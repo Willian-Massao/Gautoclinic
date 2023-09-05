@@ -1,0 +1,113 @@
+header{
+    height: 100px;
+    width: 100%;
+    margin-top: -230px;
+    padding-left: 20px; padding-right: 20px;
+    justify-content: space-between;
+}
+#background{
+    margin-top: 0px;
+}
+#background span{
+    min-width: 350px;
+}
+#background span button{
+    display: none;
+}
+#container{
+    margin-top: 230px;
+}
+#searchbox .searchbox{
+    width: 80%;
+}
+#searchbox{
+    margin-right: 40px;
+}
+.searchbtn{
+    width: 35px;
+    height: 35px;
+    margin: 7.5px;
+}
+#logodiv{
+    display: none;
+}
+aside{
+    position: fixed;
+    width: 250px;
+    height: 100%;
+    margin-left: -260px;
+    top: 0;
+    z-index: 4;
+    box-shadow: 0 0 10px;
+}
+span{
+    display: none;
+}
+#products, main, #meio{
+    width: 100%;
+    min-width: 270px;
+}
+#products div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#products{
+    min-height: 100vh;
+}
+#meio{
+    display: unset;
+}
+.autoscrolltop button{
+    width: 70px;
+    height: 70px;
+}
+button#mobilebtn{
+    display: block;
+    background-color: rgba(0,0,0,0);
+    width: 50px;
+    height: 50px;
+    border: none;
+    z-index: 3;
+}
+#mobilebtn i{
+    color: black;
+}
+#contato input.text{
+    width: 200px;
+}
+#socialmidia button:hover{
+    background-color: black;
+}
+#socialmidia button:active{
+    background-color: rgb(49, 49, 49);
+    transition: 100ms linear;
+}
+.grupo{
+    margin-left: 110px;
+    margin-right: 110px;
+}
+footer{
+    height: min-content;
+}
+.grupo{
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+}
+.member{
+    text-align: center;
+    font-size: 0.8em;
+    width: fit-content;
+}
+#cascaded{
+    right: 0;
+    margin-right: 60px;
+    width: 236px;
+}
+@media screen and (max-width: 319px) {
+    body{
+        display: none;
+    }
+}

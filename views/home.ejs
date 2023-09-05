@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/PC.css">
+    <link rel="stylesheet" media="(max-width: 957px)" href="css/Mobile.css">
+    <script src="https://kit.fontawesome.com/4783f14bfa.js" crossorigin="anonymous"></script>
+    <script src="script/script.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <title>Supermercado A</title>
+</head>
+<body onload="">
+    <div class="autoscrolltop">
+        <button onclick="aa()">
+            <i class="fa-solid fa-arrow-up fa-2xl"></i>
+        </button>
+    </div>
+    <section id="container">
+        <div id="background">
+            <span id="span-background">
+                <button id="btnE" onclick="Switch(0)"></button>
+                <button id="btnD" onclick="Switch(1)"></button>
+            </span>
+        </div>
+        <header>
+            <button id="mobilebtn" onclick="apper(0)">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <button class="menu"></button>
+            <div id="logodiv">
+                <p class="tittle">SuperMercado</p>
+                <img src="src/logoA.png" alt="" class="logo">
+            </div>
+            <div id="searchbox">
+                <input type="text" class="searchbox" id="teste" placeholder="Search" oninput="search()">
+                <button class="searchbtn" onclick=""><i class="fa-solid fa-magnifying-glass" ></i></button>
+            </div>
+            <div id="cascaded">
+                <div id="result">
+
+                </div>
+            </div>
+            <div id="account">
+                <a href="/login"><button class="searchbtn" onclick=""><i class="fa-solid fa-user" ></i></button></a>
+            </div>
+        </header>
+        <section id="meio">
+            <span></span>
+            <aside id="menu">
+                <div>
+                    <button id="mobilebtn" onclick="apper(-260)">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <ul>
+                        <li>
+                            <input type="checkbox" onclick=" checkAll('checkbox', this.checked)" checked><a>Todos</a>
+                        </li>
+                        <li>
+                            <input type="checkbox" class="checkbox" onclick="hideShow('carne', this.checked)" checked> <a href="#carne">Carnes / Frangos</a>
+                        </li>
+                        <li>
+                            <input type="checkbox" class="checkbox" onclick="hideShow('marga', this.checked)" checked> <a href="#marga">Margarinas</labal>
+                        </li>
+                        <li>
+                            <input type="checkbox" class="checkbox" onclick="hideShow('grao', this.checked)" checked> <a href="#grao">Grãos</a>
+                        </li>
+                        <li>
+                            <input type="checkbox" class="checkbox" onclick="hideShow('tempero', this.checked)" checked><a href="#temp">Temperos</a>
+                        </li>
+                        <li>
+                            <input type="checkbox" class="checkbox" onclick="hideShow('doces', this.checked)" checked><a href="#doces">Doces</a>
+                        </li>
+                        <li>
+                            <input type="checkbox" class="checkbox" onclick="hideShow('bebidas', this.checked)" checked><a href="#bebidas">Bebidas</a>
+                        </li>
+                        <li>
+                            <input type="checkbox" class="checkbox" onclick="hideShow('higiene', this.checked)" checked><a href="#higi">Higiene e Limpeza</a>
+                        </li>
+                        <li>
+                            <input type="checkbox" class="checkbox" onclick="hideShow('verduras', this.checked)" checked><a href="#verduras">Verduras e Legumes</a>
+                        </li>
+                        <li>
+                            <input type="checkbox" class="checkbox" onclick="hideShow('frutas', this.checked)" checked><a href="#frutas">Frutas</a>
+                        </li>
+                        <li>
+                            <input type="checkbox" class="checkbox" onclick="hideShow('peixe', this.checked)" checked><a href="#peixe">Peixes e Derivados</a>
+                        </li>
+                    </ul>
+                </div>
+            </aside>
+            <main>
+                <script>
+                    // Função para criar produtos e as divs das classes se necessário
+                    function createProduct(section, imgSrc, description, fakePrice, price, id) {
+                        console.log(section);
+                        var sectionDiv = $(`.${section}`);
+                    
+                        if (sectionDiv.length === 0) {
+                            sectionDiv = $('<div>').addClass(section).attr('id', section);
+                            $('#products').append(sectionDiv);
+                        }
+                    
+                        var productLink = $('<a>').attr('href', `/product/${id}`);
+                        var productFigure = $('<figure>');
+                        var productImg = $('<img>').attr('src', imgSrc).attr('alt', description);
+                        var figCaption = $('<figcaption>').html(`
+                            <p class="description">${description}</p>
+                            <p class="fakeprice">R$ ${fakePrice}</p>
+                            <p class="descont">35%</p>
+                            <p class="price">R$ ${price}</p>
+                        `);
+                        
+                        productLink.append(productFigure); // Adiciona a figura ao link
+                        productFigure.append(productImg).append(figCaption);
+                        sectionDiv.append(productLink);
+                    }
+            </script>
+                <div id="products">
+                    <div class="carne" id="carne">
+                        <p>Carnes / Frangos</p>
+                    </div>
+                    <div  class="bebidas" id="bebidas">
+                        <p>Bebidas</p>
+                    </div>
+                    <div class="tempero" id="tempero">
+                        <p>Temperos</p>
+                    </div>
+                    <div class="higiene" id="higiene">
+                        <p>Higiene</p>
+                    </div>
+                    <div class="verduras" id="verduras">
+                        <p>Verduras</p>
+                    </div>
+                    <div class="peixe" id="peixe">
+                        <p>Peixes</p>
+                    </div>
+                    <div class="frutas" id="frutas">
+                        <p>Frutas</p>
+                    </div>
+
+                    <!-- Renderizando os produtos -->
+                    <% itens.forEach(product => { %>
+                        <script>
+                            createProduct('<%= product.section %>', 'src/<%= product.image %>', '<%= product.name %>', '<%= product.price %>', '<%= product.itens %>', '<%= product.id %>');
+                        </script>
+                    <% }); %>
+                </div>
+            </main>
+            <span></span>
+        </section>
+        <span></span>
+        <footer>
+            <div id="socialmidia">
+                <button>
+                    <i class="fa-brands fa-twitter fa-3x"></i>
+                </button>
+                <button>
+                    <i class="fa-brands fa-google fa-3x"></i>
+                </button>
+                <button>
+                    <i class="fa-brands fa-instagram fa-3x"></i>
+                </button>
+                <button>
+                    <i class="fa-brands fa-facebook fa-3x"></i>
+                </button>
+            </div>
+            <div id="contato">
+                <form action="">
+                    <input type="text" class="text" id="first" value="Nome" onfocus="expand('min-content')">
+                    <input type="text" class="text" value="E-mail">
+                    <input type="text" class="text" value="Assunto">
+                    <input type="text" class="text" value="Mensagem">
+                    <input type="submit" class="submit" onclick="expand('62px')">
+                </form>
+            </div>
+            <div id="copyright">
+                <div class="grupo">
+                    <p class="member">Eliane Medeiros 28639375</p>
+                    <p class="member">Jonas Da Silva 29278791</p>
+                    <p class="member">Carlos Vasconcelos 29815282</p>
+                    <p class="member">Willian Massao 29864968</p>
+                    <p class="member">Sabryna Ap. 29981727</p>
+                </div>
+                <p class="year">@Copyright 1000ac - 2022dc</p>
+            </div>
+        </footer>
+    </section>
+</body>
+</html>
