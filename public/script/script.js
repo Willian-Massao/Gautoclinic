@@ -7,6 +7,25 @@ for (let i = 0;i < 99;i++) {
     task(i);
 }
 
+function addLittleCar(){
+    let item;
+    if(localStorage.getItem("item") != null){
+        item = localStorage.getItem("item");
+        item = JSON.parse(item);
+    }else{
+        item = [];
+    }
+    console.log(item);
+    item.push({
+        id: window.location.href.split("/")[4],
+        name: document.getElementById("name-info").innerText,
+        price: document.getElementById("preco-info").innerText.replace("Preço: R$ ",""),
+        section: document.getElementById("sec-info").innerText
+    });
+    console.log(item);
+    localStorage.setItem("item", JSON.stringify(item));
+}
+
 function expand(bb){
     document.getElementById("contato").style.height = `${bb}`;
 }
