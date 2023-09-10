@@ -138,6 +138,7 @@ i{
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+    margin: auto;
 }
 figure{
     width: 240px; height: 360px;

@@ -150,7 +150,11 @@ app.get('/product/:id', (req, res) => {
     const item = new itens();
 
     item.findItemById(req.params.id).then( item =>{
-        res.render('product', {item: item});
+        if(req.isAuthenticated()){
+            res.render('productlogged', {item: item});
+        }else{
+            res.render('product', {item: item});
+        }
     })
 });
 

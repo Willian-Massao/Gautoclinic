@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/login.css">
+    <script src="https://kit.fontawesome.com/4783f14bfa.js" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <title>Perfil do Usuário</title>
 </head>
 <body>
@@ -12,7 +14,29 @@
             <img src="profile-picture.jpg" alt="Foto de Perfil" class="profile-picture">
             <h1><%= user.name %></h1>
             <p>Email: <%= user.email %></p>
+            <div id="profile-littlecar">
+
+            </div>
         </div>
     </div>
+    <script>
+        let item;
+        if( localStorage.getItem("item") != null){
+            item = JSON.parse(localStorage.getItem("item"));
+        }else{
+            item = [{name: "Nenhum item no carrinho"}]
+        }
+        console.log(item);
+        for(let i = 0; i < item.length; i++){
+            console.log(item[i]);
+            $("#profile-littlecar").append(`
+            <div class="profile-littlecar-item">
+                <img src="src/img${item[i].id}.png" alt="Foto do Produto" class="profile-littlecar-item-img">
+                <p>${item[i].name}</p>
+                <p>${item[i].price}</p>
+            </div>
+            `);
+        }
+    </script>
 </body>
 </html>

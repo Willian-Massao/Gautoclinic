@@ -68,3 +68,20 @@ p {
 .login-button:hover {
     background-color: rgba(255, 255, 255, 0.5);;
 }
+#profile-littlecar{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.profile-littlecar-item{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 10px;
+}
+.profile-littlecar-item > img{
+    max-width: 100%;
+    height: 100px;
+    border-radius: 50%;
+    margin: auto;
+}
