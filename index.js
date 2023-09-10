@@ -121,7 +121,7 @@ app.post('/cadastro', (req, res) => {
     })
 });
 
-// Rotas get j
+// Rotas get
 app.get('/login', (req, res) => {
     res.render('login');
 });
