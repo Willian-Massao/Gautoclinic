@@ -1,0 +1,25 @@
+<header>
+    <div class="header-container">
+        <figure class="logo_container">
+            <img src="src/bossi.png" alt="">
+        </figure>
+        <div class="header-search-bar">
+            <input type="text"><button><i class="fi fi-rs-search"></i></button>
+        </div>
+        <div class="header-login">
+            <a href="/profile"><i class="fi fi-rr-user G"></i>
+                <div>
+                    Olá <strong><%= user.name.split(" ") %></strong>
+                </div>
+            </a>
+        </div>
+        <div class="header-carrinho">
+            <a href="/carrinho">
+                <div>
+                    <i class="fi fi-rr-shopping-cart"></i>
+                </div>
+                <div>0<br>Item</div>
+            </a>
+        </div>
+    </div>
+</header>

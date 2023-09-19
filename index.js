@@ -135,7 +135,7 @@ app.get('/', (req, res) =>{
 
     item.findItemAll().then( itens =>{
         if(req.isAuthenticated()){
-            res.render('homelogged', {itens: itens});
+            res.render('homelogged', {itens: itens, user: req.user});
         }else{
             res.render('home', {itens: itens});
         }

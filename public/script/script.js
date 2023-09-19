@@ -1,95 +1,51 @@
-/*jshint esversion: 6 */
-
-var image = ["Atacadista.png","Atacadista2.png","Atacadista3.png"];
-var select = 0;
-
-for (let i = 0;i < 99;i++) {
-    task(i);
-}
-
-function addLittleCar(){
-    let item;
-    if(localStorage.getItem("item") != null){
-        item = localStorage.getItem("item");
-        item = JSON.parse(item);
-    }else{
-        item = [];
+// Função para criar produtos e as divs das classes se necessário
+function createProduct(productName, productPrice, productImg, productClass, productId) {
+    // criar div por classe
+    if(document.getElementById(productClass) == null){
+        $("main").append(`
+        <div class="product-container" id="${productClass}">
+            <div class="product-text">
+                <h3>${productClass}</h3>
+                <h3>Veja Mais</h3>
+            </div>
+            <div class="scroll-effect">
+                <button onclick="scrollR('${productClass}')"><i class="fi fi-rr-angle-left"></i></button>
+                <div class="product-cards-cotainer">
+                </div>
+                <button onclick="scrollL('${productClass}')"><i class="fi fi-rr-angle-right"></i>
+        </button>
+            </div>
+        </div>`
+        );
     }
-    console.log(item);
-    item.push({
-        id: window.location.href.split("/")[4],
-        name: document.getElementById("name-info").innerText,
-        price: document.getElementById("preco-info").innerText.replace("Preço: R$ ",""),
-        section: document.getElementById("sec-info").innerText
-    });
-    console.log(item);
-    localStorage.setItem("item", JSON.stringify(item));
+    addProduct(productName, productPrice, productImg, productClass, productId);
 }
-
-function expand(bb){
-    document.getElementById("contato").style.height = `${bb}`;
+function addProduct(productName, productPrice, productImg, productClass, productId){
+    $(`#${productClass}`).children(".scroll-effect").children(".product-cards-cotainer")
+    .append(`
+        <a class="product-cards" href="/product/${productId}">
+            <div class="img-container">
+                <img src="${productImg}" alt="">
+            </div>
+            <div class="product-price">
+                <p class="price">${productPrice}</p>
+                <p class="name">${productName}</p>
+            </div>
+            <button class="product-button">Adicionar</button>
+        </a>
+    `)
 }
-
-function Switch(prevback){
-    var spanbackground = document.getElementById("span-background").style.backgroundImage = `url(src/${image[select]})`;
-    if(prevback == 0){
-        select--;
-        select < 0? ((select = 2),(spanbackground)) : spanbackground;
-    }else{
-        select++;
-        select > 2? ((select = 0),(spanbackground)) : spanbackground;
-    }
+function scrollL(father){
+    $(`#${father}`)
+    .children(".scroll-effect")
+    .children(".product-cards-cotainer").scrollLeft($(`#${father}`)
+    .children(".scroll-effect")
+    .children(".product-cards-cotainer").scrollLeft() + 150);
 }
-
-function task(i) {
-    setTimeout(function() {
-        Switch(1);
-    }, 3000 * i);
-}
-//teste
-function hideShow(myClass, visible) {	
-    let display = document.getElementsByClassName(myClass);
-    visible == false? [].forEach.call(display, function (el) { el.style.display = "none";}):[].forEach.call(display, function (el) { el.style.display = "flex";});
-}
-
-function checkAll(myClass) {	
-    let checkbox = document.getElementsByClassName(myClass);
-    [].forEach.call(checkbox, function (el) {el.click();});  
-}
-
-function aa(){
-    window.scrollTo(0,0);
-}
-
-function apper(nsei){
-    document.getElementById("menu").style.marginLeft = `${nsei}px`;
-}
-
-function toggle(mode, visible){
-    document.getElementById(mode).style.display = visible;
-}
-
-
-function search(){
-
-    const resultDiv = document.getElementById("result");
-
-    resultDiv.innerHTML = '';
-
-    let search = (document.getElementById("teste").value).toLowerCase();
-
-    if(search != ''){
-        let itemsUnfilted = document.getElementsByTagName("figure");
-        let items = [];
-        [].forEach.call( itemsUnfilted ,function(num) { items.push((num.children[1].children[0].outerText).toLowerCase());});
-        let result = items.filter(s => s.includes(search));
-        if(result != ''){
-        document.getElementById('cascaded').style.display = "unset";
-        [].forEach.call( result , function(g){ resultDiv.innerHTML += `<p>${g}</p>`;});
-        }else{
-            resultDiv.innerHTML += `<p>Produto não encontrado</p>`;
-        }
-    }else if(search == ''){
-        document.getElementById('cascaded').style.display = "none";
-    }
+function scrollR(father){
+    $(`#${father}`)
+    .children(".scroll-effect")
+    .children(".product-cards-cotainer").scrollLeft($(`#${father}`)
+    .children(".scroll-effect")
+    .children(".product-cards-cotainer").scrollLeft() - 150);
 }
