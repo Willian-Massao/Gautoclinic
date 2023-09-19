@@ -40,7 +40,7 @@
     <main>
         <script>
             // Função para criar produtos e as divs das classes se necessário
-            function createProduct(productName, productPrice, productImg, productClass) {
+            function createProduct(productName, productPrice, productImg, productClass, productId) {
                 // criar div por classe
                 if(document.getElementById(productClass) == null){
                     $("main").append(`
@@ -59,12 +59,12 @@
                     </div>`
                     );
                 }
-                addProduct(productName, productPrice, productImg, productClass);
+                addProduct(productName, productPrice, productImg, productClass, productId);
             }
-            function addProduct(productName, productPrice, productImg, productClass){
+            function addProduct(productName, productPrice, productImg, productClass, productId){
                 $(`#${productClass}`).children(".scroll-effect").children(".product-cards-cotainer")
                 .append(`
-                    <div class="product-cards">
+                    <a class="product-cards" href="/product/${productId}">
                         <div class="img-container">
                             <img src="${productImg}" alt="">
                         </div>
@@ -73,7 +73,7 @@
                             <p class="name">${productName}</p>
                         </div>
                         <button class="product-button">Adicionar</button>
-                    </div>
+                    </a>
                 `)
             }
             function scrollL(father){
@@ -94,7 +94,7 @@
         <!-- Renderizando os produtos -->
         <% itens.forEach(product => { %>
             <script>
-                createProduct('<%= product.name %>', '<%= product.price %>', 'products/<%= product.image %>', '<%= product.section %>');
+                createProduct('<%= product.name %>', '<%= product.price %>', 'products/<%= product.image %>', '<%= product.section %>', '<%= product.id %>');
             </script>
         <% }); %>
     </main>
