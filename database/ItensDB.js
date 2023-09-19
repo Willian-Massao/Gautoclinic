@@ -54,4 +54,14 @@ module.exports  = class itens{
             console.log(err);
         }
     }
+
+    async findItemBySection(section){
+        try {
+            var db = await openDb();
+            var result = await db.all(`SELECT * FROM "item" WHERE "section" = '${section}'`);
+            return result;
+        }catch(err){
+            console.log(err);
+        }
+    }
 }

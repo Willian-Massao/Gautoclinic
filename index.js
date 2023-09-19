@@ -146,14 +146,26 @@ app.get('/profile', ensureAuthenticated, (req, res) => {
     res.render('profile', { user: req.user });
 });
 
+app.get('/section/:sec', (req, res) => {
+    const item = new itens();
+
+    item.findItemBySection(req.params.sec).then( itens =>{
+        if(req.isAuthenticated()){
+            res.render('sectionlogged', {itens: itens, user: req.user});
+        }else{
+            res.render('section', {itens: itens});
+        }
+    })
+});
+
 app.get('/product/:id', (req, res) => {
     const item = new itens();
 
-    item.findItemById(req.params.id).then( item =>{
+    item.findItemById(req.params.id).then( itens =>{
         if(req.isAuthenticated()){
-            res.render('productlogged', {item: item});
+            res.render('sectionlogged', {itens: itens, user: req.user});
         }else{
-            res.render('product', {item: item});
+            res.render('section', {itens: itens});
         }
     })
 });
