@@ -105,7 +105,8 @@ main{
     display: flex;
     flex-direction: column;
     align-items: center;
-
+    margin-bottom: 15px;
+    overflow: hidden;
 }
 .product-text{
     width: 93%;
@@ -117,6 +118,7 @@ main{
     width: 220px;
     height: 495px;
     min-width: 220px;
+    background-color: #fff;
     border: 2px #dfdfdf solid;
     border-radius: 10px;
     display: flex;
@@ -124,20 +126,36 @@ main{
     align-items: center;
     justify-content: space-between;
     padding: 15px;
+    margin: 8px;
     margin-bottom: 100px;
+    scroll-snap-align: center;
 }
 .product-cards-cotainer{
     min-height: 529px;
     width: 86%;
     display: flex;
-    flex-wrap: wrap;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: start;
     align-items: space-between;
+    overflow-x: scroll;
+    box-shadow: inset 0 0 15px #ffffff;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
 }
-.product-cards img{
-    width: 50%;
-    height: fit-content;
+.img-container{
+    width: 100%;
+    height: 60%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.img-container img{
+    flex-shrink:  0;
+    -webkit-flex-shrink: 0;
+    max-width:  100%;
+    max-height:  100%;
 }
 .product-cards button{
     width: 100%;
@@ -149,4 +167,26 @@ main{
 .product-cards:hover{
     border: 2px #ff6969 solid;
     transform: scale(1.01);
+}
+.product-price{
+    width: 100%;
+}
+.price{
+    font-size: 20px;
+    font-weight: bold;
+    color: #ff3434;
+}
+.scroll-effect{
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+}
+.scroll-effect>button{
+    width: 7%;
+    height: 637px;
+    background-color: #fff;
+    border: none;
 }
