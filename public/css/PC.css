@@ -99,7 +99,7 @@ main{
     margin-top: 50px;
 }
 .product-container{
-    height: 635px;
+    min-height: 635px;
     width: 100%;
     background-color: #fff;
     display: flex;
@@ -116,6 +116,7 @@ main{
 .product-cards{
     width: 220px;
     height: 495px;
+    min-width: 220px;
     border: 2px #dfdfdf solid;
     border-radius: 10px;
     display: flex;
@@ -123,10 +124,13 @@ main{
     align-items: center;
     justify-content: space-between;
     padding: 15px;
+    margin-bottom: 100px;
 }
 .product-cards-cotainer{
+    min-height: 529px;
     width: 86%;
     display: flex;
+    flex-wrap: wrap;
     flex-direction: row;
     justify-content: space-between;
     align-items: space-between;
