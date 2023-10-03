@@ -8,7 +8,7 @@
         <!-- Renderizando os produtos -->
         <% itens.forEach(product => { %>
             <script>
-                createProductOnly('<%= product.name %>', '<%= product.price %>', 'products/<%= product.image %>', '<%= product.section %>', '<%= product.id %>');
+                createProduct('<%= product.name %>', '<%= product.price %>', 'products/<%= product.image %>', '<%= product.section %>', '<%= product.id %>', true);
             </script>
         <% }); %>
     </main>

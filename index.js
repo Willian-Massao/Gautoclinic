@@ -163,9 +163,20 @@ app.get('/product/:id', (req, res) => {
 
     item.findItemById(req.params.id).then( itens =>{
         if(req.isAuthenticated()){
-            res.render('sectionlogged', {itens: itens, user: req.user});
+            res.render('productlogged', {itens: itens, user: req.user});
         }else{
-            res.render('section', {itens: itens});
+            res.render('product', {itens: itens});
+        }
+    })
+});
+app.get('/carrinho', (req, res) => {
+    const item = new itens();
+
+    item.findItemById(req.params.id).then( itens =>{
+        if(req.isAuthenticated()){
+            res.render('carrinho', {itens: itens, user: req.user});
+        }else{
+            res.render('carrinho', {itens: itens});
         }
     })
 });

@@ -1,104 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/PC.css">
-    <link rel="stylesheet" media="(max-width: 957px)" href="/css/Mobile.css">
-    <script src="https://kit.fontawesome.com/4783f14bfa.js" crossorigin="anonymous"></script>
+    <%- include ("partials/head.ejs") %>
     <script src="/script/script.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 </head>
 <body>
-    <div class="autoscrolltop">
-        <button onclick="aa()">
-            <i class="fa-solid fa-arrow-up fa-2xl"></i>
-        </button>
-    </div>
-    <section id="container">
-        <div id="background">
-            <span id="span-background">
-                <button id="btnE" onclick="Switch(0)"></button>
-                <button id="btnD" onclick="Switch(1)"></button>
-            </span>
-        </div>
-        <header>
-            <button id="mobilebtn" onclick="apper(0)">
-                <i class="fa-solid fa-bars"></i>
-            </button>
-            <button class="menu"></button>
-            <div id="logodiv">
-                <p class="tittle">SuperMercado</p>
-                <img src="/src/logoA.png" alt="" class="logo">
-            </div>
-            <div id="searchbox">
-                <input type="text" class="searchbox" id="teste" placeholder="Search" oninput="search()">
-                <button class="searchbtn" onclick=""><i class="fa-solid fa-magnifying-glass" ></i></button>
-            </div>
-            <div id="cascaded">
-                <div id="result">
+    <%- include ("partials/header_logged.ejs") %>
+    <main>
+        <div class="product-container">
+            <div class="product-main">
+                <div class="product-img">
+                    <img src="/products/<%= itens.image %>" alt="Foto do Produto" class="product-img-img" id="img-info">
+                </div>
+                <p id="sec-info" hidden><%= itens.section %></p>
+                <div>
+                    <h1 id="name-info"><%= itens.name %></h1>
+                    <p id="preco-info"><%= itens.price %></p>
 
+                    <button class="product-info-button" onclick="addLittleCar()">Adicionar ao carrinho</button>
                 </div>
             </div>
-            <div id="account">
-                <a href="/profile"><button class="searchbtn" onclick=""><i class="fa-solid fa-user" ></i></button></a>
-            </div>
-        </header>
-        <section id="meio">
-            <span></span>
-            <main style="grid-column: span 2;">
-                <div id="product">
-                    <div id="product-img">
-                        <img src="/src/<%= item.image %>" alt="">
-                    </div>
-                    <div id="product-info">
-                        <h1 id="sec-info"><%= item.section %></h1>
-                        <p id="name-info"><%= item.name %></p>
-                        <p id="preco-info">Preço: <%= item.price %></p>
-                        <p>Quantidade: 1</p>
-                        <p>Estoque: 10</p>
-                        <p>Descrição: <%= item.name %></p>
-                        <button onclick="addLittleCar()">Adicionar ao carrinho</button>
-                    </div>
-                </div>
-            </main>
-            <span></span>
-        </section>
-        <footer>
-            <div id="socialmidia">
-                <button>
-                    <i class="fa-brands fa-twitter fa-3x"></i>
-                </button>
-                <button>
-                    <i class="fa-brands fa-google fa-3x"></i>
-                </button>
-                <button>
-                    <i class="fa-brands fa-instagram fa-3x"></i>
-                </button>
-                <button>
-                    <i class="fa-brands fa-facebook fa-3x"></i>
-                </button>
-            </div>
-            <div id="contato">
-                <form action="">
-                    <input type="text" class="text" id="first" value="Nome" onfocus="expand('min-content')">
-                    <input type="text" class="text" value="E-mail">
-                    <input type="text" class="text" value="Assunto">
-                    <input type="text" class="text" value="Mensagem">
-                    <input type="submit" class="submit" onclick="expand('62px')">
-                </form>
-            </div>
-            <div id="copyright">
-                <div class="grupo">
-                    <p class="member">Eliane Medeiros 28639375</p>
-                    <p class="member">Jonas Da Silva 29278791</p>
-                    <p class="member">Carlos Vasconcelos 29815282</p>
-                    <p class="member">Willian Massao 29864968</p>
-                    <p class="member">Sabryna Ap. 29981727</p>
-                </div>
-                <p class="year">@Copyright 1000ac - 2022dc</p>
-            </div>
-        </footer>
+        </div>
+    </main>
 </body>
 </html>

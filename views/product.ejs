@@ -1,16 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/PC.css">
-    <link rel="stylesheet" media="(max-width: 957px)" href="/css/Mobile.css">
-    <script src="https://kit.fontawesome.com/4783f14bfa.js" crossorigin="anonymous"></script>
+    <%- include ("partials/head.ejs") %>
     <script src="/script/script.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 </head>
 <body>
-   
+    <%- include ("partials/header.ejs") %>
+    <main>
+        <div class="product-container">
+            <div class="product-main">
+                <div class="product-img">
+                    <img src="/products/<%= itens.image %>" alt="Foto do Produto" class="product-img-img" id="img-info">
+                </div>
+                <p id="sec-info" hidden><%= itens.section %></p>
+                <div>
+                    <h1 id="name-info"><%= itens.name %></h1>
+                    <p id="preco-info"><%= itens.price %></p>
+
+                    <button class="product-info-button" onclick="addLittleCar()">Adicionar ao carrinho</button>
+                </div>
+            </div>
+        </div>
+    </main>
 </body>
 </html>
