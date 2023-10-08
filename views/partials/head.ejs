@@ -8,25 +8,6 @@
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-    <script>
-        let item;
-        let qtdP = 0;
-        if(localStorage.getItem("item") != null){
-            item = localStorage.getItem("item");
-            item = JSON.parse(item);
-        }else{
-            item = [];
-        }
-        function sleep(ms) {
-          return new Promise(resolve => setTimeout(resolve, ms));
-        }
-        item.forEach(i => {
-            qtdP += parseInt(i.qtd);
-        });
-        sleep(300).then(() => {
-            document.getElementById("littlecar").innerHTML = qtdP + "<br>produto(s)";
-            console.log(item);
-        });
-    </script>
+    <script src="/script/script.js"></script>
     <title>Supermercado A</title>
 </head>
