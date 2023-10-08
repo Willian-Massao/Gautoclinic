@@ -115,7 +115,9 @@ app.post('/cadastro', (req, res) => {
         bcrypt.genSalt(10, (err, salt) => {
             bcrypt.hash(password, salt, (err, hash) => {
                 // Salva o usuário no banco de dados
-                usuario.insertPessoa({name, email, password: hash, salt});
+                usuario.insertPessoa({name, email, password: hash, salt}).then(
+                    res.redirect('/login')
+                );
             });
         });
     })
