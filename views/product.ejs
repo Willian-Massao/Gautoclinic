@@ -14,14 +14,38 @@
                 <p id="sec-info" hidden><%= itens.section %></p>
                 <div>
                     <h1 id="name-info"><%= itens.name %></h1>
-
-                    <button class="product-info-button" onclick="addLittleCar()">Adicionar ao carrinho</button>
+                    <div class="product-rating">
+                        <p>5.0</p><div>
+                            <i class="fi fi-ss-star"></i>
+                            <i class="fi fi-ss-star"></i>
+                            <i class="fi fi-ss-star"></i>
+                            <i class="fi fi-ss-star"></i>
+                            <i class="fi fi-ss-star"></i>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="price">
+                        <p id="preco-info" class="price-only"><%= itens.price.split(",")[0] %></p>
+                        <p id="preco-info" class="price-only price-cents"><%= itens.price.split(",")[1] %></p>
+                    </div>
+                    <div class="description">
+                        <p>
+                            A Picanha Friboi Tradicional é uma escolha excepcional para os amantes de carne que buscam qualidade superior e sabor inigualável. Com uma peça de 1 quilo a vácuo, este corte premium é originário de uma das partes mais saborosas e suculentas do boi, garantindo uma experiência gastronômica incrível.
+                        </p>
+                    </div>
                 </div>
             </div>
-            <div class="summary-box">
-                <p id="preco-info"><%= itens.price %></p>
-
-                <button class="product-info-button" onclick="addLittleCar()">Adicionar ao carrinho</button>
+            <div id="summary" class="summary-product">
+                <div class="summary-box product-only-sum">
+                    <div>
+                        <div class="price">
+                            <p id="preco-info" class="price-only"><%= itens.price.split(",")[0] %></p>
+                            <p id="preco-info" class="price-only price-cents"><%= itens.price.split(",")[1] %></p>
+                        </div>
+                        <p class="user-end"><i class="fi fi-rr-marker"></i> user.endereco </p>
+                    </div>
+                    <button class="product-info-button product-button" onclick="addLittleCar()">Adicionar ao carrinho</button>
+                </div>
             </div>
         </div>
     </main>
