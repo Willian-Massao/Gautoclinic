@@ -1,7 +1,7 @@
 body{
     margin: 0;
     padding: 0;
-    background-color: #f7f7f7;
+    background-color: #eaeded;
     font-family: "Ubuntu", sans-serif;
 }
 header{
@@ -251,32 +251,61 @@ main{
 #itens-list{
     min-height: 550px;
     width: 80%;
-    padding-top: 30px;
     padding-bottom: 30px;
+    background-color: #ffffff;
+    padding: 20px;
+}
+#itens-list>p{
+    font-size: 30px;
+    margin-top: 5px;
+}
+hr{
+    color: #ffffff;
 }
 .product-container.itens-type{
     overflow: unset;
+    background-color: unset;
+
 }
 #summary{
-    width: 15%;
-    height: 550px;
+    margin-left: 15px;
+    height: fit-content;
+    background-color: #fff;
 }
 #summary fieldset{
     width: 157px;
+}
+.summary-box{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+}
+.summary-box .summary-box-info{
+    width: 100%;
+}
+.summary-box button{
+    width: 100%;
+    height: 40px;
+    margin-top: 15px;
+    border: 1px #dfdfdf solid;
 }
 .item{
     display: flex;
     flex-direction: row;
     justify-content: start;
+    height: 250px;
 }
 .item img{
     flex-shrink:  0;
     -webkit-flex-shrink: 0;
     max-width:  300px;
-    max-height:  300px;
+    max-height:  100%px;
 }
 .item .img-container{
     width:  300px;
+    height: 100%;
 }
 hr{
     color: #dbdbdb;
@@ -327,4 +356,60 @@ hr{
 p#subtotal{
     text-align: end;
     margin-right: 15px;
+}
+.product-container.product-only{
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+.product-main{
+    display: flex;
+    flex-direction: row;
+    background-color: #fff;
+    padding: 30px;
+    width: 50%;
+    height: 100%;
+}
+#summary.summary-product{
+    height: 401.5px;
+    width: 250px;
+    border: 1px solid rgb(214, 214, 214);
+    border-radius: 10px;
+}
+.summary-box.product-only-sum{
+    align-items: center;
+    justify-content: space-between;
+    height: calc(100% - 30px);
+}
+#preco-info.price-only{
+    font-size: 30px;
+    margin: 0;
+    color: #ff3434;
+}
+.price{
+    display: flex;
+    flex-direction: row;
+    font-weight: unset;
+}
+#preco-info.price-cents{
+    font-size: 15px;
+}
+.product-info-button.product-button{
+    border-radius: 20px;
+}
+.user-end i{
+    font-size: 15px;
+}
+.product-rating{
+    height: 15px;
+    display: flex;
+    flex-direction: row;
+}
+.product-rating i{
+    font-size: 15px;
+}
+.product-rating p{
+    margin: 0;
+    margin-right: 5px;
+    font-size: 17px;
 }

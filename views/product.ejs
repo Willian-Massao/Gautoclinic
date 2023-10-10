@@ -6,7 +6,7 @@
 <body>
     <%- include ("partials/header.ejs") %>
     <main>
-        <div class="product-container">
+        <div class="product-container product-only">
             <div class="product-main">
                 <div class="product-img">
                     <img src="/products/<%= itens.image %>" alt="Foto do Produto" class="product-img-img" id="img-info">
@@ -14,10 +14,14 @@
                 <p id="sec-info" hidden><%= itens.section %></p>
                 <div>
                     <h1 id="name-info"><%= itens.name %></h1>
-                    <p id="preco-info"><%= itens.price %></p>
 
                     <button class="product-info-button" onclick="addLittleCar()">Adicionar ao carrinho</button>
                 </div>
+            </div>
+            <div class="summary-box">
+                <p id="preco-info"><%= itens.price %></p>
+
+                <button class="product-info-button" onclick="addLittleCar()">Adicionar ao carrinho</button>
             </div>
         </div>
     </main>
