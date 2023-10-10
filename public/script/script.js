@@ -45,7 +45,7 @@ function addProduct(Name, Price, Img, Class, Id, isOnly){
                 <img src="/${Img}" alt="">
             </div>
             <div class="product-price">
-                <p class="price">${Price}</p>
+                <p class="price">R$ ${Price}</p>
                 <p class="name">${Name}</p>
             </div>
             <button class="product-button">Adicionar</button>

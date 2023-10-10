@@ -14,24 +14,47 @@
                     <p class="profile-info-email"><%= user.email %></p>
                 </div>
             </div>
+            <div id="itens-owner">
+                <table>
+                    <tr>
+                        <th>Imagem</th>
+                        <th>preço</th>
+                        <th>descrição</th>
+                    </tr>
+                <% for(let i = 0; i < itens.length; i++){ %>
+                    <tr>
+                        <td id="table-img">
+                            <img src="/products/<%= itens[i].image %>" alt="">
+                        </td>
+                        <td id="table-price">
+                            <p>R$ <%= itens[i].price %></p>
+                        </td>
+                        <td id="table-description">
+                            <p> <%= itens[i].description %></p>
+                        </td>
+                    </tr>
+                <% } %>
+                </table>            
+            </div>
         </div>
     </main>
+    <%- include ("partials/footer.ejs") %>
     <script>
-        let item;
-        if( localStorage.getItem("item") != null){
-            item = JSON.parse(localStorage.getItem("item"));
-        }else{
-            item = [{name: "Nenhum item no carrinho"}]
-        }
-        console.log(item);
-        for(let i = 0; i < item.length; i++){
-            console.log(item[i]);
-            $("#profile-littlecar").append(`
-            <div class="profile-littlecar-item">
-                <img src="src/img${item[i].id}.png" alt="Foto do Produto" class="profile-littlecar-item-img">
-                <p>${item[i].name}</p>
-                <p>${item[i].price}</p>
-            </div>
+        console.log("<%= itens %>");
+        for(let i = 0; i < itens.length; i++){
+            console.log(itens[i]);
+            $("#itens-owner").append(`
+                <div class="item-owner-container">
+                    <div class="item-owner-img">
+                        <img src="/products/${itens[i].image}" alt="">
+                    </div>
+                    <div class="item-owner-price">
+                        <p>R$ ${itens[i].price}</p>
+                    </div>
+                    <div class="item-owner-description">
+                        <p> ${itens[i].description}</p>
+                    </div>
+                </div>
             `);
         }
     </script>

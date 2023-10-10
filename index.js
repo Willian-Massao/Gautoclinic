@@ -145,7 +145,11 @@ app.get('/', (req, res) =>{
 });
 
 app.get('/profile', ensureAuthenticated, (req, res) => {
-    res.render('profile', { user: req.user });
+    const item = new itens();
+
+    item.findItemByUserId(req.user.id).then( itens =>{
+        res.render('profile', { user: req.user, itens: itens});
+    })
 });
 
 app.get('/section/:sec', (req, res) => {

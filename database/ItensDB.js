@@ -8,9 +8,11 @@ module.exports  = class itens{
             db.exec(`create table if not exists item (
                 id integer primary key autoincrement,
                 name varchar(255),
-                price varchar(255),
+                price int(255),
                 image varchar(255),
-                section varchar(255)
+                section varchar(255),
+                description varchar(255),
+                userId int(255)
             )`)
             .then(err => {
                 console.log("Tabela item criada com sucesso!");
@@ -59,6 +61,16 @@ module.exports  = class itens{
         try {
             var db = await openDb();
             var result = await db.all(`SELECT * FROM "item" WHERE "section" = '${section}'`);
+            return result;
+        }catch(err){
+            console.log(err);
+        }
+    }
+
+    async findItemByUserId(userId){
+        try {
+            var db = await openDb();
+            var result = await db.all(`SELECT "description", "image", "price" FROM "item" WHERE "userId" = '${userId}'`);
             return result;
         }catch(err){
             console.log(err);

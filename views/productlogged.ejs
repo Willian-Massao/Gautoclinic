@@ -25,12 +25,12 @@
                     </div>
                     <hr>
                     <div class="price">
-                        <p id="preco-info" class="price-only"><%= itens.price.split(",")[0] %></p>
+                        <p id="preco-info" class="price-only">R$ <%= itens.price.split(",")[0] %></p>
                         <p id="preco-info" class="price-only price-cents"><%= itens.price.split(",")[1] %></p>
                     </div>
                     <div class="description">
                         <p>
-                            A Picanha Friboi Tradicional é uma escolha excepcional para os amantes de carne que buscam qualidade superior e sabor inigualável. Com uma peça de 1 quilo a vácuo, este corte premium é originário de uma das partes mais saborosas e suculentas do boi, garantindo uma experiência gastronômica incrível.
+                            <%= itens.description %>
                         </p>
                     </div>
                 </div>
@@ -39,7 +39,7 @@
                 <div class="summary-box product-only-sum">
                     <div>
                         <div class="price">
-                            <p id="preco-info" class="price-only"><%= itens.price.split(",")[0] %></p>
+                            <p id="preco-info" class="price-only">R$ <%= itens.price.split(",")[0] %></p>
                             <p id="preco-info" class="price-only price-cents"><%= itens.price.split(",")[1] %></p>
                         </div>
                         <p class="user-end"><i class="fi fi-rr-marker"></i> user.endereco </p>
@@ -49,5 +49,6 @@
             </div>
         </div>
     </main>
+    <%- include ("partials/footer.ejs") %>
 </body>
 </html>
