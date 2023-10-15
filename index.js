@@ -168,7 +168,7 @@ app.post('/item/add', upload.single('image') , (req, res) => {
     console.log(name, price, description, section, image);
 
     item.insertItem({name, price, image, section, description, userId}).then(
-        res.redirect('/')
+        res.redirect('/profile')
     );
 })
 

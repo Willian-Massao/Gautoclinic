@@ -16,7 +16,7 @@ function getItem(){
 
 function createProduct(Name, Price, Img, Class, Id, isOnly) {
     // criar div por classe
-    if(document.getElementById(Class) == null){
+    if(document.getElementById(Class.replaceAll(" ", "_")) == null){
         $("main").append(`
         <div class="product-container${isOnly ? "-only": ""}" id="${Class.replaceAll(" ", "_")}">
             <div class="product-text">
