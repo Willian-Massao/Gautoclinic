@@ -123,6 +123,23 @@ app.post('/cadastro', (req, res) => {
     })
 });
 
+app.post('/carrinho', async(req, res) => {
+    const item = new itens();
+    let id = req.body.itemArr;
+    let itemList = [];
+
+    console.log(id);
+
+    try{
+        for(let i in id){
+            itemList.push(await item.findItemById(id[i]));
+        };
+    }catch(err){
+        console.log(err);
+    }
+    res.send(itemList);
+});
+
 // Rotas get
 app.get('/login', (req, res) => {
     res.render('login');
@@ -180,11 +197,15 @@ app.get('/carrinho', (req, res) => {
 
     item.findItemById(req.params.id).then( itens =>{
         if(req.isAuthenticated()){
-            res.render('carrinho', {itens: itens, user: req.user});
+            res.render('carrinhologged', {itens: itens, user: req.user});
         }else{
             res.render('carrinho', {itens: itens});
         }
     })
+});
+
+app.get('/pagamento',ensureAuthenticated, (req, res) => {
+    res.render('pagamento', { user: req.user});
 });
 
 app.listen(port, () => {

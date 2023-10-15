@@ -66,7 +66,6 @@ function refreshCar(){
     });
 
     document.getElementById("littlecar").innerHTML = qtdP + "<br>produto(s)";
-    console.log(qtdP);
 }
 
 function addLittleCar(){

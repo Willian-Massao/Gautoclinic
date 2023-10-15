@@ -5,7 +5,7 @@ body{
     font-family: "Ubuntu", sans-serif;
 }
 header{
-    background-color: #fff;
+    background-color: #131921;
     box-shadow: 10px 10px 10px rgba(0,0,0,.05);
 }
 .header-container{
@@ -14,7 +14,7 @@ header{
     flex-direction: row;
     justify-content: space-evenly;
     align-items: center;
-    height: 150px;
+    height: 100px;
     width: 100%;
 }
 .logo_container{
@@ -63,7 +63,7 @@ i{
     width: 50%;
     min-width: 300px;
     padding: 15px;
-    background-color: #f7f7f7;
+    background-color: #fff;
     border: 1px #c3c3c3 solid;
     border-radius: 10px;
 }
@@ -74,7 +74,14 @@ i{
     border-radius: 5px;
     font-size: 16px;
     padding-left: 5px;
-    background-color: #f7f7f7;
+    background-color: #fff;
+}
+header>a, header strong, header i, header p{
+    color: #fff;
+    margin: 0;
+}
+.header-search-bar i,.header-carrinho i{
+    color: #000;
 }
 input:focus{
     outline: none;
@@ -84,7 +91,7 @@ input:focus{
     width: 40px;
     border: none;
     border-radius: 5px;
-    background-color: #f7f7f7;
+    background-color: #fff;
     font-size: 16px;
     z-index: 3;
 }
@@ -101,6 +108,26 @@ input:focus{
     flex-direction: row;
     align-items: center;
     justify-content: space-evenly;
+}
+#header-list{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 40px;
+    justify-content: space-evenly;
+    background-color: #232f3e;
+}
+.header-sections{
+    width: 9.09%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+}
+.header-sections:hover{
+    width: calc(9.09% - 2px);
+    height: calc(100% - 2px);
+    border: 1px #fff solid;
 }
 main{
     width: 82%;
@@ -366,9 +393,10 @@ p#subtotal{
 .product-main{
     display: flex;
     flex-direction: row;
+    justify-content: space-evenly;
     background-color: #fff;
     padding: 30px;
-    width: 50%;
+    min-width: 50%;
     height: 100%;
 }
 #summary.summary-product{
@@ -400,6 +428,9 @@ p#subtotal{
 }
 .user-end i{
     font-size: 15px;
+}
+#info-container{
+    width: 300px;
 }
 .product-rating{
     height: 15px;
@@ -461,7 +492,7 @@ tr img{
     padding: 20px;
 }
 .footer {
-    background-color: #333;
+    background-color: #232f3e;
     color: #fff;
     padding: 30px 0;
 }
@@ -507,4 +538,71 @@ tr img{
 
 .footer a:hover {
     color: #007bff;
+}
+.product-container.pag{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: start;
+}
+.dados-cad{
+    width: 300px;
+    padding: 30px;
+    margin: 30px;
+    margin-top: 90px;
+    padding-bottom: 15px;
+    border-radius: 5px;
+    border: 1px #dbdbdb solid;
+}
+.basic-form{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.half-form{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.half-form>.basic-form{
+    width: 45%;
+    height: 100%;
+}
+.basic-form input{
+    width: calc( 100% - 8px);
+    height: 30px;
+    border-radius: 5px;
+    border: 1px #dbdbdb solid;
+    margin: 5px;
+}
+.dados-cad select{
+    width: 100%;
+    height: 30px;
+    border-radius: 5px;
+    border: 1px #dbdbdb solid;
+    margin: 5px;
+}
+.form-valid{
+    display: flex;
+    flex-direction: row;
+}
+.form-valid select{
+    width: 50%;
+}
+.tittle{
+    width: 100%;
+}
+.basic-form button{
+    width: 100%;
+    height: 40px;
+    border-radius: 5px;
+    border: none;
+    background-color: #34ff45;
+    color: #fff;
+    font-weight: bold;
+    margin-top: 15px;
+}
+.basic-form button:active{
+    background-color: #00b300;
 }
