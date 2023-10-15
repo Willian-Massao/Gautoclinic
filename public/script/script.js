@@ -18,7 +18,7 @@ function createProduct(Name, Price, Img, Class, Id, isOnly) {
     // criar div por classe
     if(document.getElementById(Class) == null){
         $("main").append(`
-        <div class="product-container${isOnly ? "-only": ""}" id="${Class}">
+        <div class="product-container${isOnly ? "-only": ""}" id="${Class.replaceAll(" ", "_")}">
             <div class="product-text">
                 <p class="product-class">${Class}s</p>
                 <a href="/section/${Class}"><h3>Veja Mais</h3></a>
@@ -34,11 +34,12 @@ function createProduct(Name, Price, Img, Class, Id, isOnly) {
         );
     }
     //  isOnly ? addProductOnly(Name, Price, Img, Class, Id) : addProduct(Name, Price, Img, Class, Id);
+    console.log(Name, Price, Img, Class, Id);
     addProduct(Name, Price, Img, Class, Id, isOnly ? true : false);
 }
 
 function addProduct(Name, Price, Img, Class, Id, isOnly){
-    $(`#${Class}`).children(".scroll-effect").children(`.product-cards-cotainer${isOnly ? "-only": ""}`)
+    $(`#${Class.replaceAll(" ", "_")}`).children(".scroll-effect").children(`.product-cards-cotainer${isOnly ? "-only": ""}`)
     .append(`
     <a class="product-cards${isOnly ? "-only": ""}" href="/product/${Id}">
             <div class="img-container">

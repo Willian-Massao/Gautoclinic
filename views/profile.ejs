@@ -15,6 +15,33 @@
                 </div>
             </div>
             <div id="itens-owner">
+                <form class="action-container" action="/item/add" method="post" enctype="multipart/form-data">
+                    <div class="half-form">
+                        <div class="basic-form">
+                            <label for="">Nome</label>
+                            <input type="text" name="name" id="name">
+                        </div>
+                        <div class="basic-form">
+                            <label for="">Preço</label>
+                            <input type="text" name="price" id="price">
+                        </div>
+                    </div>
+                    <div class="basic-form">
+                        <label for="">Descrição</label>
+                        <input type="text" name="description" id="description">
+                    </div>
+                    <div class="basic-form">
+                        <label for="">Sessão</label>
+                        <input type="text" name="section" id="section">
+                    </div>
+                    <div class="basic-form">
+                        <label for="">Imagem</label>
+                        <input type="file" name="image" id="image">
+                    </div>
+                    <div class="basic-form">
+                        <input type="submit" value="Enviar">
+                    </div>
+                </form>
                 <table>
                     <tr>
                         <th>Imagem</th>

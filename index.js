@@ -8,6 +8,24 @@ const LocalStrategy = require('passport-local').Strategy;
 const passport = require('passport');
 const bcrypt = require('bcryptjs');
 const flash = require('connect-flash');
+const multer = require('multer');
+
+// configuração do multer
+const storage = multer.diskStorage({
+    destination: function(req, file, cb){
+        cb(null, 'public/products');
+    },
+    filename: function(req, file, cb){
+        
+        const extension = file.mimetype.split('/')[1];
+
+        const fileName = require('crypto').randomBytes(10).toString('hex');
+
+        cb(null, `${fileName}.${extension}`);
+    }
+});
+
+const upload = multer({ storage });
 
 // database
 const pessoa = require("./database/pessoaDB.js");
@@ -92,6 +110,7 @@ app.use(express.urlencoded({limit: '50mb', extended: true}));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+
 // Configuração da sessão
 app.use(session({ secret: 'seu-segredo', resave: false, saveUninitialized: false }));
 app.use(passport.initialize());
@@ -123,7 +142,7 @@ app.post('/cadastro', (req, res) => {
     })
 });
 
-app.post('/carrinho', async(req, res) => {
+app.post('/carrinho' ,async(req, res) => {
     const item = new itens();
     let id = req.body.itemArr;
     let itemList = [];
@@ -139,6 +158,19 @@ app.post('/carrinho', async(req, res) => {
     }
     res.send(itemList);
 });
+
+app.post('/item/add', upload.single('image') , (req, res) => {
+    const item = new itens();
+    const { name, price, description, section } = req.body;
+    const image = req.file.filename;
+    const userId = req.user.id;
+
+    console.log(name, price, description, section, image);
+
+    item.insertItem({name, price, image, section, description, userId}).then(
+        res.redirect('/')
+    );
+})
 
 // Rotas get
 app.get('/login', (req, res) => {
@@ -185,6 +217,8 @@ app.get('/product/:id', (req, res) => {
     const item = new itens();
 
     item.findItemById(req.params.id).then( itens =>{
+        console.log(itens);
+        itens.price = itens.price.toFixed(2);
         if(req.isAuthenticated()){
             res.render('productlogged', {itens: itens, user: req.user});
         }else{

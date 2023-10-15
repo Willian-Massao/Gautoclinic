@@ -25,8 +25,8 @@
                     </div>
                     <hr>
                     <div class="price">
-                        <p id="preco-info" class="price-only">R$ <%= itens.price.split(",")[0] %></p>
-                        <p id="preco-info" class="price-only price-cents"><%= itens.price.split(",")[1] %></p>
+                        <p id="preco-info" class="price-only">R$ <%= itens.price.toString().split(".")[0] %></p>
+                        <p id="preco-info" class="price-only price-cents"><%= itens.price.toString().split(".")[1] %></p>
                     </div>
                     <div class="description">
                         <p>
@@ -39,8 +39,8 @@
                 <div class="summary-box product-only-sum">
                     <div>
                         <div class="price">
-                            <p id="preco-info" class="price-only">R$ <%= itens.price.split(",")[0] %></p>
-                            <p id="preco-info" class="price-only price-cents"><%= itens.price.split(",")[1] %></p>
+                            <p id="preco-info" class="price-only">R$ <%= itens.price.toString().split(".")[0] %></p>
+                            <p id="preco-info" class="price-only price-cents"><%= itens.price.toString().split(".")[1] %></p>
                         </div>
                         <p class="user-end"><i class="fi fi-rr-marker"></i> user.endereco </p>
                     </div>

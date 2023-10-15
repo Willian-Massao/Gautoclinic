@@ -27,7 +27,7 @@ module.exports  = class itens{
     // create
     async insertItem(item){
         openDb().then(db=>{
-            db.exec(`insert into item (name, price, image, section) values ('${item.name}', '${item.price}', '${item.image}', '${item.section}')`)
+            db.exec(`insert into item (name, price, image, section, description, userId) values ('${item.name}', '${item.price}', '${item.image}', '${item.section}', '${item.description}', '${item.userId}')`)
             .then(err => {
                 console.log("Item inserido com sucesso!");
             }).catch(err => {
