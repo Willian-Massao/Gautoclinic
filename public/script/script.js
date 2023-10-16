@@ -34,7 +34,6 @@ function createProduct(Name, Price, Img, Class, Id, isOnly) {
         );
     }
     //  isOnly ? addProductOnly(Name, Price, Img, Class, Id) : addProduct(Name, Price, Img, Class, Id);
-    console.log(Name, Price, Img, Class, Id);
     addProduct(Name, Price, Img, Class, Id, isOnly ? true : false);
 }
 
