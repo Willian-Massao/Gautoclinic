@@ -147,8 +147,6 @@ app.post('/carrinho' ,async(req, res) => {
     let id = req.body.itemArr;
     let itemList = [];
 
-    console.log(id);
-
     try{
         for(let i in id){
             itemList.push(await item.findItemById(id[i]));
@@ -164,8 +162,6 @@ app.post('/item/add', upload.single('image') , (req, res) => {
     const { name, price, description, section } = req.body;
     const image = req.file.filename;
     const userId = req.user.id;
-
-    console.log(name, price, description, section, image);
 
     item.insertItem({name, price, image, section, description, userId}).then(
         res.redirect('/profile')
@@ -217,7 +213,6 @@ app.get('/product/:id', (req, res) => {
     const item = new itens();
 
     item.findItemById(req.params.id).then( itens =>{
-        console.log(itens);
         itens.price = itens.price.toFixed(2);
         if(req.isAuthenticated()){
             res.render('productlogged', {itens: itens, user: req.user});
