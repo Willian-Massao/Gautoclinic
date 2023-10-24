@@ -16,11 +16,12 @@ function getItem(){
 
 function createProduct(Name, Price, Img, Class, Id, isOnly) {
     // criar div por classe
+    console.log(Class[Class.length-1] == "s" ? "" : "s");
     if(document.getElementById(Class.replaceAll(" ", "_")) == null){
         $("main").append(`
         <div class="product-container${isOnly ? "-only": ""}" id="${Class.replaceAll(" ", "_")}">
             <div class="product-text">
-                <p class="product-class">${Class}s</p>
+                <p class="product-class">${Class}${Class[Class.length-1] == "s" ? "" : "s"}</p>
                 <a href="/section/${Class}"><h3>Veja Mais</h3></a>
             </div>
             <div class="scroll-effect">

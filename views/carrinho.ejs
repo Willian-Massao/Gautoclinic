@@ -69,8 +69,6 @@
 
                 total = subtotal + frete;
 
-                console.log(subtotal);
-
                 document.getElementById("subtotal").innerHTML = `Subtotal (${carrinho} produtos): <strong>R$${subtotal.toFixed(2)}</strong>`;
                 document.getElementById("frete").innerHTML = `R$${frete.toFixed(2)}`;
                 document.getElementById("total").innerHTML = `R$${total.toFixed(2)}`;
@@ -108,6 +106,7 @@
                 }
             }
             function qtdButton(dir, id, val){
+                console.log(item)
                 let qtd = parseInt(document.getElementById("qtd-input-" + val).value);
                 switch (dir){
                     case 0:
@@ -124,6 +123,13 @@
                         item[i].qtd = parseInt(document.getElementById("qtd-input-" + val).value);
                     }
                 });
+
+                if(qtd == 0){
+                    for(let i = 0; i<item.length; i++){
+                        item[i].name == document.getElementById("qtd-input-0").parentNode.parentNode.childNodes[1].childNodes[1].textContent ? item.splice(i, 1) : console.log("não encontrado");
+                    }
+                    console.log(item)
+                }
                 
                 localStorage.setItem("item", JSON.stringify(item));
                 total()
