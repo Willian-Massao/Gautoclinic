@@ -8,6 +8,7 @@ module.exports = class pessoa{
                 id integer primary key autoincrement,
                 name varchar(255),
                 email varchar(255),
+                end varchar(255),
                 password varchar(255),
                 salt varchar(255)
             )`)
@@ -24,7 +25,12 @@ module.exports = class pessoa{
     // create
     async insertPessoa(pessoa){
         openDb().then(db=>{
-            db.exec(`insert into user (name, email, password, salt) values ('${pessoa.name}','${pessoa.email}', '${pessoa.password}', '${pessoa.salt}')`)
+            db.exec(`insert into user (name, email, password, salt) values 
+            ('${pessoa.name}',
+            '${pessoa.email}',
+            '${pessoa.end}',
+            '${pessoa.password}',
+            '${pessoa.salt}')`)
             .then(err => {
                 console.log("Pessoa inserida com sucesso!");
             }).catch(err => {
@@ -50,8 +56,8 @@ module.exports = class pessoa{
     async findPessoaById(id){
         try {
             var db = await openDb();
-            var result = await db.get(`SELECT * FROM "user" WHERE "id" = '${id}'`);
-            //console.log(`SELECT * FROM "user" WHERE "email" = '${email}'`);
+            var result = await db.get(`SELECT * FROM "user" WHERE "id" = ${id}`);
+            //console.log(`SELECT * FROM "user" WHERE "id" = ${id}`);
             //console.log(result);
             return result;
         }catch(err){
@@ -60,7 +66,7 @@ module.exports = class pessoa{
     }
 
     // update
-    async updatePessoa(id){
+    async updatePessoa(pessoa){
         openDb().then(db=>{
             db.get(`update user set name = '${pessoa.name}', email = '${pessoa.email}', password = '${pessoa.password}', salt = '${pessoa.salt}' where id = '${id}'`)
             .then(row =>{

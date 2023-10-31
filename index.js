@@ -121,7 +121,7 @@ app.use(flash());
 app.post('/login', passport.authenticate('local', { successRedirect: '/', failureRedirect: '/login', failureFlash: true  }));
 
 app.post('/cadastro', (req, res) => {
-    const { name, email, password } = req.body;
+    const { name, email, password , end} = req.body;
     // Verifica se o email já está cadastrado
     const usuario = new pessoa();
 
@@ -134,7 +134,7 @@ app.post('/cadastro', (req, res) => {
         bcrypt.genSalt(10, (err, salt) => {
             bcrypt.hash(password, salt, (err, hash) => {
                 // Salva o usuário no banco de dados
-                usuario.insertPessoa({name, email, password: hash, salt}).then(
+                usuario.insertPessoa({name, email, end, password: hash, salt}).then(
                     res.redirect('/login')
                 );
             });
@@ -211,11 +211,14 @@ app.get('/section/:sec', (req, res) => {
 
 app.get('/product/:id', (req, res) => {
     const item = new itens();
+    const user = new pessoa();
 
     item.findItemById(req.params.id).then( itens =>{
-        itens.price = itens.price.toFixed(2);
+            itens.price = itens.price.toFixed(2);
         if(req.isAuthenticated()){
-            res.render('productlogged', {itens: itens, user: req.user});
+            user.findPessoaById(req.user.id).then( user =>{
+                res.render('productlogged', {itens: itens, user: user});
+            })
         }else{
             res.render('product', {itens: itens});
         }
