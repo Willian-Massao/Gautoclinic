@@ -25,7 +25,13 @@ module.exports = class pessoa{
     // create
     async insertPessoa(pessoa){
         openDb().then(db=>{
-            db.exec(`insert into user (name, email, password, salt) values 
+            console.log(`insert into user (name, email, end, password, salt) values 
+            ('${pessoa.name}',
+            '${pessoa.email}',
+            '${pessoa.end}',
+            '${pessoa.password}',
+            '${pessoa.salt}')`)
+            db.exec(`insert into user (name, email, end, password, salt) values 
             ('${pessoa.name}',
             '${pessoa.email}',
             '${pessoa.end}',
@@ -68,7 +74,7 @@ module.exports = class pessoa{
     // update
     async updatePessoa(pessoa){
         openDb().then(db=>{
-            db.get(`update user set name = '${pessoa.name}', email = '${pessoa.email}', password = '${pessoa.password}', salt = '${pessoa.salt}' where id = '${id}'`)
+            db.get(`update user set name = '${pessoa.name}', email = '${pessoa.email}',end = '${pessoa.end}', password = '${pessoa.password}', salt = '${pessoa.salt}' where id = '${id}'`)
             .then(row =>{
                 console.log(row);
                 return row;
