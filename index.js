@@ -9,6 +9,8 @@ const passport = require('passport');
 const bcrypt = require('bcryptjs');
 const flash = require('connect-flash');
 const multer = require('multer');
+const xml = require('xml');
+const xml2js = require('xml-js');
 
 // configuração do multer
 const storage = multer.diskStorage({
@@ -92,6 +94,25 @@ function ensureAuthenticated(req, res, next) {
     res.redirect('/login');
 }
 
+function ensureAdmin(req, res, next) {
+    const user = new pessoa();
+    let admin = false;
+    try{
+        user.findPessoaById(req.user.id).then( user => {
+            if(user.admin == 1){
+                admin = true;
+            }
+            if (req.isAuthenticated() && admin) {
+                return next();
+            }
+            res.redirect('/login');
+        })
+    }catch(err){
+        console.log(err);
+    }
+    //verificar no banco de dados se o usuario é admin
+}
+
 // Conexão com o banco de dados
 //connection.authenticate()
 //.then(() => {
@@ -121,7 +142,7 @@ app.use(flash());
 app.post('/login', passport.authenticate('local', { successRedirect: '/', failureRedirect: '/login', failureFlash: true  }));
 
 app.post('/cadastro', (req, res) => {
-    const { name, email, password , end} = req.body;
+    const { name, email, password , end, tel, cpf} = req.body;
     // Verifica se o email já está cadastrado
     const usuario = new pessoa();
 
@@ -134,7 +155,7 @@ app.post('/cadastro', (req, res) => {
         bcrypt.genSalt(10, (err, salt) => {
             bcrypt.hash(password, salt, (err, hash) => {
                 // Salva o usuário no banco de dados
-                usuario.insertPessoa({name, email, end, password: hash, salt}).then(
+                usuario.insertPessoa({name, email, end, cpf, tel, password: hash, salt}).then(
                     res.redirect('/login')
                 );
             });
@@ -157,16 +178,48 @@ app.post('/carrinho' ,async(req, res) => {
     res.send(itemList);
 });
 
-app.post('/item/add', upload.single('image') , (req, res) => {
+app.post('/debug/add/item', upload.single('image') , (req, res) => {
     const item = new itens();
-    const { name, price, description, section } = req.body;
+    const { name, price, description, section, userId } = req.body;
     const image = req.file.filename;
-    const userId = req.user.id;
 
     item.insertItem({name, price, image, section, description, userId}).then(
-        res.redirect('/profile')
+        res.redirect('/debug/tabela/item')
     );
 })
+
+// update item
+app.post('/debug/update/item', upload.single('image') , (req, res) => {
+    const item = new itens();
+
+    const { name, price, description, section, userId, id } = req.body;
+    const image = req.file.filename;
+
+    console.log(req.body);
+
+    item.updateItem({name, price, image, section, description, userId, id}).then(
+        res.redirect('/debug/tabela/item')
+    );
+});
+
+app.post('/debug/delete/item', (req, res) => {
+    const item = new itens();
+
+    item.deleteItem(req.body.id).then(
+        console.log("Item deletado com sucesso!"),
+    ).finally(
+        res.redirect('/debug/tabela/item')
+    );
+});
+
+app.post('/debug/delete/pessoa', (req, res) => {
+    const user = new pessoa();
+
+    user.deletePessoa(req.body.id).then( result =>{
+        console.log("Pessoa deletada com sucesso!");
+        res.redirect('/debug/tabela/pessoa');
+    })
+});
 
 // Rotas get
 app.get('/login', (req, res) => {
@@ -224,6 +277,7 @@ app.get('/product/:id', (req, res) => {
         }
     })
 });
+
 app.get('/carrinho', (req, res) => {
     const item = new itens();
 
@@ -237,7 +291,109 @@ app.get('/carrinho', (req, res) => {
 });
 
 app.get('/pagamento',ensureAuthenticated, (req, res) => {
-    res.render('pagamento', { user: req.user});
+    const user = new pessoa();
+
+    user.findPessoaById(req.user.id).then( user =>{
+        res.render('pagamento', { user: user});
+    });
+});
+
+app.get('/debug/pessoa/xml', ensureAdmin, (req, res) => {
+    const user = new pessoa();
+    user.executeQuery("SELECT * FROM user").then( user =>{
+        let xml = `<?xml version="1.0" encoding="UTF-8"?>`
+        xml += `<usuarios>`
+        user.forEach(element => {
+            xml += `<usuario>`
+            xml += `<id>${element.id}</id>`
+            xml += `<name>${element.name}</name>`
+            xml += `<email>${element.email}</email>`
+            xml += `<end>${element.end}</end>`
+            xml += `<password>${element.password}</password>`
+            xml += `<salt>${element.salt}</salt>`
+            xml += `</usuario>`
+        });
+        xml += `</usuarios>`
+        res.header('Content-Type', 'application/xml')
+        res.status(200).send(xml)
+    })
+});
+
+app.get('/debug/pessoa/json', ensureAdmin, (req, res) => {
+    const user = new pessoa();
+
+    user.executeQuery("SELECT * FROM user").then( user =>{
+        res.json(user);
+    })
+});
+
+app.get('/debug/item/xml', ensureAdmin, (req, res) => {
+    const item = new itens();
+    item.executeQuery("SELECT * FROM item").then( item =>{
+        let xml = ``
+        xml += `<?xml version="1.0" encoding="UTF-8"?>`
+        xml += `<itens>`
+        item.forEach(element => {
+            xml += `<item>`
+            xml += `<id>${element.id}</id>`
+            xml += `<name>${element.name}</name>`
+            xml += `<price>${element.price}</price>`
+            xml += `<image>${element.image}</image>`
+            xml += `<section>${element.section}</section>`
+            xml += `<description>${element.description}</description>`
+            xml += `<userId>${element.userId}</userId>`
+            xml += `</item>`
+        });
+        xml += `</itens>`
+        res.header('Content-Type', 'application/xml')
+        res.status(200).send(xml)
+    })
+});
+
+app.get('/debug/item/json', ensureAdmin, (req, res) => {
+    const item = new itens();
+
+    item.executeQuery("SELECT * FROM item").then( item =>{
+        res.json(item);
+    })
+});
+
+app.get('/debug/tabela/pessoa', ensureAdmin, (req, res) => {
+    const user = new pessoa();
+
+    user.executeQuery("SELECT * FROM user").then( result =>{
+        result.forEach(element => {
+            element.password = "🤫 é segredo";
+            element.salt = "ninguem pode saber 🤗";
+        });
+        res.render('debug',{ result: result} );
+    })
+});
+
+app.get('/debug/tabela/item', ensureAdmin, (req, res) => {
+    const item = new itens();
+
+    item.executeQuery("SELECT * FROM item").then( result =>{
+        res.render('debug',{ result: result} );
+    })
+});
+
+// update
+app.get('/debug/update/pessoa', ensureAdmin, (req, res) => {
+    const user = new pessoa();
+
+    user.findPessoaById(req.user.id).then( user =>{
+        res.render('update', { user: user});
+    })
+});
+
+// item update
+app.get('/debug/update/item', ensureAdmin, (req, res) => {
+    const item = new itens();
+
+    item.findItemById(req.body.id).then( item =>{
+        res.render('update', { item: item});
+    })
 });
 
 app.listen(port, () => {

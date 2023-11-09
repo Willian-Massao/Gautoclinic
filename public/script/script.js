@@ -14,6 +14,14 @@ function getItem(){
     return item;
 }
 
+function format(mask, number) {
+    var s = ''+number, r = '';
+    for (var im=0, is = 0; im<mask.length && is<s.length; im++) {
+      r += mask.charAt(im)=='X' ? s.charAt(is++) : mask.charAt(im);
+    }
+    return r;
+}    
+
 function createProduct(Name, Price, Img, Class, Id, isOnly) {
     // criar div por classe
     console.log(Class[Class.length-1] == "s" ? "" : "s");

@@ -11,79 +11,13 @@
                 </div>
                 <div class="profile-info">
                     <h1 class="profile-info-name"><%= user.name %></h1>
+                    <p class="profile-info-cpf"><%= user.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4") %></p>
                     <p class="profile-info-email"><%= user.email %></p>
+                    <p class="profile-info-tel"><%= user.tel.replace(/^\(?([0-9]{2})\)?([0-9]{4,5})\-?([0-9]{4})$/mg, `($1)$2-$3`) %></p>
                 </div>
-            </div>
-            <div id="itens-owner">
-                <form class="action-container" action="/item/add" method="post" enctype="multipart/form-data">
-                    <div class="half-form">
-                        <div class="basic-form">
-                            <label for="">Nome</label>
-                            <input type="text" name="name" id="name">
-                        </div>
-                        <div class="basic-form">
-                            <label for="">Preço</label>
-                            <input type="text" name="price" id="price">
-                        </div>
-                    </div>
-                    <div class="basic-form">
-                        <label for="">Descrição</label>
-                        <input type="text" name="description" id="description">
-                    </div>
-                    <div class="basic-form">
-                        <label for="">Sessão</label>
-                        <input type="text" name="section" id="section">
-                    </div>
-                    <div class="basic-form">
-                        <label for="">Imagem</label>
-                        <input type="file" name="image" id="image">
-                    </div>
-                    <div class="basic-form">
-                        <input type="submit" value="Enviar">
-                    </div>
-                </form>
-                <table>
-                    <tr>
-                        <th>Imagem</th>
-                        <th>preço</th>
-                        <th>descrição</th>
-                    </tr>
-                <% for(let i = 0; i < itens.length; i++){ %>
-                    <tr>
-                        <td id="table-img">
-                            <img src="/products/<%= itens[i].image %>" alt="">
-                        </td>
-                        <td id="table-price">
-                            <p>R$ <%= itens[i].price %></p>
-                        </td>
-                        <td id="table-description">
-                            <p> <%= itens[i].description %></p>
-                        </td>
-                    </tr>
-                <% } %>
-                </table>            
             </div>
         </div>
     </main>
     <%- include ("partials/footer.ejs") %>
-    <script>
-        console.log("<%= itens %>");
-        for(let i = 0; i < itens.length; i++){
-            console.log(itens[i]);
-            $("#itens-owner").append(`
-                <div class="item-owner-container">
-                    <div class="item-owner-img">
-                        <img src="/products/${itens[i].image}" alt="">
-                    </div>
-                    <div class="item-owner-price">
-                        <p>R$ ${itens[i].price}</p>
-                    </div>
-                    <div class="item-owner-description">
-                        <p> ${itens[i].description}</p>
-                    </div>
-                </div>
-            `);
-        }
-    </script>
 </body>
 </html>

@@ -9,20 +9,20 @@
                 <p class="tittle"> Dados cadastrais</p>
                 <div class="basic-form">
                     <label for="nome">Nome completo</label><br>
-                    <input type="text" name="nome" placeholder="Digite seu nome completo">
+                    <input type="text" name="nome" placeholder="Digite seu nome completo" value="<%= user.name %>">
                 </div>
                 <div class="basic-form">
                     <label for="email">E-mail</label><br>
-                    <input type="text" name="email" placeholder="Digite seu melhor E-mail">
+                    <input type="text" name="email" placeholder="Digite seu melhor E-mail" value="<%= user.email %>">
                 </div>
                 <div class="half-form">
                     <div class="basic-form">
                         <label for="tel">Celular</label><br>
-                        <input type="tel" name="tel" placeholder="(00)00000-0000">
+                        <input type="tel" name="tel" placeholder="(00)00000-0000" value="<%= user.tel %>">
                     </div>
                     <div class="basic-form">
                         <label for="cpf">CPF/CNPJ</label><br>
-                        <input type="text" name="cpf" placeholder="xxx.xxx.xxx-xx">
+                        <input type="text" name="cpf" placeholder="xxx.xxx.xxx-xx" value="<%= user.cpf %>">
                     </div>
                 </div>
             </div>
@@ -76,7 +76,7 @@
                     total += x.price * i;
                 });
                 for(let i = 0; i < 12; i++){
-                    $("#parcela").append(`<option value="${i+1}">${i+1}x de R$ ${((total/12)*(i+1)).toFixed(2)}</option>`);
+                    $("#parcela").append(`<option value="${i+1}">${i+1}x de R$ ${(((total*(1+(i*0.016)))/(i+1))).toFixed(2)} ${((i*0.016)*100).toFixed(1)}% de juros</option>`);
                 }
             });
         }catch(err){

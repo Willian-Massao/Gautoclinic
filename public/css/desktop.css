@@ -446,6 +446,9 @@ p#subtotal{
 .product-info-button.product-button{
     border-radius: 20px;
 }
+.product-info-button.product-button:active{
+    transform: scale(0.98);
+}
 .user-end i{
     font-size: 15px;
 }

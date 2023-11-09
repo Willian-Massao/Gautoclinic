@@ -6,13 +6,13 @@ module.exports  = class itens{
     async createTable(){
         openDb().then(db=>{
             db.exec(`create table if not exists item (
-                id integer primary key autoincrement,
-                name varchar(255),
-                price int(255),
+                id integer primary key autoincrement not null,
+                name varchar(255) not null,
+                price int(255) not null,
                 image varchar(255),
-                section varchar(255),
-                description varchar(255),
-                userId int(255)
+                section varchar(255) not null,
+                description varchar(255) not null,
+                userId int not null
             )`)
             .then(err => {
                 console.log("Tabela item criada com sucesso!");
@@ -52,11 +52,49 @@ module.exports  = class itens{
             console.log(err);
         }
     }
+    // update
+    async updateItem(item){
+        try {
+            var db = await openDb();
+            var result = await db.run(`UPDATE "item" SET 
+                "name" = '${item.name}',
+                "price" = '${item.price}',
+                "image" = '${item.image}',
+                "section" = '${item.section}',
+                "description" = '${item.description}',
+                "userId" = '${item.userId}'
+                WHERE "id" = '${item.id}'`);
+            return result;
+        }catch(err){
+            console.log(err);
+        }
+    }
 
     async findItemAll(){
         try {
             var db = await openDb();
             var result = await db.all(`SELECT * FROM "item"`);
+            return result;
+        }catch(err){
+            console.log(err);
+        }
+    }
+
+    // delete
+    async deleteItem(id){
+        try {
+            var db = await openDb();
+            var result = await db.run(`DELETE FROM "item" WHERE "id" = '${id}'`);
+            return result;
+        }catch(err){
+            console.log(err);
+        }
+    }
+
+    async executeQuery(query){
+        try {
+            var db = await openDb();
+            var result = await db.all(query);
             return result;
         }catch(err){
             console.log(err);
