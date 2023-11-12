@@ -3,6 +3,7 @@ body{
     padding: 0;
     background-color: #eaeded;
     font-family: "Ubuntu", sans-serif;
+    min-width: 400px;
 }
 header{
     background-color: #131921;
@@ -37,6 +38,7 @@ header{
 }
 .header-login{
     width: 158px;
+    min-width: 140px;
     margin-right: 15px;
 }
 .header-login a{
@@ -70,6 +72,11 @@ i{
     background-color: #fff;
     border: 1px #c3c3c3 solid;
     border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
 }
 .header-search-bar input{
     height: 35px;
@@ -84,6 +91,73 @@ header>a, header strong, header i, header p{
     color: #fff;
     margin: 0;
 }
+
+#search-result{
+    background-color: #131921;
+    width: 100%;
+    min-width: 300px;
+    height: 450px;
+    display: none;
+    position: absolute;
+    top: 1;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    border-radius: 0px 0px 5px 5px;
+    margin-left: -20px;
+    margin-top: 676px;
+}
+#search-result>ul{
+    width: 100%;
+    height: 100%;
+    list-style: none;
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+}
+
+#search-result li {
+    display: flex;
+    align-items: center;
+    margin: 10px;
+    padding: 10px;
+    border: thin solid #384b64;
+    border-radius: 10px;
+    box-shadow: 0px 0px 5px 2px #384b64;
+    background-color: #232f3e;
+}
+
+#search-result a {
+    text-decoration: none;
+    color: #333;
+}
+
+.search-list-container {
+    display: flex;
+    align-items: center;
+}
+.search-list-img-container{
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.search-list-img {
+    object-fit: cover;
+    margin-right: 20px;
+    border-radius: 10px;
+    flex-shrink:  0;
+    -webkit-flex-shrink: 0;
+    max-width:  100%;
+    max-height:  100%;
+}
+
+.search-list-p {
+    font-size: 18px;
+    font-weight: bold;
+}
+
 .header-search-bar i,.header-carrinho i{
     color: #000;
 }
@@ -101,6 +175,7 @@ input:focus{
 }
 .header-carrinho{
     width: 140px;
+    min-width: 140px;
     height: 65px;
     background-color: #f7f7f7;
     border: 1px #c3c3c3 solid;
@@ -229,11 +304,6 @@ main{
     border: 1px #dfdfdf solid;
     background-color: #fff;
     border-radius: 5px;
-}
-.product-cards:hover, .product-cards-only:hover{
-    display: none;
-    border: 2px #ff6969 solid;
-    transform: scale(1.01);
 }
 .product-price{
     width: 100%;

@@ -21,16 +21,16 @@
                         <input type="tel" name="tel" placeholder="(00)00000-0000" value="<%= user.tel %>">
                     </div>
                     <div class="basic-form">
-                        <label for="cpf">CPF/CNPJ</label><br>
+                        <label for="cpf">CPF</label><br>
                         <input type="text" name="cpf" placeholder="xxx.xxx.xxx-xx" value="<%= user.cpf %>">
                     </div>
                 </div>
             </div>
             <div class="dados-cad">
-                <p class="tittle"> Selecionar Pagamento</p>
+                <p class="tittle"> Selecionar Pagamento</p><p id="error"></p>
                 <div class="basic-form">
-                    <label for="nome">Número do cartão</label><br>
-                    <input type="text" name="nome" placeholder="Digite o numero do cartão">
+                    <label for="card">Número do cartão</label><br>
+                    <input type="text" name="card" placeholder="Digite o numero do cartão" oninput="validarCard()">
                 </div>
                 <div class="basic-form">
                     <label for="email">Seu nome impresso no cartão</label><br>

@@ -18,6 +18,10 @@ body {
     width: 420px;
 }
 
+.input-field:focus{
+    outline: none;
+}
+
 .login-box, .profile-box {
     padding: 30px;
     text-align: center;

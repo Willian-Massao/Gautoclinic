@@ -4,6 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/login.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="/script/script.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        function validar(){
+            if(validarName() && validarEmail() && validarCpf() && validarPhone() && validarPassword()){
+                $("button[type='submit']").removeAttr("disabled");
+            }else{
+                $("button[type='submit']").attr("disabled", "disabled");
+            }
+        }
+        $(document).keyup(function(){
+            validar();
+        });
+
+    </script>
     <title>Página de Login</title>
 </head>
 <body>
@@ -11,11 +27,11 @@
         <div class="login-box">
             <h1>Cadastro</h1>
             <form class="login-form" method="post" action="/cadastro">
-                <input type="text" placeholder="name" name="name" class="input-field">
-                <input type="text" placeholder="email" name="email" class="input-field">
-                <input type="text" placeholder="endereço" name="end" class="input-field">
-                <input type="text" placeholder="cpf" name="cpf" class="input-field">
-                <input type="text" placeholder="telefone" name="tel" class="input-field">
+                <input type="text" placeholder="name" name="name" class="input-field" oninput="validarName()">
+                <input type="text" placeholder="email" name="email" class="input-field" oninput="validarEmail()">
+                <input type="text" placeholder="endereço" name="end" class="input-field" oninput="validarEnd()">
+                <input type="text" placeholder="cpf" name="cpf" class="input-field" oninput="validarCpf()">
+                <input type="text" placeholder="telefone" name="tel" class="input-field" oninput="validarPasswd()">
                 <input type="password" placeholder="password" name="password" class="input-field">
                 <button type="submit" class="login-button">Cadastrar</button>
             </form>

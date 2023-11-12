@@ -7,6 +7,8 @@
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-solid-straight/css/uicons-solid-straight.css'>
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-brands/css/uicons-brands.css'>
+    <script src="/script/script.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
         function deleteById(id){
@@ -22,6 +24,7 @@
             // armazenar os valores da linha em um array
             const values = [];
             const trow = document.getElementById(`tr${ElementId}`);
+            let table = window.location.pathname.split("/")[window.location.pathname.split("/").length - 1];
             trow.childNodes.forEach(child => {
                 if(child.nodeName == "TD"){
                     values.push(child.innerHTML);
@@ -29,7 +32,7 @@
             });
             console.log(values);
             const keys = "<%= Object.keys(result[0]) %>".replaceAll(`"`, '').split(",");
-            trow.innerHTML = `<form action="/debug/update/item" method="post" id="fr${ElementId}" enctype="multipart/form-data"></form>`;
+            trow.innerHTML = `<form action="/debug/update/${table}" method="post" id="fr${ElementId}" <%= crypt %>></form>`;
             for(let i = 0; i < keys.length; i++){
                 if(keys[i] == "image"){
                     trow.innerHTML += `<td><input class="styled-input" type="file" name="${keys[i]}" id="${keys[i]}" form="fr${ElementId}"></td>`;
@@ -150,7 +153,7 @@
                     </td>
                 </tr>
             <% }) %>
-            <form action="/debug/add/item" method="post" id="my_form" enctype="multipart/form-data">
+            <form action="" method="post" id="my_form" <%= crypt %>>
                 <tr>
                     <% keys.forEach(key => { %>
                         <% if(key == "image"){ %>
@@ -164,6 +167,10 @@
                     </td>
                 </tr>
             </form>
+            <script>
+                let table = window.location.pathname.split("/")[window.location.pathname.split("/").length - 1];
+                document.getElementById("my_form").action = `/debug/add/${table}`;
+            </script>
         </tbody>
     </table>
 </body>

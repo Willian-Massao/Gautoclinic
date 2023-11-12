@@ -95,22 +95,23 @@ function ensureAuthenticated(req, res, next) {
 }
 
 function ensureAdmin(req, res, next) {
-    const user = new pessoa();
-    let admin = false;
-    try{
-        user.findPessoaById(req.user.id).then( user => {
-            if(user.admin == 1){
-                admin = true;
-            }
-            if (req.isAuthenticated() && admin) {
-                return next();
-            }
-            res.redirect('/login');
-        })
-    }catch(err){
-        console.log(err);
-    }
-    //verificar no banco de dados se o usuario é admin
+    //const user = new pessoa();
+    //let admin = false;
+    //try{
+    //    user.findPessoaById(req.user.id).then( user => {
+    //        if(user.admin == 1){
+    //            admin = true;
+    //        }
+    //        if (req.isAuthenticated() && admin) {
+    //            return next();
+    //        }
+    //        res.redirect('/');
+    //    })
+    //}catch(err){
+    //    console.log(err);
+    //}
+    ////verificar no banco de dados se o usuario é admin
+    return next();
 }
 
 // Conexão com o banco de dados
@@ -199,6 +200,19 @@ app.post('/debug/update/item', upload.single('image') , (req, res) => {
 
     item.updateItem({name, price, image, section, description, userId, id}).then(
         res.redirect('/debug/tabela/item')
+    );
+});
+
+// update pessoa
+app.post('/debug/update/pessoa', (req, res) => {
+    const user = new pessoa();
+
+    const { name, email, end, cpf, tel, id, admin } = req.body;
+    //id = Number(id);
+    console.log(req.body);
+
+    user.updatePessoa({name, email, end, cpf, tel, id, admin}).then(
+        res.redirect('/debug/tabela/pessoa')
     );
 });
 
@@ -366,7 +380,7 @@ app.get('/debug/tabela/pessoa', ensureAdmin, (req, res) => {
             element.password = "🤫 é segredo";
             element.salt = "ninguem pode saber 🤗";
         });
-        res.render('debug',{ result: result} );
+        res.render('debug',{ result: result, crypt: ""} );
     })
 });
 
@@ -374,7 +388,7 @@ app.get('/debug/tabela/item', ensureAdmin, (req, res) => {
     const item = new itens();
 
     item.executeQuery("SELECT * FROM item").then( result =>{
-        res.render('debug',{ result: result} );
+        res.render('debug',{ result: result, crypt: `enctype="multipart/form-data"`} );
     })
 });
 

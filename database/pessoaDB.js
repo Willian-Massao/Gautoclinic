@@ -86,9 +86,8 @@ module.exports = class pessoa{
             end = '${pessoa.end}',
             cpf = '${pessoa.cpf}',
             tel = '${pessoa.tel}',
-            admin = 0,
-            password = '${pessoa.password}',
-            salt = '${pessoa.salt}' where id = '${id}'`)
+            admin = '${pessoa.admin} '
+            where id = '${pessoa.id}'`)
             .then(row =>{
                 console.log(row);
                 return row;

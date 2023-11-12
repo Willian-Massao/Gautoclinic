@@ -6,7 +6,12 @@
             </a>
         </figure>
         <div class="header-search-bar">
-            <input type="text"><button><i class="fi fi-rs-search"></i></button>
+            <input type="text" placeholder="Pesquisar" id="search" oninput="makeListAppear()"><button><i class="fi fi-rs-search"></i></button>
+            <div id="search-result">
+                <ul id="search-list">
+                    
+                </ul>
+            </div>
         </div>
         <div class="header-user-interface">
             <div class="header-login">

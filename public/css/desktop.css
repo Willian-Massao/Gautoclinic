@@ -20,6 +20,21 @@ header{
     height: 100px;
     width: 100%;
 }
+@media(max-width: 1100px){
+    .header-container{
+        margin: auto;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+        align-items: center;
+        height: 100px;
+        width: 100%;
+    }
+    .logo_container{
+        display: none;
+    }
+}
 .logo_container{
     height: 50%;
     margin: 0;
@@ -64,21 +79,91 @@ i{
 .header-search-bar{
     height: 40px;
     width: 50%;
-    min-width: 300px;
+    min-width: 550px;
     padding: 15px;
     background-color: #fff;
     border: 1px #c3c3c3 solid;
     border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
 .header-search-bar input{
     height: 35px;
     width: calc(97% - 40px);
     border: none;
     border-radius: 5px;
-    font-size: 16px;
+    font-size: 18px;
     padding-left: 5px;
     background-color: #fff;
 }
+#search-result{
+    background-color: #131921;
+    width: calc(50% + 30px);
+    min-width: 580px;
+    height: 450px;
+    display: none;
+    position: absolute;
+    top: 1;
+    margin-top: 550px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    border-radius: 0px 0px 5px 5px;
+}
+#search-result>ul{
+    width: 100%;
+    height: 100%;
+    list-style: none;
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+}
+
+#search-result li {
+    display: flex;
+    align-items: center;
+    margin: 10px;
+    padding: 10px;
+    border: thin solid #384b64;
+    border-radius: 10px;
+    box-shadow: 0px 0px 5px 2px #384b64;
+    background-color: #232f3e;
+}
+
+#search-result a {
+    text-decoration: none;
+    color: #333;
+}
+
+.search-list-container {
+    display: flex;
+    align-items: center;
+}
+.search-list-img-container{
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.search-list-img {
+    object-fit: cover;
+    margin-right: 20px;
+    border-radius: 10px;
+    flex-shrink:  0;
+    -webkit-flex-shrink: 0;
+    max-width:  100%;
+    max-height:  100%;
+}
+
+.search-list-p {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+
 header>a, header strong, header i, header p{
     color: #fff;
     margin: 0;
@@ -96,7 +181,6 @@ input:focus{
     border-radius: 5px;
     background-color: #fff;
     font-size: 16px;
-    z-index: 3;
 }
 .header-carrinho{
     width: 140px;
@@ -226,7 +310,6 @@ main{
 }
 .product-cards:hover, .product-cards-only:hover{
     border: 2px #ff6969 solid;
-    transform: scale(1.01);
 }
 .product-price{
     width: 100%;
