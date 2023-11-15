@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-straight/css/uicons-regular-straight.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-solid-straight/css/uicons-solid-straight.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-brands/css/uicons-brands.css'>
+    <script src="/script/script.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <style>
+        main{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .painel-table{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .painel-api{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .api-div{
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+        }
+        .dubug-button{
+            margin: 10px;
+            padding: 10px;
+            border-radius: 10px;
+            border: none;
+            background-color: #f3f3f3;
+            cursor: pointer;
+        }
+        .dubug-button:hover{
+            background-color: #e3e3e3;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <div class="painel-table">
+            <button class="dubug-button" onclick="window.location.href=`/debug/tabela/pessoa`">Tabela de pessoa</button>
+            <button class="dubug-button" onclick="window.location.href=`/debug/tabela/item`">Tabela de itens</button>
+        </div>
+        <div class="painel-api">
+            <label for="">Api pessoas </label><br>
+            <div class="api-div">
+                <button class="dubug-button" onclick="window.location.href=`/debug/pessoa/xml`">pessoa em xml</button>
+                <button class="dubug-button" onclick="window.location.href=`/debug/pessoa/json`">pessoa em json</button>
+            </div>
+            <label for="">Api itens </label><br>
+            <div class="api-div">
+                <button class="dubug-button" onclick="window.location.href=`/debug/item/xml`">item em xml</button>
+                <button class="dubug-button" onclick="window.location.href=`/debug/item/json`">item em json</button>
+            </div>
+        </div>
+        <div class="painel-table">
+            <button class="dubug-button" onclick="window.location.href=`/debug/lista`">Grupo</button>
+        </div>
+    </main>
+</body>
+</html>

@@ -131,8 +131,8 @@ function validarPasswd(){
 
 function validarEmpty(target){
     let val = document.getElementsByName(target)[0].value;
-    isValid(val == "", target);
-    return (val == "");
+    isValid(val != "", target);
+    return (val != "");
 }
 
 function validarName(){

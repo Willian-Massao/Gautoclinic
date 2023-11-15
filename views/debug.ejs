@@ -149,7 +149,11 @@
                     <% }) %>
                     <td>
                         <button class="styled-button edit" onclick="mimic(<%= row.id %>)"><i class="fi fi-rr-edit"></i></button>
-                        <button class="styled-button delete" onclick="deleteById(<%= row.id %>)"><i class="fi fi-rs-trash"></i></button>
+                        <% if(user == row.id){ %>
+                            <button class="styled-button delete" onclick="deleteById(<%= row.id %>)" disabled><i class="fi fi-rs-trash"></i></button>
+                        <% }else{ %>
+                            <button class="styled-button delete" onclick="deleteById(<%= row.id %>)"><i class="fi fi-rs-trash"></i></button>
+                        <% } %>
                     </td>
                 </tr>
             <% }) %>

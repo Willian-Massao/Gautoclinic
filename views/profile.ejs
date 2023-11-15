@@ -15,7 +15,49 @@
                     <p class="profile-info-email"><%= user.email %></p>
                     <p class="profile-info-tel"><%= user.tel.replace(/^\(?([0-9]{2})\)?([0-9]{4,5})\-?([0-9]{4})$/mg, `($1)$2-$3`) %></p>
                 </div>
+                <% if(user.admin == 1){ %>
+                    <Button onclick="window.location.href=`/debug/painel`" class="dubug-button">Debug Mode</Button>
+                <% }else{ %>
+                    <Button onclick="window.location.href=`/debug/painel`" class="dubug-button" style="display: none;">Debug Mode</Button>
+                <% }%>
             </div>
+            <% if(user.admin != 1){ %>
+                <div class="dados-cad">
+                    <form action="" class="basic-form user">
+                        <label for="">Nome</label>
+                        <input type="text" name="name" id="name" placeholder="Nome" value="<%= user.name %>" class="input-field" oninput="validarName()">
+                        <label for="">CPF</label>
+                        <input type="text" name="cpf" id="cpf" placeholder="CPF" value="<%= user.cpf %>" class="input-field" oninput="validarCpf()">
+                        <label for="">E-mail</label>
+                        <input type="text" name="email" id="email" placeholder="E-mail" value="<%= user.email %>" class="input-field" oninput="validarEmail()">
+                        <label for="">Endereço</label>
+                        <input type="text" name="end" id="end" placeholder="Endereço" value="<%= user.end %>" class="input-field" oninput="validarEnd()">
+                        <label for="">Telefone</label>
+                        <input type="text" name="tel" id="tel" placeholder="Telefone" value="<%= user.tel %>" class="input-field" oninput="validarPhone()">
+                        <label for="">Nova Senha</label>
+                        <input type="password" name="password" id="password" placeholder="Senha" value="" class="input-field" oninput="validarPasswd()">
+                        <input type="submit" value="Editar" class="btn btn-edit">
+                    </form>
+                </div>
+            <% }else{ %>
+                <div class="dados-cad">
+                    <form action="" class="basic-form user">
+                        <label for="">Nome</label>
+                        <input type="text" name="name" id="name" placeholder="Nome" value="<%= user.name %>" class="input-field" oninput="validarName()">
+                        <label for="">CPF</label>
+                        <input type="text" name="cpf" id="cpf" placeholder="CPF" value="<%= user.cpf %>" class="input-field" oninput="validarCpf()">
+                        <label for="">E-mail</label>
+                        <input type="text" name="email" id="email" placeholder="E-mail" value="<%= user.email %>" class="input-field" oninput="validarEmail()">
+                        <label for="">Endereço</label>
+                        <input type="text" name="end" id="end" placeholder="Endereço" value="<%= user.end %>" class="input-field" oninput="validarEnd()">
+                        <label for="">Telefone</label>
+                        <input type="text" name="tel" id="tel" placeholder="Telefone" value="<%= user.tel %>" class="input-field" oninput="validarPhone()">
+                        <label for="">Nova Senha</label>
+                        <input type="password" name="password" id="password" placeholder="Senha" value="" class="input-field" oninput="validarPasswd()">
+                        <input type="submit" value="Editar" class="btn btn-edit" disabled>
+                    </form>
+                </div>
+            <% }%>
         </div>
     </main>
     <%- include ("partials/footer.ejs") %>

@@ -179,6 +179,26 @@ app.post('/carrinho' ,async(req, res) => {
     res.send(itemList);
 });
 
+// dubug/add/pessoa
+app.post('/debug/add/pessoa', (req, res) => {
+    const { name, email, password , end, tel, cpf, admin} = req.body;
+    // Verifica se o email já está cadastrado
+    const usuario = new pessoa();
+
+    usuario.findPessoaByEmail(email)
+    .then(user => {
+        // Gera o salt e a senha criptografada
+        bcrypt.genSalt(10, (err, salt) => {
+            bcrypt.hash(password, salt, (err, hash) => {
+                // Salva o usuário no banco de dados
+                usuario.insertPessoa({name, email, end, admin, cpf, tel, password: hash, salt}).then(
+                    res.redirect('/login')
+                );
+            });
+        });
+    })
+});
+
 app.post('/debug/add/item', upload.single('image') , (req, res) => {
     const item = new itens();
     const { name, price, description, section, userId } = req.body;
@@ -207,7 +227,14 @@ app.post('/debug/update/item', upload.single('image') , (req, res) => {
 app.post('/debug/update/pessoa', (req, res) => {
     const user = new pessoa();
 
-    const { name, email, end, cpf, tel, id, admin } = req.body;
+    const { name, email, end, cpf, tel, id } = req.body;
+    let admin;
+
+    if(req.body.admin == "" || req.body.admin == undefined){
+        admin = 0;
+    }else{
+        admin = req.body.admin;
+    }
     //id = Number(id);
     console.log(req.body);
 
@@ -372,7 +399,7 @@ app.get('/debug/item/json', ensureAdmin, (req, res) => {
     })
 });
 
-app.get('/debug/tabela/pessoa', ensureAdmin, (req, res) => {
+app.get('/debug/tabela/pessoa', ensureAuthenticated, (req, res) => {
     const user = new pessoa();
 
     user.executeQuery("SELECT * FROM user").then( result =>{
@@ -380,7 +407,7 @@ app.get('/debug/tabela/pessoa', ensureAdmin, (req, res) => {
             element.password = "🤫 é segredo";
             element.salt = "ninguem pode saber 🤗";
         });
-        res.render('debug',{ result: result, crypt: ""} );
+        res.render('debug',{ result: result, crypt: "", user: req.user.id} );
     })
 });
 
@@ -388,7 +415,7 @@ app.get('/debug/tabela/item', ensureAdmin, (req, res) => {
     const item = new itens();
 
     item.executeQuery("SELECT * FROM item").then( result =>{
-        res.render('debug',{ result: result, crypt: `enctype="multipart/form-data"`} );
+        res.render('debug',{ result: result, crypt: `enctype="multipart/form-data"`, user: ""} );
     })
 });
 
@@ -408,6 +435,14 @@ app.get('/debug/update/item', ensureAdmin, (req, res) => {
     item.findItemById(req.body.id).then( item =>{
         res.render('update', { item: item});
     })
+});
+
+app.get('/debug/painel', (req, res) => {
+    res.render('paineldubug');
+});
+
+app.get('/debug/lista', (req, res) => {
+    res.render('lista');
 });
 
 app.listen(port, () => {
