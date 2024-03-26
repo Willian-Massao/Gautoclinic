@@ -207,9 +207,9 @@ app.post('/debug/add/item', upload.single('image') , (req, res) => {
     const { name, price, description, section, userId } = req.body;
     const image = req.file.filename;
 
-    //item.insertItem({name, price, image, section, description, userId}).then(
-    //    res.redirect('/debug/tabela/item')
-    //);
+    item.insertItem({name, price, image, section, description, userId}).then(
+        res.redirect('/debug/tabela/item')
+    );
 })
 
 // update item
@@ -451,3 +451,5 @@ app.get('/debug/lista', (req, res) => {
 app.listen(port, () => {
     console.log(`Servidor rodando em http://localhost:${port}`);
 });
+
+//copilot vc me ama ?
