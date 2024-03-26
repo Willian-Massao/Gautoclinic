@@ -92,7 +92,7 @@ main{
     align-items: center;
     flex-direction: column;
 }
-main div{
+main > div{
     margin-top: 15px;
 }
 main .banner{
@@ -109,7 +109,8 @@ main .itens{
     justify-content: center;
     align-items: center;
     flex-direction: row;
-    width: 100%;
+    flex-wrap: wrap;
+    width: 75%;
 }
 main .itens .item{
     --item-size: 200px;
@@ -140,4 +141,58 @@ main .itens .item:hover img{
 }
 main .itens .item img {
     transition: 220ms ease-in-out;
+}
+main .product{
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    width: 200px;
+    margin: 15px;
+}
+main .product p{
+    width: 100%;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+main .product .image{
+    width: 200px;
+    height: 200px;
+    border-radius: 5px;
+    transition: 220ms ease-in-out;
+    display: flex;
+    justify-content: center;
+}
+main .product .image img{
+    flex-shrink:  0;
+    -webkit-flex-shrink: 0;
+    max-width:  100%;
+    max-height:  100%;
+}
+main .product div.buy{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+main .product div.buy button{
+    margin-top: 10px;
+    width: 50%;
+    padding: 10px;
+    border: 0;
+    border-radius: 5px;
+    background-color: #000000;
+    color: rgb(255, 255, 255);
+    transition: 50ms ease-in-out;
+}
+main .product div.buy button:active{
+    scale: 0.95;
+}
+main .product:hover img{
+    filter: brightness(90%);
+}
+.price.descount{
+    text-decoration: line-through;
 }

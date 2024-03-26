@@ -284,6 +284,14 @@ app.get('/', (req, res) =>{
     })
 });
 
+app.get('/produtos/:sec', (req, res) =>{
+    const item = new itens();
+
+    item.findItemBySection(req.params.sec).then( itens =>{
+        res.render('produtos', {itens: itens});
+    })
+});
+
 app.get('/profile', ensureAuthenticated, (req, res) => {
     const item = new itens();
 

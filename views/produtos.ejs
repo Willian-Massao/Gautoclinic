@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include ("partials/head.ejs") %>
+</head>
+<body>
+    <%- include ("partials/header.ejs") %>
+    <main>
+        <div class="banner">
+            <img src="/src/gauto_pose1.jpg" alt="">
+        </div>
+        <div class="itens">
+            <% itens.forEach((item)=>{ %>
+                <div class="product" href="/produtos">
+                    <div class="image">
+                        <img src="/products/<%= item.image %>" alt="">
+                    </div>
+                    <p class="description"><%= item.description %></p>
+                    <div class="rate">
+                        <i class="fi fi-rr-star"></i>
+                        <i class="fi fi-sr-star"></i>
+                        <i class="fi fi-sr-star"></i>
+                        <i class="fi fi-sr-star"></i>
+                        <i class="fi fi-sr-star"></i>
+                    </div>
+                    <p class="price descount">R$ 999,99</p>
+                    <p class="price">R$ <%= item.price.toFixed(2) %> Em promoção</p>
+                    <div class="buy">
+                        <button class="buy-button">Comprar</button>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+</body>
+</html>
