@@ -18,8 +18,6 @@ const storage = multer.diskStorage({
         cb(null, 'public/products');
     },
     filename: function(req, file, cb){
-
-        console.log(req);
         
         const extension = file.mimetype.split('/')[1];
 
@@ -311,6 +309,7 @@ app.get('/product/:id', (req, res) => {
     const user = new pessoa();
 
     item.findItemById(req.params.id).then( itens =>{
+            console.log(itens);
             itens.price = itens.price.toFixed(2);
         if(req.isAuthenticated()){
             user.findPessoaById(req.user.id).then( user =>{
@@ -451,5 +450,3 @@ app.get('/debug/lista', (req, res) => {
 app.listen(port, () => {
     console.log(`Servidor rodando em http://localhost:${port}`);
 });
-
-//copilot vc me ama ?
