@@ -18,6 +18,8 @@ const storage = multer.diskStorage({
         cb(null, 'public/products');
     },
     filename: function(req, file, cb){
+
+        console.log(req);
         
         const extension = file.mimetype.split('/')[1];
 
@@ -54,6 +56,7 @@ passport.use(new LocalStrategy({
 
     usuario.findPessoaByEmail(email)
     .then(user => {
+        console.log(user);
         if (!user) {
             console.log('Email ou senha incorretos.');
             return done(null, false, { message: 'Email ou senha incorretos.' });
@@ -128,7 +131,7 @@ app.set('view engine', 'ejs');
 app.set('views', './views');
 app.use(express.static('public'));
 app.use(express.json({limit: '50mb'}));
-app.use(express.urlencoded({limit: '50mb', extended: true}));
+app.use(express.urlencoded({limit: '50mb', extended: false}));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -204,9 +207,9 @@ app.post('/debug/add/item', upload.single('image') , (req, res) => {
     const { name, price, description, section, userId } = req.body;
     const image = req.file.filename;
 
-    item.insertItem({name, price, image, section, description, userId}).then(
-        res.redirect('/debug/tabela/item')
-    );
+    //item.insertItem({name, price, image, section, description, userId}).then(
+    //    res.redirect('/debug/tabela/item')
+    //);
 })
 
 // update item
@@ -415,7 +418,7 @@ app.get('/debug/tabela/item', ensureAdmin, (req, res) => {
     const item = new itens();
 
     item.executeQuery("SELECT * FROM item").then( result =>{
-        res.render('debug',{ result: result, crypt: `enctype="multipart/form-data"`, user: ""} );
+        res.render('debug',{ result: result, crypt: `enctype=multipart/form-data`, user: ""} );
     })
 });
 

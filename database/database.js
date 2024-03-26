@@ -1,11 +1,17 @@
-const sqlite3 = require("sqlite3");
-const { open } = require("sqlite");
+const mysql = require('mysql2/promise');
 
-const openDb = async () => {
-  return open({
-    filename: "./database/database.db",
-    driver: sqlite3.Database,
-  });
-}
+const pool = mysql.createPool({
+  host: "localhost",
+  user: "root",
+  password: "12345",
+  database: "gauto",
+  waitForConnections: true,
+  connectionLimit: 10,
+  maxIdle: 10, // max idle connections, the default value is the same as `connectionLimit`
+  idleTimeout: 60000, // idle connections timeout, in milliseconds, the default value 60000
+  queueLimit: 0,
+  enableKeepAlive: true,
+  keepAliveInitialDelay: 0,
+});
 
-module.exports = { openDb };
+module.exports = pool;
