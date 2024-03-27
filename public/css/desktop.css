@@ -2,9 +2,14 @@ body{
     margin: 0;
     padding: 0;
     font-family: "Inter", sans-serif;
+    height:100%;
+    position: relative;
 }
 .disable{
     display: none;
+}
+a{
+    text-decoration: none;
 }
 header{
     color: black;
@@ -28,7 +33,6 @@ header .icons, header .icons a, header .icons button{
     padding-left: 15px;
     padding-right: 15px;
     color: black;
-    text-decoration: none;
     background-color: white;
     border: 0;
     border-radius: 5px;
@@ -65,7 +69,7 @@ header .search-bar input{
     padding: 0;
     border: 0;
 }
-header .search-bar input:focus{
+input:focus{
     outline: none;
 }
 header .search-bar button{
@@ -88,9 +92,10 @@ header p{
 }
 main{
     display: flex;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
     flex-direction: column;
+    min-height: 100vh;
 }
 main > div{
     margin-top: 15px;
@@ -196,3 +201,131 @@ main .product:hover img{
 .price.descount{
     text-decoration: line-through;
 }
+footer {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-direction: row-reverse;
+    background-color: black;
+    color: white;
+    width: 100%;
+    height: 350px;
+}
+footer .newsletters{
+    min-width: 150px;
+    max-width: 450px;
+    width: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+footer .newsletters form{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    border-radius: 5px;
+    overflow: hidden;
+}
+footer .newsletters input, footer .newsletters button{
+    height: 50px;
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+footer .newsletters button{
+    width: 100px;
+}
+footer .newsletters input{
+    width: calc(100% - 125px);
+    padding-left: 25px;
+}
+footer .newsletters p{
+    margin-top: 0;
+    font-size: x-large;
+}
+footer .insta i{
+    color: white;
+    font-size: xx-large;
+    margin-top: 9px;
+    margin-right: 8px;
+}
+footer .insta{
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    width: fit-content;
+}
+footer .menssages p{
+    margin: 2px;
+}
+footer>div{
+    width: 33%;
+}
+footer .social{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
+footer .social a{
+    color: white;
+}
+footer .insta>a{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
+footer .insta p{
+    margin: 0;
+    padding: 0;
+}
+nav{
+    display: flex;
+    position: fixed;
+    width: 0;
+    height: 100%;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    z-index: 1;
+    overflow-x: hidden;
+    transition: 0.5s;
+    background: rgba(0, 0, 0, 0.35);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(8.9px);
+    -webkit-backdrop-filter: blur(8.9px);
+}
+nav ul{
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+    background-color: white;
+    width: 0;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    transition: 0.5s;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.30);
+}
+nav ul li{
+    width: 100%;
+    height: 50px;
+    border-bottom: 1px solid black;
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #000000;
+}
+nav ul li a{
+    color: #000000;
+}
+
