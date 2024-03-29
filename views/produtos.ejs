@@ -12,24 +12,26 @@
         </div>
         <div class="itens">
             <% itens.forEach((item)=>{ %>
-                <div class="product" href="/produtos">
+                <a class="product" href="/item/<%= item.id %>">
                     <div class="image">
-                        <img src="/products/<%= item.image %>" alt="">
+                        <img src="data:image/jpg;base64,<%= image.image %>" alt="">
                     </div>
-                    <p class="description"><%= item.description %></p>
+                    <p class="description"><%= item.name %></p>
                     <div class="rate">
-                        <i class="fi fi-rr-star"></i>
-                        <i class="fi fi-sr-star"></i>
-                        <i class="fi fi-sr-star"></i>
-                        <i class="fi fi-sr-star"></i>
-                        <i class="fi fi-sr-star"></i>
+                        <% for(let i = 0; i < 5; i++){ %>
+                            <% if(i+1 > item.mRate){ %>
+                                <i class="fi fi-rr-star"></i>
+                            <% }else{ %>
+                                <i class="fi fi-sr-star"></i>
+                            <% } %>
+                        <% } %>
                     </div>
                     <p class="price descount">R$ 999,99</p>
                     <p class="price">R$ <%= item.price.toFixed(2) %> Em promoção</p>
                     <div class="buy">
                         <button class="buy-button">Comprar</button>
                     </div>
-                </div>
+                </a>
             <% }) %>
         </div>
     </main>

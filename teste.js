@@ -6,5 +6,5 @@ async function coisa(file){
     return contents;
 }
 
-console.log(coisa('./public/src/Atacadista.png'));
+console.log(coisa('./public/src/5.png'));
 

@@ -162,6 +162,9 @@ main .product p{
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+main a.product{
+    color: black;
+}
 main .product .image{
     width: 200px;
     height: 200px;
@@ -327,5 +330,154 @@ nav ul li{
 }
 nav ul li a{
     color: #000000;
+}
+main .item-container{
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 1100px;
+    margin-top: 100px;
+}
+main .item-images div{
+    --img-size: 500px;
+    width: var(--img-size);
+    height: var(--img-size);
+    overflow: hidden;
+}
+main .item-images div img{
+    flex-shrink:  0;
+    -webkit-flex-shrink: 0;
+    max-width:  100%;
+    max-height:  100%;
+}
+.item-container .item-info{
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+    width: 25%;
+}
+.item-container .item-name{
+    min-width: 350px;
+    font-size: 30px;
+    font-weight: bolder;
+    overflow: hidden;
+    white-space: wrap;
+}
+.item-container .item-rate{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.item-rate .item-stock{
+    display: flex;
+    flex-direction: row;
+    margin-left: 5px;
+}
+.item-rate .item-stock .instock{
+    color: green;
+}
+.item-rate .item-stock .outstock{
+    color: red;
+}
+.item-rate .item-stock p{
+    margin: 0;
+    padding: 0;
+    margin-bottom: 6px;
+    margin-left: 3px;
+}
+.rate{
+    display: flex;
+    flex-direction: row;
+}
+.item-rate .item-stock i{
+    margin-top: 4px;
+}
+
+button.item-buy{
+    margin-top: 10px;
+    width: 50%;
+    padding: 10px;
+    border: 0;
+    border-radius: 5px;
+    background-color: #000000;
+    color: rgb(255, 255, 255);
+    transition: 50ms ease-in-out;
+}
+button.item-buy:active{
+    scale: 0.95;
+}
+.item-section{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 1100px;
+
+}
+.item-rating{
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: row;
+    margin-top: 10px;
+    width: 100%;
+}
+.item-rating .avg{
+    width: 150px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-direction: row;
+}
+.appraisal-container{
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    width: calc(100% - 150px);
+    border-left: 1px solid black;
+    padding-left: 10px;
+}
+.comment-form, .comment-form form{
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 10px;
+}
+.comment-form form textarea{
+    width: 86%;
+    height: 100%;
+    border: 0;
+    padding: 0;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    margin-bottom: 5px;
+    resize: none;
+    background-color: #cccccc;
+    padding-top: 10px;
+    
+}
+.comment-form form input[type="submit"]{
+    margin-top: 10px;
+    width: 150px;
+    height: 40px;
+    padding: 10px;
+    border: 0;
+    border-radius: 5px;
+    background-color: #000000;
+    color: rgb(255, 255, 255);
+    transition: 50ms ease-in-out;
+    margin-bottom: 5px;
+}
+.comment-form form textarea:focus{
+    outline: none;
+}
+.comment-form form input[type="submit"]:active{
+    scale: 0.95;
 }
 

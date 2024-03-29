@@ -9,10 +9,17 @@
         </button>
     </form>
     <div class="icons align">
-        <a class="user" href="/">
-            <i class="fi fi-rr-user"></i>
-            <p>OLÁ, FAÇA O LOGIN <br> EM SUA CONTA</p>
-        </a>
+        <% if(user == undefined){ %>
+            <a class="user" href="/login">
+                <i class="fi fi-rr-user"></i>
+                <p>OLÁ, FAÇA O LOGIN <br> EM SUA CONTA</p>
+            </a>
+        <% }else{ %>
+            <a class="user" href="/profile">
+                <i class="fi fi-rr-user"></i>
+                <p>OLÁ, <%= user.name.split(' ')[0].toUpperCase() %></p>
+            </a>
+        <% } %>
         <a class="cart" href="/">
             <i class="fi fi-rr-shopping-cart"></i>
             <p>Seu carrinho <br> R$ 00,00</p>

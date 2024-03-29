@@ -2,7 +2,7 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-//const connection = require('./database/database');
+const fs = require('fs').promises;
 const session = require('express-session');
 const LocalStrategy = require('passport-local').Strategy;
 const passport = require('passport');
@@ -30,18 +30,29 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // database
-const pessoa = require("./database/pessoaDB.js");
-const itens = require("./database/ItensDB.js");
+//const pessoa = require("./database/pessoaDB.js");
+//const itens = require("./database/ItensDB.js");
+const userDAO = require("./database/userDAO.js");
+const itemDAO = require("./database/itemDAO.js");
+const cardDAO = require("./database/cardDAO.js");
+const commentDAO = require("./database/commentDAO.js");
+const imageDAO = require("./database/imageDAO.js");
 
 // porta do servidor
 const port = 3000;
 
 // cria tabela
-const user = new pessoa();
-const item = new itens();
+const users = new userDAO();
+const itens = new itemDAO();
+const cards = new cardDAO();
+const comments = new commentDAO();
+const images = new imageDAO();
 
-item.createTable();
-user.createTable();
+itens.create();
+users.create();
+cards.create();
+comments.create();
+images.create();
 
 
 // Autenticação
@@ -50,11 +61,10 @@ passport.use(new LocalStrategy({
     passwordField: 'password' // nome do campo de senha no formulário de login
 }, (email, password, done) => {
     // Verifica se o email do usuário existe no banco de dados
-    const usuario = new pessoa();
+    const users = new userDAO();
 
-    usuario.findPessoaByEmail(email)
+    users.findEmail(email)
     .then(user => {
-        console.log(user);
         if (!user) {
             console.log('Email ou senha incorretos.');
             return done(null, false, { message: 'Email ou senha incorretos.' });
@@ -79,9 +89,9 @@ passport.serializeUser((user, done) => {
 });
   
 passport.deserializeUser((id, done) => {
-    const usuario = new pessoa();
+    const users = new userDAO();
 
-    usuario.findPessoaById(id)
+    users.findId(id)
       .then(user => {
         done(null, user);
       })
@@ -96,10 +106,10 @@ function ensureAuthenticated(req, res, next) {
 }
 
 function ensureAdmin(req, res, next) {
-    //const user = new pessoa();
+    //const user = new userDAO();
     //let admin = false;
     //try{
-    //    user.findPessoaById(req.user.id).then( user => {
+    // users.findId(req.user.id).then( user => {
     //        if(user.admin == 1){
     //            admin = true;
     //        }
@@ -144,11 +154,11 @@ app.use(flash());
 app.post('/login', passport.authenticate('local', { successRedirect: '/', failureRedirect: '/login', failureFlash: true  }));
 
 app.post('/cadastro', (req, res) => {
-    const { name, email, password , end, tel, cpf} = req.body;
+    const { name, email, lastname, tel, cpf, cep, city, district, adress, number, password} = req.body;
     // Verifica se o email já está cadastrado
-    const usuario = new pessoa();
+    const users = new userDAO();
 
-    usuario.findPessoaByEmail(email)
+    users.findEmail(email)
     .then(user => {
         if (user) {
             return res.render('cadastro', { message: 'Email já cadastrado.' });
@@ -157,7 +167,7 @@ app.post('/cadastro', (req, res) => {
         bcrypt.genSalt(10, (err, salt) => {
             bcrypt.hash(password, salt, (err, hash) => {
                 // Salva o usuário no banco de dados
-                usuario.insertPessoa({name, email, end, cpf, tel, password: hash, salt}).then(
+                users.insert({name, email, lastname, tel, cpf, cep, city, district, adress, number, password: hash, salt}).then(
                     res.redirect('/login')
                 );
             });
@@ -166,13 +176,13 @@ app.post('/cadastro', (req, res) => {
 });
 
 app.post('/carrinho' ,async(req, res) => {
-    const item = new itens();
+    const itens = new itemDAO();
     let id = req.body.itemArr;
     let itemList = [];
 
     try{
         for(let i in id){
-            itemList.push(await item.findItemById(id[i]));
+            itemList.push(await itens.findId(id[i]));
         };
     }catch(err){
         console.log(err);
@@ -181,86 +191,109 @@ app.post('/carrinho' ,async(req, res) => {
 });
 
 // dubug/add/pessoa
-app.post('/debug/add/pessoa', (req, res) => {
-    const { name, email, password , end, tel, cpf, admin} = req.body;
-    // Verifica se o email já está cadastrado
-    const usuario = new pessoa();
+//app.post('/debug/add/pessoa', (req, res) => {
+//    const { name, email, lastname, tel, cpf, cep, city, district, adress, number, password} = req.body;
+//    // Verifica se o email já está cadastrado
+//    const users = new userDAO();
+//
+//    users.findEmail(email)
+//    .then(user => {
+//        // Gera o salt e a senha criptografada
+//        bcrypt.genSalt(10, (err, salt) => {
+//            bcrypt.hash(password, salt, (err, hash) => {
+//                // Salva o usuário no banco de dados
+//                users.insert({name, email, lastname, tel, cpf, cep, city, district, adress, number, password: hash, salt}).then(
+//                    res.redirect('/login')
+//                );
+//            });
+//        });
+//    })
+//});
 
-    usuario.findPessoaByEmail(email)
-    .then(user => {
-        // Gera o salt e a senha criptografada
-        bcrypt.genSalt(10, (err, salt) => {
-            bcrypt.hash(password, salt, (err, hash) => {
-                // Salva o usuário no banco de dados
-                usuario.insertPessoa({name, email, end, admin, cpf, tel, password: hash, salt}).then(
-                    res.redirect('/login')
-                );
-            });
-        });
-    })
-});
+app.post('/image', upload.single('image') ,async (req, res) => {
+    const images = new imageDAO();
+    let id = 1;
+    const image = await coisa('./public/products/' + req.file.filename);
 
-app.post('/debug/add/item', upload.single('image') , (req, res) => {
-    const item = new itens();
-    const { name, price, description, section, userId } = req.body;
-    const image = req.file.filename;
-
-    item.insertItem({name, price, image, section, description, userId}).then(
+    images.insert({idproduct: id, image: image}).then(
         res.redirect('/debug/tabela/item')
     );
 })
 
-// update item
-app.post('/debug/update/item', upload.single('image') , (req, res) => {
-    const item = new itens();
+async function coisa(file){
+    let contents = await fs.readFile(file, {encoding: 'base64'});
+    await fs.unlink(file);
 
-    const { name, price, description, section, userId, id } = req.body;
-    const image = req.file.filename;
+    return contents;
+}
+//
+//// update item
+//app.post('/debug/update/item', upload.single('image') , (req, res) => {
+//    const itens = new itemDAO();
+//
+//    const { name, price, description, section, userId, id } = req.body;
+//    const image = req.file.filename;
+//
+//    item.update({name, price, image, section, description, userId, id}).then(
+//        res.redirect('/debug/tabela/item')
+//    );
+//});
+//
+//// update pessoa
+//app.post('/debug/update/pessoa', (req, res) => {
+//    const user = new userDAO();
+//
+//    const { name, email, end, cpf, tel, id } = req.body;
+//    let admin;
+//
+//    if(req.body.admin == "" || req.body.admin == undefined){
+//        admin = 0;
+//    }else{
+//        admin = req.body.admin;
+//    }
+//
+//    user.updatePessoa({name, email, end, cpf, tel, id, admin}).then(
+//        res.redirect('/debug/tabela/pessoa')
+//    );
+//});
+//
+//app.post('/debug/delete/item', (req, res) => {
+//    const itens = new itemDAO();
+//
+//    item.deleteItem(req.body.id).then(
+//        console.log("Item deletado com sucesso!"),
+//    ).finally(
+//        res.redirect('/debug/tabela/item')
+//    );
+//});
+//
+//app.post('/debug/delete/pessoa', (req, res) => {
+//    const user = new userDAO();
+//
+//    user.deletePessoa(req.body.id).then( result =>{
+//        console.log("Pessoa deletada com sucesso!");
+//        res.redirect('/debug/tabela/pessoa');
+//    })
+//});
 
-    console.log(req.body);
+app.post('/comment/add/:id', async(req, res) => {
+    const comments = new commentDAO();
+    const users = new userDAO();
 
-    item.updateItem({name, price, image, section, description, userId, id}).then(
-        res.redirect('/debug/tabela/item')
-    );
-});
+    let rate = 5;
+    let id = req.params.id;
+    let comment = req.body.comment;
 
-// update pessoa
-app.post('/debug/update/pessoa', (req, res) => {
-    const user = new pessoa();
+    console.log(req.body.comment);
 
-    const { name, email, end, cpf, tel, id } = req.body;
-    let admin;
-
-    if(req.body.admin == "" || req.body.admin == undefined){
-        admin = 0;
-    }else{
-        admin = req.body.admin;
+    if(comment != ""){
+        users.findId(req.user.id).then( user =>{
+            comments.insert({idProduct: id, idUser: user.id, nameUser: user.name, comment, rate}).then(
+                res.redirect(`/item/${id}`)
+            );
+        });
     }
-    //id = Number(id);
-    console.log(req.body);
-
-    user.updatePessoa({name, email, end, cpf, tel, id, admin}).then(
-        res.redirect('/debug/tabela/pessoa')
-    );
-});
-
-app.post('/debug/delete/item', (req, res) => {
-    const item = new itens();
-
-    item.deleteItem(req.body.id).then(
-        console.log("Item deletado com sucesso!"),
-    ).finally(
-        res.redirect('/debug/tabela/item')
-    );
-});
-
-app.post('/debug/delete/pessoa', (req, res) => {
-    const user = new pessoa();
-
-    user.deletePessoa(req.body.id).then( result =>{
-        console.log("Pessoa deletada com sucesso!");
-        res.redirect('/debug/tabela/pessoa');
-    })
+    res.redirect(`/item/${id}`);
 });
 
 // Rotas get
@@ -273,187 +306,202 @@ app.get('/cadastro', (req, res) => {
 });
 
 app.get('/', (req, res) =>{
-    const item = new itens();
-
-    item.findItemAll().then( itens =>{
-        if(req.isAuthenticated()){
-            res.render('homelogged', {itens: itens, user: req.user});
-        }else{
-            res.render('home', {itens: itens});
-        }
-    })
+    res.render('home', {itens: itens, user: req.user });
 });
 
 app.get('/produtos/:sec', (req, res) =>{
-    const item = new itens();
+    const itens = new itemDAO();
+    const images = new imageDAO();
 
-    item.findItemBySection(req.params.sec).then( itens =>{
-        res.render('produtos', {itens: itens});
+    itens.findType(req.params.sec).then( itens =>{
+        images.findId(1).then( image =>{
+            res.render('produtos', {itens: itens, user: req.user, image: image});
+        });
+    })
+});
+
+app.get('/item/:id', (req, res) =>{
+    const itens = new itemDAO();
+    const comments = new commentDAO();
+    const images = new imageDAO();
+
+    let rates = 0;
+
+    itens.findId(req.params.id).then( item =>{
+        comments.productId(req.params.id).then( comment =>{
+            comment.forEach(element => {
+                rates+= element.rate;
+            });
+            itens.newRate({mRate: (rates/(comment.length)), id: req.params.id});
+            images.findId(1).then( image =>{
+                res.render('item', {item: item, comment: comment, user: req.user, image: image});
+            })
+        });
     })
 });
 
 app.get('/profile', ensureAuthenticated, (req, res) => {
-    const item = new itens();
+    const itens = new itemDAO();
 
-    item.findItemByUserId(req.user.id).then( itens =>{
+    itens.findId(req.user.id).then( itens =>{
         res.render('profile', { user: req.user, itens: itens});
     })
 });
 
-app.get('/section/:sec', (req, res) => {
-    const item = new itens();
+//app.get('/section/:sec', (req, res) => {
+//    const itens = new itemDAO();
+//
+//    itens.findType(req.params.sec).then( itens =>{
+//        if(req.isAuthenticated()){
+//            res.render('sectionlogged', {itens: itens, user: req.user});
+//        }else{
+//            res.render('section', {itens: itens});
+//        }
+//    })
+//});
 
-    item.findItemBySection(req.params.sec).then( itens =>{
-        if(req.isAuthenticated()){
-            res.render('sectionlogged', {itens: itens, user: req.user});
-        }else{
-            res.render('section', {itens: itens});
-        }
-    })
-});
+//app.get('/product/:id', (req, res) => {
+//    const itens = new itemDAO();
+//    const user = new userDAO();
+//
+//    itens.findId(req.params.id).then( itens =>{
+//            console.log(itens);
+//            itens.price = itens.price.toFixed(2);
+//        if(req.isAuthenticated()){
+//         users.findId(req.user.id).then( user =>{
+//                res.render('productlogged', {itens: itens, user: user});
+//            })
+//        }else{
+//            res.render('product', {itens: itens});
+//        }
+//    })
+//});
 
-app.get('/product/:id', (req, res) => {
-    const item = new itens();
-    const user = new pessoa();
+//app.get('/carrinho', (req, res) => {
+//    const itens = new itemDAO();
+//
+//    itens.findId(req.params.id).then( itens =>{
+//        if(req.isAuthenticated()){
+//            res.render('carrinhologged', {itens: itens, user: req.user});
+//        }else{
+//            res.render('carrinho', {itens: itens});
+//        }
+//    })
+//});
 
-    item.findItemById(req.params.id).then( itens =>{
-            console.log(itens);
-            itens.price = itens.price.toFixed(2);
-        if(req.isAuthenticated()){
-            user.findPessoaById(req.user.id).then( user =>{
-                res.render('productlogged', {itens: itens, user: user});
-            })
-        }else{
-            res.render('product', {itens: itens});
-        }
-    })
-});
+//app.get('/pagamento',ensureAuthenticated, (req, res) => {
+//    const user = new userDAO();
+//
+// users.findId(req.user.id).then( user =>{
+//        res.render('pagamento', { user: user});
+//    });
+//});
 
-app.get('/carrinho', (req, res) => {
-    const item = new itens();
+//app.get('/debug/pessoa/xml', ensureAdmin, (req, res) => {
+//    const user = new userDAO();
+//    user.executeQuery("SELECT * FROM user").then( user =>{
+//        let xml = `<?xml version="1.0" encoding="UTF-8"?>`
+//        xml += `<usuarios>`
+//        user.forEach(element => {
+//            xml += `<usuario>`
+//            xml += `<id>${element.id}</id>`
+//            xml += `<name>${element.name}</name>`
+//            xml += `<email>${element.email}</email>`
+//            xml += `<end>${element.end}</end>`
+//            xml += `<password>${element.password}</password>`
+//            xml += `<salt>${element.salt}</salt>`
+//            xml += `</usuario>`
+//        });
+//        xml += `</usuarios>`
+//        res.header('Content-Type', 'application/xml')
+//        res.status(200).send(xml)
+//    })
+//});
+//
+//app.get('/debug/pessoa/json', ensureAdmin, (req, res) => {
+//    const user = new userDAO();
+//
+//    user.executeQuery("SELECT * FROM user").then( user =>{
+//        res.json(user);
+//    })
+//});
+//
+//app.get('/debug/item/xml', ensureAdmin, (req, res) => {
+//    const itens = new itemDAO();
+//    item.executeQuery("SELECT * FROM item").then( item =>{
+//        let xml = ``
+//        xml += `<?xml version="1.0" encoding="UTF-8"?>`
+//        xml += `<itens>`
+//        item.forEach(element => {
+//            xml += `<item>`
+//            xml += `<id>${element.id}</id>`
+//            xml += `<name>${element.name}</name>`
+//            xml += `<price>${element.price}</price>`
+//            xml += `<image>${element.image}</image>`
+//            xml += `<section>${element.section}</section>`
+//            xml += `<description>${element.description}</description>`
+//            xml += `<userId>${element.userId}</userId>`
+//            xml += `</item>`
+//        });
+//        xml += `</itens>`
+//        res.header('Content-Type', 'application/xml')
+//        res.status(200).send(xml)
+//    })
+//});
 
-    item.findItemById(req.params.id).then( itens =>{
-        if(req.isAuthenticated()){
-            res.render('carrinhologged', {itens: itens, user: req.user});
-        }else{
-            res.render('carrinho', {itens: itens});
-        }
-    })
-});
+//app.get('/debug/item/json', ensureAdmin, (req, res) => {
+//    const itens = new itemDAO();
+//
+//    item.executeQuery("SELECT * FROM item").then( item =>{
+//        res.json(item);
+//    })
+//});
 
-app.get('/pagamento',ensureAuthenticated, (req, res) => {
-    const user = new pessoa();
+//app.get('/debug/tabela/pessoa', ensureAuthenticated, (req, res) => {
+//    const user = new userDAO();
+//
+//    user.executeQuery("SELECT * FROM user").then( result =>{
+//        result.forEach(element => {
+//            element.password = "🤫 é segredo";
+//            element.salt = "ninguem pode saber 🤗";
+//        });
+//        res.render('debug',{ result: result, crypt: "", user: req.user.id} );
+//    })
+//});
 
-    user.findPessoaById(req.user.id).then( user =>{
-        res.render('pagamento', { user: user});
-    });
-});
-
-app.get('/debug/pessoa/xml', ensureAdmin, (req, res) => {
-    const user = new pessoa();
-    user.executeQuery("SELECT * FROM user").then( user =>{
-        let xml = `<?xml version="1.0" encoding="UTF-8"?>`
-        xml += `<usuarios>`
-        user.forEach(element => {
-            xml += `<usuario>`
-            xml += `<id>${element.id}</id>`
-            xml += `<name>${element.name}</name>`
-            xml += `<email>${element.email}</email>`
-            xml += `<end>${element.end}</end>`
-            xml += `<password>${element.password}</password>`
-            xml += `<salt>${element.salt}</salt>`
-            xml += `</usuario>`
-        });
-        xml += `</usuarios>`
-        res.header('Content-Type', 'application/xml')
-        res.status(200).send(xml)
-    })
-});
-
-app.get('/debug/pessoa/json', ensureAdmin, (req, res) => {
-    const user = new pessoa();
-
-    user.executeQuery("SELECT * FROM user").then( user =>{
-        res.json(user);
-    })
-});
-
-app.get('/debug/item/xml', ensureAdmin, (req, res) => {
-    const item = new itens();
-    item.executeQuery("SELECT * FROM item").then( item =>{
-        let xml = ``
-        xml += `<?xml version="1.0" encoding="UTF-8"?>`
-        xml += `<itens>`
-        item.forEach(element => {
-            xml += `<item>`
-            xml += `<id>${element.id}</id>`
-            xml += `<name>${element.name}</name>`
-            xml += `<price>${element.price}</price>`
-            xml += `<image>${element.image}</image>`
-            xml += `<section>${element.section}</section>`
-            xml += `<description>${element.description}</description>`
-            xml += `<userId>${element.userId}</userId>`
-            xml += `</item>`
-        });
-        xml += `</itens>`
-        res.header('Content-Type', 'application/xml')
-        res.status(200).send(xml)
-    })
-});
-
-app.get('/debug/item/json', ensureAdmin, (req, res) => {
-    const item = new itens();
-
-    item.executeQuery("SELECT * FROM item").then( item =>{
-        res.json(item);
-    })
-});
-
-app.get('/debug/tabela/pessoa', ensureAuthenticated, (req, res) => {
-    const user = new pessoa();
-
-    user.executeQuery("SELECT * FROM user").then( result =>{
-        result.forEach(element => {
-            element.password = "🤫 é segredo";
-            element.salt = "ninguem pode saber 🤗";
-        });
-        res.render('debug',{ result: result, crypt: "", user: req.user.id} );
-    })
-});
-
-app.get('/debug/tabela/item', ensureAdmin, (req, res) => {
-    const item = new itens();
-
-    item.executeQuery("SELECT * FROM item").then( result =>{
-        res.render('debug',{ result: result, crypt: `enctype=multipart/form-data`, user: ""} );
-    })
-});
+//app.get('/debug/tabela/item', ensureAdmin, (req, res) => {
+//    const itens = new itemDAO();
+//
+//    item.executeQuery("SELECT * FROM item").then( result =>{
+//        res.render('debug',{ result: result, crypt: `enctype=multipart/form-data`, user: ""} );
+//    })
+//});
 
 // update
-app.get('/debug/update/pessoa', ensureAdmin, (req, res) => {
-    const user = new pessoa();
-
-    user.findPessoaById(req.user.id).then( user =>{
-        res.render('update', { user: user});
-    })
-});
-
-// item update
-app.get('/debug/update/item', ensureAdmin, (req, res) => {
-    const item = new itens();
-
-    item.findItemById(req.body.id).then( item =>{
-        res.render('update', { item: item});
-    })
-});
-
-app.get('/debug/painel', (req, res) => {
-    res.render('paineldubug');
-});
-
-app.get('/debug/lista', (req, res) => {
-    res.render('lista');
-});
+//app.get('/debug/update/pessoa', ensureAdmin, (req, res) => {
+//    const user = new userDAO();
+//
+// users.findId(req.user.id).then( user =>{
+//        res.render('update', { user: user});
+//    })
+//});
+//
+//// item update
+//app.get('/debug/update/item', ensureAdmin, (req, res) => {
+//    const itens = new itemDAO();
+//
+//    itens.findId(req.body.id).then( item =>{
+//        res.render('update', { item: item});
+//    })
+//});
+//
+//app.get('/debug/painel', (req, res) => {
+//    res.render('paineldubug');
+//});
+//
+//app.get('/debug/lista', (req, res) => {
+//    res.render('lista');
+//});
 
 app.listen(port, () => {
     console.log(`Servidor rodando em http://localhost:${port}`);

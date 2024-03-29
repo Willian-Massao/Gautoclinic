@@ -17,11 +17,16 @@
         <div class="login-box">
             <h1>Cadastro</h1>
             <form class="login-form" method="post" action="/cadastro">
-                <input type="text" placeholder="name" name="name" class="input-field" oninput="validarName()">
+                <input type="text" placeholder="name" name="name" class="input-field">
+                <input type="text" placeholder="lastname" name="lastname" class="input-field">
                 <input type="text" placeholder="email" name="email" class="input-field" oninput="validarEmail()">
-                <input type="text" placeholder="endereço" name="end" class="input-field" oninput="validarEnd()">
+                <input type="text" placeholder="tel" name="tel" class="input-field" oninput="validarPhone()">
                 <input type="text" placeholder="cpf" name="cpf" class="input-field" oninput="validarCpf()">
-                <input type="text" placeholder="telefone" name="tel" class="input-field" oninput="validarPhone()">
+                <input type="text" placeholder="cep" name="cep" class="input-field">
+                <input type="text" placeholder="city" name="city" class="input-field">
+                <input type="text" placeholder="district" name="district" class="input-field">
+                <input type="text" placeholder="adress" name="adress" class="input-field" oninput="validarEnd()">
+                <input type="text" placeholder="number" name="number" class="input-field">
                 <input type="password" placeholder="password" name="password" class="input-field" oninput="validarPasswd()">
                 <button type="submit" class="login-button">Cadastrar</button>
             </form>

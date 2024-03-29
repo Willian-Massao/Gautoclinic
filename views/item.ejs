@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include ("partials/head.ejs") %>
+    <title>Document</title>
+</head>
+<body>
+    <%- include ("partials/navbar.ejs") %>
+    <%- include ("partials/header.ejs") %>
+    <main>
+        <div class="item-container">
+            <div class="item-images">
+                <div>
+                    <img src="data:image/jpg;base64,<%= image.image %>" alt="">
+                </div>
+            </div>
+            <div class="item-info">
+                <h1 class="item-name"><%= item.name %></h1>
+                <div class="item-rate">
+                    <div class="rate">
+                        <% for(let i = 0; i < 5; i++){ %>
+                            <% if(i+1 > item.mRate){ %>
+                                <i class="fi fi-rr-star"></i>
+                            <% }else{ %>
+                                <i class="fi fi-sr-star"></i>
+                            <% } %>
+                        <% } %>
+                    </div>
+                    <div class="item-stock">
+                        <% if(item.qtd != 0){ %>
+                            <i class="fi fi-rr-check-circle instock"></i>
+                            <p class="instock">em stock</p>
+                        <% }else{ %>
+                            <i class="fi fi-rr-cross-circle outstock"></i>
+                            <p class="outstock">sem stock</p>
+                        <% } %>
+                    </div>
+                </div>
+                <div class="item-price">
+                    <h1>R$ <%= item.price.toFixed(2) %></h1>
+                    <p>6x R$ <%= ((item.price)/6).toFixed(2) %> sem juros</p>
+                </div>
+                <button class="item-buy">COMPRE</button>
+            </div>
+        </div>
+        <div class="item-section">
+            <div class="item-description">
+                <p><%= item.description %></p>
+            </div>
+            <div class="item-rating">
+                <div class="avg">
+                    <p><%= item.mRate.toFixed(1) %></p>
+                    <div class="rate">
+                        <% for(let i = 0; i < 5; i++){ %>
+                            <% if(i+1 > item.mRate){ %>
+                                <i class="fi fi-rr-star"></i>
+                            <% }else{ %>
+                                <i class="fi fi-sr-star"></i>
+                            <% } %>
+                        <% } %>
+                    </div>
+                </div>
+                <div class="appraisal-container">
+                    <div class="appraisal-comment">
+                        <% comment.forEach((data)=>{ %>
+                            <div class="rate">
+                                <% for(let i = 0; i < 5; i++){ %>
+                                    <% if(i+1 > data.rate){ %>
+                                        <i class="fi fi-rr-star"></i>
+                                    <% }else{ %>
+                                        <i class="fi fi-sr-star"></i>
+                                    <% } %>
+                                <% } %>
+                            </div>
+                                <p class="comment"><%= data.comment %></p>
+                                <p class="comment-user">Por <%= data.nameUser %></p>
+                        <% }) %>
+                    </div>
+                    <div class="comment-form">
+                        <% if(user){ %>
+                            <form action="/comment/add/<%= item.id %>" method="post">
+                                <textarea name="comment" id="comment" cols="30" rows="2"></textarea>
+                                <input type="submit" value="Enviar">
+                            </form>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <%- include ("partials/footer.ejs") %>
+</body>
+</html>
