@@ -292,8 +292,9 @@ app.post('/comment/add/:id', async(req, res) => {
                 res.redirect(`/item/${id}`)
             );
         });
+    }else{
+        res.redirect(`/item/${id}`);
     }
-    res.redirect(`/item/${id}`);
 });
 
 // Rotas get
