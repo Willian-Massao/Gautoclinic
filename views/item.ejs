@@ -40,7 +40,11 @@
                     <h1>R$ <%= item.price.toFixed(2) %></h1>
                     <p>6x R$ <%= ((item.price)/6).toFixed(2) %> sem juros</p>
                 </div>
-                <button class="item-buy">COMPRE</button>
+                <% if(item.qtd != 0){ %>
+                    <button class="item-buy">COMPRE</button>
+                <% }else{ %>
+                    <button class="item-buy" disabled>COMPRE</button>
+                <% } %>
             </div>
         </div>
         <div class="item-section">
