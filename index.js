@@ -220,7 +220,7 @@ app.post('/image', upload.single('image') ,async (req, res) => {
     );
 })
 
-async function coisa(file){
+async function removeFile(file){
     let contents = await fs.readFile(file, {encoding: 'base64'});
     await fs.unlink(file);
 
@@ -323,21 +323,16 @@ app.get('/produtos/:sec', (req, res) =>{
 
 app.get('/item/:id', (req, res) =>{
     const itens = new itemDAO();
-    const comments = new commentDAO();
-    const images = new imageDAO();
+
 
     let rates = 0;
 
-    itens.findId(req.params.id).then( item =>{
-        comments.productId(req.params.id).then( comment =>{
-            comment.forEach(element => {
-                rates+= element.rate;
-            });
-            itens.newRate({mRate: (rates/(comment.length)), id: req.params.id});
-            images.findId(1).then( image =>{
-                res.render('item', {item: item, comment: comment, user: req.user, image: image});
-            })
+    itens.getItem(req.params.id).then( data =>{
+        data.comments.forEach(element => {
+            rates+= element.rate;
         });
+        itens.newRate({mRate: (rates/(data.comments.length)), id: req.params.id});
+        res.render('item', {item: data, user: req.user, image: data.images});
     })
 });
 
@@ -346,6 +341,14 @@ app.get('/profile', ensureAuthenticated, (req, res) => {
 
     itens.findId(req.user.id).then( itens =>{
         res.render('profile', { user: req.user, itens: itens});
+    })
+});
+
+app.get('/carrinho', (req, res) => {
+    const itens = new itemDAO();
+
+    itens.findId(req.params.id).then( itens =>{
+        res.render('carrinho', {itens: itens, user: req.user});
     })
 });
 
@@ -374,18 +377,6 @@ app.get('/profile', ensureAuthenticated, (req, res) => {
 //            })
 //        }else{
 //            res.render('product', {itens: itens});
-//        }
-//    })
-//});
-
-//app.get('/carrinho', (req, res) => {
-//    const itens = new itemDAO();
-//
-//    itens.findId(req.params.id).then( itens =>{
-//        if(req.isAuthenticated()){
-//            res.render('carrinhologged', {itens: itens, user: req.user});
-//        }else{
-//            res.render('carrinho', {itens: itens});
 //        }
 //    })
 //});
