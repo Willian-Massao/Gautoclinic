@@ -17,7 +17,6 @@ module.exports  = class itens{
                 district varchar(45) NOT NULL,
                 adress varchar(45) NOT NULL,
                 number varchar(45) NOT NULL,
-                hasAdmin BOOLEAN NOT NULL DEFAULT 0,
                 password varchar(255) NOT NULL,
                 salt varchar(255) NOT NULL,
                 PRIMARY KEY (id))`;
@@ -65,7 +64,7 @@ module.exports  = class itens{
     async findEmail(email){
         const conn = await pool.getConnection();
         try {
-            const sql = `SELECT * FROM users WHERE email = ?`;
+            const sql = `SELECT US.email, US.name, US.password, US.salt, case when AD.id is not null then true else false end AS hasAdmin FROM users US left join admins AD on US.id = AD.idUser WHERE US.email = ?;`;
             const [rows] = await conn.query(sql, [email]);
             return rows[0];
         }catch(err){

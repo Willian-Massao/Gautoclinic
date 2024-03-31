@@ -37,6 +37,7 @@ const itemDAO = require("./database/itemDAO.js");
 const cardDAO = require("./database/cardDAO.js");
 const commentDAO = require("./database/commentDAO.js");
 const imageDAO = require("./database/imageDAO.js");
+const adminDAO = require("./database/adminDAO.js");
 
 // porta do servidor
 const port = 3000;
@@ -47,13 +48,16 @@ const itens = new itemDAO();
 const cards = new cardDAO();
 const comments = new commentDAO();
 const images = new imageDAO();
+const admins = new adminDAO();
 
 itens.create();
 users.create();
 cards.create();
 comments.create();
 images.create();
+admins.create();
 
+let controllerUser
 
 // Autenticação
 passport.use(new LocalStrategy({
@@ -65,6 +69,7 @@ passport.use(new LocalStrategy({
 
     users.findEmail(email)
     .then(user => {
+        controllerUser = new User(user);
         if (!user) {
             console.log('Email ou senha incorretos.');
             return done(null, false, { message: 'Email ou senha incorretos.' });
@@ -105,24 +110,20 @@ function ensureAuthenticated(req, res, next) {
     res.redirect('/login');
 }
 
-function ensureAdmin(req, res, next) {
-    //const user = new userDAO();
-    //let admin = false;
-    //try{
-    // users.findId(req.user.id).then( user => {
-    //        if(user.admin == 1){
-    //            admin = true;
-    //        }
-    //        if (req.isAuthenticated() && admin) {
-    //            return next();
-    //        }
-    //        res.redirect('/');
-    //    })
-    //}catch(err){
-    //    console.log(err);
-    //}
-    ////verificar no banco de dados se o usuario é admin
-    return next();
+async function ensureAdmin(req, res, next) {
+    if(req.isAuthenticated()){
+        const admins = new adminDAO();
+
+        let dbres = await admins.findIdUser();
+        console.log(dbres);
+        if(dbres.id == req.user.id){
+            return next();
+        }else{
+            res.redirect('/');
+        }
+    }else{
+        res.redirect('/login');
+    }
 }
 
 // Conexão com o banco de dados
@@ -175,7 +176,7 @@ app.post('/cadastro', (req, res) => {
     })
 });
 
-app.post('/carrinho' ,async(req, res) => {
+app.post('/carrinho' ,async  (req, res) => {
     const itens = new itemDAO();
     let id = req.body.itemArr;
     let itemList = [];
@@ -349,6 +350,14 @@ app.get('/carrinho', (req, res) => {
 
     itens.findId(req.params.id).then( itens =>{
         res.render('carrinho', {itens: itens, user: req.user});
+    })
+});
+
+app.get('/admin/painel', ensureAdmin, (req, res) => {
+    const users = new userDAO();
+
+    users.select().then( item =>{
+        res.render('admin', {data: item});
     })
 });
 

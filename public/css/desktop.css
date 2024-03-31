@@ -559,3 +559,76 @@ button.item-buy:active{
     color: rgb(255, 255, 255);
     transition: 50ms ease-in-out;
 }
+table.green-table{
+    border-collapse: collapse;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 10px 0px rgba(0,0,0,0.5);
+    border-radius: 10px 10px 0 0;
+    overflow: hidden;
+    width: 80%;
+}
+.green-table tr:nth-child(2n){
+    background-color: #f4f4f2;
+}
+.green-table tr{
+    justify-content: start;
+    align-items: start;
+    flex-direction: row;
+    background-color: #ffffff;
+    margin: 0;
+    border-bottom: 1px solid lightgray;
+    height: 50px;
+}
+.green-table tr button{
+    background-color: #ff5454;
+    color: white;
+    border: none;
+    padding: 10px 20px 10px 20px;
+    border-radius: 3px;;
+}
+.green-table tr button:hover{
+    background-color: #cc4343;
+    color: white;
+}
+.green-table tr button:active{
+    background-color: #ff5454;
+}
+.green-table tr:hover{
+    color: #009979;
+}
+.green-table td{
+    max-width: 150px;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.green-table th{
+    background-color: #009979;
+    color: white;
+}
+.green-table td, th{
+    padding-left: 15px;
+    padding-right: 15px;
+}
+header.admin ul{
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: row;
+}
+header.admin li{
+    list-style: none;
+    margin: 5px;
+    padding: 10px;
+    background-color: #009979;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.30);
+}
+header.admin li a{
+    color: white;
+}
+header.admin li:hover{
+    background-color: #00bf97;
+}

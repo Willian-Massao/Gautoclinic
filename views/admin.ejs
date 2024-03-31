@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include ("partials/head.ejs") %>
+</head>
+<body>
+    <header class="admin">
+        <ul>
+            <li>
+                <a href="/admin/products">Produtos</a>
+            </li>
+            <li>
+                <a href="/admin/users">Consultas</a>
+            </li>
+            <li>
+                <a href="/admin/admins">Administradores</a>
+            </li>
+        </ul>
+    </header>
+    <main>
+        <table class="green-table">
+            <tr>
+                <% Object.keys(data[0]).forEach((e)=>{ %>
+                    <th> <%= e %> </th>
+                <% }) %>
+                <th>Apagar</th>
+            </tr>
+            <% data.forEach((e)=>{ %>
+                <tr>
+                    <% Object.keys(e).forEach((key)=>{ %>
+                        <td> <%= e[key] %> </td>
+                    <% }) %>
+                    <td><form action="/database/delete" method="POST"><input type="text" name="idContatos" value="<%= e.id %>" class="disable" readonly><button><i class="fi fi-rr-trash-xmark"></i></button></form></td>
+                </tr>
+            <% }) %>
+        </table>
+    </main>
+</body>
+</html>
