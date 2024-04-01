@@ -5,3 +5,4 @@ class User{
         this.hasAdmin = user.hasAdmin;
     }
 }
+module.exports = User;
