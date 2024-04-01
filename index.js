@@ -253,6 +253,7 @@ app.get('/item/:id', (req, res) =>{
         data.comments.forEach(element => {
             rates+= element.rate;
         });
+        console.log(data);
         itens.newRate({mRate: (rates/(data.comments.length)), id: req.params.id});
         res.render('item', {item: data, user: req.user, image: data.images});
     })

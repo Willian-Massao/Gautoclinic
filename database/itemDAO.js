@@ -27,10 +27,11 @@ module.exports  = class itens{
     async getItem(id){
         const conn = await pool.getConnection();
         try{
-            const sql = `SELECT P.name, P.qtd, P.price, P.descount, P.description, P.mRate, I.id as idImage, I.image, C.id as idComment, C.rate, C.nameUser, C.comment from gauto.itens P inner join gauto.images I on I.idProduct = P.id inner join gauto.comments C on C.idProduct = P.id where P.id = ?`;
+            const sql = `SELECT P.id, P.name, P.qtd, P.price, P.descount, P.description, P.mRate, I.id as idImage, I.image, C.id as idComment, C.rate, C.nameUser, C.comment from gauto.itens P inner join gauto.images I on I.idProduct = P.id inner join gauto.comments C on C.idProduct = P.id where P.id = ?`;
             const [rows] = await conn.query(sql, [id]);
 
             let temp = {
+                id: rows[0].id,
                 name: rows[0].name,
                 qtd: rows[0].qtd,
                 price: rows[0].price,
