@@ -3,23 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/login.css">
+    <link rel="stylesheet" href="./css/login.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-    <script src="/script/script.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a81368914c.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Página de Login</title>
 </head>
 <body>
-    <div class="login-container">
-        <div class="login-box">
-            <h1>Login</h1>
-            <form class="login-form" method="post" action="/login">
-                <input type="text" placeholder="email" name="email" class="input-field">
-                <input type="password" placeholder="password" name="password" class="input-field">
-                <p>Não é cadastrado ?, clique <a href="/cadastro">Aqui</a> para se cadastrar</p>
-                <button type="submit" class="login-button">Entrar</button>
-            </form>
+    <body>
+        <img class="wave" src="src/wave.png">
+        <div class="container">
+            <div class="img">
+                <img src="/src/login.svg">
+            </div>
+            <div class="login-content">
+                <form method="post" action="/login">
+                    <img src="/src/logo.png">
+                    <h2 class="title">Bem Vindo</h2>
+                       <div class="input-div one">
+                          <div class="i">
+                                  <i class="fas fa-user"></i>
+                          </div>
+                          <div class="div">
+                                  <h5>E-mail</h5>
+                                  <input type="text" name="email" class="input">
+                          </div>
+                       </div>
+                       <div class="input-div pass">
+                          <div class="i"> 
+                               <i class="fas fa-lock"></i>
+                          </div>
+                          <div class="div">
+                               <h5>Senha</h5>
+                               <input type="password" name="password" class="input">
+                       </div>
+                    </div>
+                    <a href="#">Esqueceu sua senha?</a>
+                    <input type="submit" class="btn" value="Login">
+                </form>
+            </div>
         </div>
-    </div>
-</body>
-</html>
+        <script type="text/javascript" src="./script/scriptLogin.js"></script>
+    </body>
+    </html>
