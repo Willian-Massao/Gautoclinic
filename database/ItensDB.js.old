@@ -43,10 +43,11 @@ module.exports  = class itens{
 
     // read
     async findItemById(id){
+        const conn = await pool.getConnection();
         try {
-            var db = await pool();
-            var result = await db.get(`SELECT * FROM item WHERE id = '${id}'`);
-            return result;
+            const sql = `SELECT * FROM item WHERE id = ?`;
+            const [rows] = await conn.query(sql, [id]);
+            return rows[0];
         }catch(err){
             console.log(err);
         }

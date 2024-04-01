@@ -1,0 +1,23 @@
+<nav id="sidenav" onclick="toggle(false)">
+    <ul id="sideul">
+        <li><a href="/">Home</a></li>
+        <li><a href="/produtos">Produtos</a></li>
+        <li><a href="/sobre">Sobre</a></li>
+        <li><a href="/contato">Contato</a></li>
+        <li><form method="post" action="/logout"><input type="submit" value="Logout"></form></li>
+    </ul>
+    <script>
+        let sidebar = document.getElementById('sideul');
+        let sidenav = document.getElementById('sidenav');
+        function toggle(condition){
+            if(condition){
+                sidebar.style.width = '150px';
+                sidenav.style.width = '100%';
+            }
+            if(!condition){
+                sidebar.style.width = '0';
+                sidenav.style.width = '0';
+            }
+        }
+    </script>
+</nav>

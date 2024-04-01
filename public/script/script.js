@@ -67,14 +67,16 @@ function sleep(ms) {
 }
 
 function refreshCar(){
-    let qtdP = 0;
+    let price = 0;
     let item = getItem();
 
+    console.log(item);
+
     item.forEach(i => {
-        qtdP += parseInt(i.qtd);
+        price += i.qtd * i.price;
     });
 
-    document.getElementById("littlecar").innerHTML = qtdP + "<br>produto(s)";
+    document.getElementById("littlecar").innerHTML = "Seu carrinho<br>R$ " + price.toFixed(2);
 }
 
 function addLittleCar(){
@@ -93,9 +95,9 @@ function addLittleCar(){
         item.push({
             id: window.location.href.split("/")[4],
             name: document.getElementById("name-info").innerText,
-            price: document.getElementById("preco-info").innerText.replace("R$ ",""),
-            section: document.getElementById("sec-info").innerText,
-            img: document.getElementById("img-info").src.split("/")[4],
+            price: document.getElementById("price-info").innerText.replace("R$ ",""),
+            section: 'facial',
+            img: document.getElementById("img-info").src,
             qtd: 1
         });
     }else{
@@ -319,4 +321,3 @@ function makeListAppear(){
         });
     }
 }
-

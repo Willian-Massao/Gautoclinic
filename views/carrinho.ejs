@@ -2,9 +2,10 @@
 <html lang="en">
     <%- include ("partials/head.ejs") %>
 <body onload="">
+    <%- include ("partials/navbar.ejs") %>
     <%- include ("partials/header.ejs") %>
     <main>
-        <div class="product-container itens-type">
+        <div class="product-container">
             <div id="itens-container">
                 <div id="itens-list">
                     <p>Carrinho de compras</p>
@@ -71,7 +72,7 @@
                     document.getElementById("itens-list").innerHTML += `
                         <div class="item">
                             <div class="img-container">
-                                <img src="/products/${itens[i].img}">
+                                <img src="${itens[i].img}">
                             </div>
                             <div class="desc-container">
                                 <div>
@@ -79,7 +80,7 @@
                                     <p id="preco-info">R$ ${itens[i].price}</p>
                                 </div>
                                 <div class="qtd">
-                                    <button id="left" onclick="qtdButton(0,${itens[i].id},${i})"><i class="fi fi-rs-plus"></i></button>
+                                    <button id="left" onclick="qtdButton(0,${itens[i].id},${i})"><i class="fi fi-rr-plus"></i></button>
                                     <input type="number" value="${itens[i].qtd}" id="qtd-input-${i}">
                                     <button id="right" onclick="qtdButton(1,${itens[i].id},${i})"><i class="fi fi-rr-minus-small"></i></button>
                                 </div>
@@ -103,10 +104,12 @@
                 switch (dir){
                     case 0:
                         document.getElementById("qtd-input-" + val).value = qtd + 1;
+                        qtd++;
                         break;
                     case 1:
                         if(qtd > 0){
                             document.getElementById("qtd-input-" + val).value = qtd - 1;
+                            qtd--;
                         }
                         break;
                 }
@@ -120,7 +123,8 @@
                     for(let i = 0; i<item.length; i++){
                         item[i].name == document.getElementById("qtd-input-0").parentNode.parentNode.childNodes[1].childNodes[1].textContent ? item.splice(i, 1) : console.log("não encontrado");
                     }
-                    console.log(item)
+                    console.log(item);
+                    location.reload();
                 }
                 
                 localStorage.setItem("item", JSON.stringify(item));

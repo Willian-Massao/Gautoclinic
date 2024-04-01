@@ -1,46 +1,31 @@
 <header>
-    <div class="header-container">
-        <figure class="logo_container">
-            <a href="/">
-                <img src="/src/bossi.png" alt="">
+    <a class="logo align" href="/">
+        <img src="/src/logo_dark.png" alt="">
+    </a>
+    <form class="search-bar" action="">
+        <input type="text" name="search" id="search" placeholder="Pesquisar">
+        <button type="submit">
+            <i class="fi fi-rr-search"></i>
+        </button>
+    </form>
+    <div class="icons align">
+        <% if(user == undefined){ %>
+            <a class="user" href="/login">
+                <i class="fi fi-rr-user"></i>
+                <p>OLÁ, FAÇA O LOGIN <br> EM SUA CONTA</p>
             </a>
-        </figure>
-        <div class="header-search-bar">
-            <input type="text" placeholder="Pesquisar" id="search" oninput="makeListAppear()"><button><i class="fi fi-rs-search"></i></button>
-            <div id="search-result">
-                <ul id="search-list">
-
-                </ul>
-            </div>
-        </div>
-        <div class="header-user-interface">
-            <div class="header-login">
-                <a href="/login"><i class="fi fi-rr-user G"></i>
-                    <div>
-                        Olá, faça <strong>Login</strong> ou se<strong> cadastre </strong>
-                    </div>
-                </a>
-            </div>
-            <div class="header-carrinho">
-                <a href="/carrinho">
-                    <div>
-                        <i class="fi fi-rr-shopping-cart"></i>
-                    </div>
-                    <div id="littlecar"></div>
-                </a>
-            </div>
-        </div>
-    </div>
-    <div id="header-list">
-        <a class="header-sections" href="/">Carne</a>
-        <a class="header-sections" href="/">Margarinas</a>
-        <a class="header-sections" href="/">Graõs</a>
-        <a class="header-sections" href="/">Temperos</a>
-        <a class="header-sections" href="/">Doces</a>
-        <a class="header-sections" href="/">Bebidas</a>
-        <a class="header-sections" href="/">Higiene</a>
-        <a class="header-sections" href="/">Verduras</a>
-        <a class="header-sections" href="/">Peixes</a>
-        <a class="header-sections" href="/">Frutas</a>
+        <% }else{ %>
+            <a class="user" href="/profile">
+                <i class="fi fi-rr-user"></i>
+                <p>OLÁ, <%= user.name.split(' ')[0].toUpperCase() %></p>
+            </a>
+        <% } %>
+        <a class="cart" href="/carrinho">
+            <i class="fi fi-rr-shopping-cart"></i>
+            <p id="littlecar">Seu carrinho <br> R$ 00,00</p>
+        </a>
+        <button class="menu" onclick="toggle(true)">
+            <i class="fi fi-rr-menu-burger"></i>
+        </button>
     </div>
 </header>

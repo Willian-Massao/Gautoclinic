@@ -1,15 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
     <%- include ("partials/head.ejs") %>
-<body onload="">
+    <title>Gauto Clinic</title>
+</head>
+<body>
+    <%- include ("partials/navbar.ejs") %>
     <%- include ("partials/header.ejs") %>
     <main>
-        <!-- Renderizando os produtos -->
-        <% itens.forEach(product => { %>
-            <script>
-                createProduct('<%= product.name %>', '<%= product.price %>', 'products/<%= product.image %>', '<%= product.section %>', '<%= product.id %>');
-            </script>
-        <% }); %>
+        <div class="banner">
+            <img src="/src/gauto_pose1.jpg" alt="">
+        </div>
+        <div class="itens">
+            <a class="item" href="/produtos/facial">
+                <img src="/src/faciais.png" alt="">
+                <p>Produtos Faciais</p>
+            </a>
+            <a class="item" href="/produtos">
+                <img src="/src/pose.png" alt="">
+                <p>Agende sua consulta</p>
+            </a>
+            <a class="item disable" href="/produtos" >
+                <img src="/src/cursos.png" alt="">
+                <p>Cursos</p>
+            </a>
+        </div>
     </main>
     <%- include ("partials/footer.ejs") %>
 </body>

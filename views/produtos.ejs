@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include ("partials/head.ejs") %>
+</head>
+<body>
+    <%- include ("partials/navbar.ejs") %>
+    <%- include ("partials/header.ejs") %>
+    <main>
+        <div class="banner">
+            <img src="/src/gauto_pose1.jpg" alt="">
+        </div>
+        <div class="itens">
+            <% itens.forEach((item)=>{ %>
+                <a class="product" href="/item/<%= item.id %>">
+                    <div class="image">
+                        <img src="data:image/jpg;base64,<%= image.image %>" alt="">
+                    </div>
+                    <p class="description"><%= item.name %></p>
+                    <div class="rate">
+                        <% for(let i = 0; i < 5; i++){ %>
+                            <% if(i+1 > item.mRate){ %>
+                                <i class="fi fi-rr-star"></i>
+                            <% }else{ %>
+                                <i class="fi fi-sr-star"></i>
+                            <% } %>
+                        <% } %>
+                    </div>
+                    <p class="price descount">R$ <%= item.price.toFixed(2) %> </p>
+                    <p class="price">R$ <%= (item.price - (item.price * (item.descount/100))).toFixed(2) %> Em promoção</p>
+                    <div class="buy">
+                        <button class="buy-button">Comprar</button>
+                    </div>
+                </a>
+            <% }) %>
+        </div>
+    </main>
+    <%- include ("partials/footer.ejs") %>
+</body>
+</html>
