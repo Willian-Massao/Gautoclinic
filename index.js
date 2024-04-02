@@ -224,8 +224,8 @@ app.get('/login', (req, res) => {
     res.render('login');
 });
 
-app.get('/cadastro', (req, res) => {
-    res.render('cadastro');
+app.get('/register', (req, res) => {
+    res.render('register');
 });
 
 app.get('/', (req, res) =>{
@@ -295,6 +295,10 @@ app.get('/admin/admins', ensureAdmin, (req, res) => {
     admins.select().then( item =>{
         res.render('admin', {data: item, table: 'admins'});
     })
+});
+
+app.get('/info', (req, res)=>{
+    res.render('info', {user: req.user});
 });
 
 app.listen(port, () => {

@@ -182,6 +182,19 @@ a:hover{
 	background-position: right;
 }
 
+.n-user{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-direction: row-reverse;
+}
+.duo-input{
+	width: 100%;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-gap: 5px;
+}
+
 
 @media screen and (max-width: 1050px){
 	.container{
