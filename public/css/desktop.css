@@ -656,3 +656,33 @@ header.admin li:hover{
     min-width: none;
     border: 1px solid rgba(0, 0, 0, 0.15);
 }
+.info{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 80%;
+}
+.info .who{
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 50%;
+    min-width: 530px;
+}
+.info .info-container{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    margin-top: 10px;
+    text-align: center;
+}
+.info-container> div{
+    width: 30%;
+    min-width: 400px;
+    text-align: start;
+}
