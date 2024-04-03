@@ -12,7 +12,7 @@
         </div>
         <div class="itens">
             <% itens.forEach((item)=>{ %>
-                <a class="product" href="/item/?id=<%= item.id %>">
+                <a class="product" href="/item/<%= item.id %>">
                     <div class="image">
                         <img src="data:image/jpg;base64,<%= image.image %>" alt="">
                     </div>
