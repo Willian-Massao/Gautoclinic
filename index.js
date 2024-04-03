@@ -289,7 +289,7 @@ app.get('/produtos/:sec', (req, res) =>{
     const images = new imageDAO();
 
     itens.findType(req.params.sec).then( itens =>{
-        images.findId(1).then( image =>{
+        images.findId(itens.id).then( image =>{
             res.render('produtos', {itens: itens, user: req.user, image: image});
         }).catch(err => res.status(500).send('Something broke!'));
     }).catch(err => res.status(500).send('Something broke!'));
