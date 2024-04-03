@@ -32,7 +32,7 @@
                                 <label for="normal">Entrega express <br><strong>R$ 5.00</strong>hoje mesmo</label>
                             </div>
                         </fieldset>
-                        <button class="summary-box-button" onclick="window.location.href='/pagamento'">Finalizar Compra</button>
+                        <button class="summary-box-button" onclick="sendItens()">Pagamento</button>
                     </div>
                 </div>
             </div>
@@ -42,6 +42,7 @@
 
             render();
             total(0)
+
             function total(){
                 itens = JSON.parse(localStorage.getItem("item"));
 
@@ -99,7 +100,6 @@
                 }
             }
             function qtdButton(dir, id, val){
-                console.log(item)
                 let qtd = parseInt(document.getElementById("qtd-input-" + val).value);
                 switch (dir){
                     case 0:
@@ -123,12 +123,22 @@
                     for(let i = 0; i<item.length; i++){
                         item[i].name == document.getElementById("qtd-input-0").parentNode.parentNode.childNodes[1].childNodes[1].textContent ? item.splice(i, 1) : console.log("não encontrado");
                     }
-                    console.log(item);
                     location.reload();
                 }
                 
                 localStorage.setItem("item", JSON.stringify(item));
                 total()
+            }
+            function sendItens(){
+                axios({
+                    method: "post",
+                    url: "/payment",
+                    data: {
+                        itens: itens
+                    },
+                }).then((res) => {
+                    window.location.href = '/payment/' + res.data.url;
+                })
             }
         </script>
     </main>

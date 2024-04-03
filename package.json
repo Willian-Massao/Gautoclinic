@@ -23,6 +23,7 @@
     "passport-local": "^1.0.0",
     "sqlite": "^5.0.1",
     "sqlite3": "^5.1.6",
+    "uuid-lib": "^0.0.6",
     "xml": "^1.0.1",
     "xml-js": "^1.6.11"
   }
