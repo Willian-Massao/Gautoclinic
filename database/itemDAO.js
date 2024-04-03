@@ -95,6 +95,7 @@ module.exports  = class itens{
             return rows[0];
         }catch(err){
             console.log(err);
+            conn.release();
         }finally{
             conn.release();
         }

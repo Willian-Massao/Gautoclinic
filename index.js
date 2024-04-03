@@ -9,9 +9,8 @@ const passport = require('passport');
 const bcrypt = require('bcryptjs');
 const flash = require('connect-flash');
 const multer = require('multer');
-const xml = require('xml');
-const xml2js = require('xml-js');
 const User = require('./controllers/UserController.js');
+const uuid = require("uuid-lib");
 
 // configuração do multer
 const storage = multer.diskStorage({
@@ -35,7 +34,7 @@ const upload = multer({ storage });
 //const itens = require("./database/ItensDB.js");
 const userDAO = require("./database/userDAO.js");
 const itemDAO = require("./database/itemDAO.js");
-const cardDAO = require("./database/cardDAO.js");
+const transactionDAO = require("./database/transactionDAO.js");
 const commentDAO = require("./database/commentDAO.js");
 const imageDAO = require("./database/imageDAO.js");
 const adminDAO = require("./database/adminDAO.js");
@@ -46,14 +45,14 @@ const port = 3000;
 // cria tabela
 const users = new userDAO();
 const itens = new itemDAO();
-const cards = new cardDAO();
+const transaction = new transactionDAO();
 const comments = new commentDAO();
 const images = new imageDAO();
 const admins = new adminDAO();
 
 itens.create();
 users.create();
-cards.create();
+transaction.create();
 comments.create();
 images.create();
 admins.create();
@@ -165,7 +164,7 @@ app.post('/cadastro', (req, res) => {
                 );
             });
         });
-    })
+    }).catch(err => res.status(500).send('Email not found!'));
 });
 
 app.post('/carrinho' ,async  (req, res) => {
@@ -189,8 +188,8 @@ app.post('/image', upload.single('image') ,async (req, res) => {
     const image = await removeFile('./public/products/' + req.file.filename);
 
     images.insert({idproduct: id, image: image}).then(
-        res.redirect('/debug/tabela/item')
-    );
+        res.redirect('/')
+    ).catch(err => res.status(500).send('Something broke!'));
 })
 
 async function removeFile(file){
@@ -212,11 +211,64 @@ app.post('/comment/add/:id', async(req, res) => {
         users.findId(req.user.id).then( user =>{
             comments.insert({idProduct: id, idUser: user.id, nameUser: user.name, comment, rate}).then(
                 res.redirect(`/item/${id}`)
-            );
-        });
+            ).catch(err => res.status(500).send('Something broke!'));
+        }).catch(err => res.status(500).send('Something broke!'));
     }else{
         res.redirect(`/item/${id}`);
     }
+});
+
+app.post('/payment', async(req, res) => {
+    const transaction = new transactionDAO();
+    const itens = new itemDAO();
+    let databaseRes = await itens.select();
+    const cacheItens = req.body.itens;
+
+    let id;
+    let idUser;
+    let check_ref = uuid.create().toString();
+    let price = 0;
+    let currency = 'BRL';
+    let pay2mail = 'phelpsxd@hotmail.com';
+    let status = '';
+    let date = '';
+
+    cacheItens.forEach(item => {
+        databaseRes.forEach(res => {
+            if(res.id == item.id){
+                price += res.price * item.qtd;
+            }
+        });
+    });
+
+    const apiRes = await fetch('https://api.sumup.com/v0.1/checkouts',{
+        method: 'POST',
+        headers: {
+            "Authorization": "Bearer sup_sk_**",
+            "Content-Type": "application/json",
+        }, body:JSON.stringify({
+            "checkout_reference": check_ref,
+            "amount": price,
+            "currency": currency,
+            "pay_to_email": pay2mail,
+        })
+    });
+    if(apiRes.ok){
+        let data = await apiRes.json();
+
+        id = data.id;
+        idUser = req.user.id;
+        check_ref = data.checkout_reference;
+        status = data.status;
+        date = data.date;
+        price = data.amount;
+    }
+
+    transaction.insert({id, idUser, check_ref, price, currency, pay2mail, status, date}).then(
+        res.json({ url: check_ref})
+    ).catch(err => {
+            res.status(500).send('Something broke!')
+        });
 });
 
 // Rotas get
@@ -239,13 +291,12 @@ app.get('/produtos/:sec', (req, res) =>{
     itens.findType(req.params.sec).then( itens =>{
         images.findId(1).then( image =>{
             res.render('produtos', {itens: itens, user: req.user, image: image});
-        });
-    })
+        }).catch(err => res.status(500).send('Something broke!'));
+    }).catch(err => res.status(500).send('Something broke!'));
 });
 
 app.get('/item/:id', (req, res) =>{
     const itens = new itemDAO();
-
 
     let rates = 0;
 
@@ -253,10 +304,9 @@ app.get('/item/:id', (req, res) =>{
         data.comments.forEach(element => {
             rates+= element.rate;
         });
-        console.log(data);
         itens.newRate({mRate: (rates/(data.comments.length)), id: req.params.id});
         res.render('item', {item: data, user: req.user, image: data.images});
-    })
+    }).catch(err => res.status(500).send('Something broke!'));
 });
 
 app.get('/profile', ensureAuthenticated, (req, res) => {
@@ -264,15 +314,15 @@ app.get('/profile', ensureAuthenticated, (req, res) => {
 
     itens.findId(req.user.id).then( itens =>{
         res.render('profile', { user: req.user, itens: itens});
-    })
+    }).catch(err => res.status(500).send('Something broke!'));
 });
 
-app.get('/carrinho', (req, res) => {
+app.get('/carrinho', ensureAuthenticated, (req, res) => {
     const itens = new itemDAO();
 
     itens.findId(req.params.id).then( itens =>{
         res.render('carrinho', {itens: itens, user: req.user});
-    })
+    }).catch(err => res.status(500).send('Something broke!'));
 });
 
 app.get('/admin/users', ensureAdmin, (req, res) => {
@@ -280,25 +330,33 @@ app.get('/admin/users', ensureAdmin, (req, res) => {
 
     users.select().then( item =>{
         res.render('admin', {data: item, table: 'users'});
-    })
+    }).catch(err => res.status(500).send('Something broke!'));
 });
 app.get('/admin/products', ensureAdmin, (req, res) => {
     const itens = new itemDAO();
 
     itens.select().then( item =>{
         res.render('admin', {data: item, table: 'products'});
-    })
+    }).catch(err => res.status(500).send('Something broke!'));
 });
 app.get('/admin/admins', ensureAdmin, (req, res) => {
     const admins = new adminDAO();
 
     admins.select().then( item =>{
         res.render('admin', {data: item, table: 'admins'});
-    })
+    }).catch(err => res.status(500).send('Something broke!'));
 });
 
 app.get('/info', (req, res)=>{
     res.render('info', {user: req.user});
+});
+app.get('/payment/:id', (req, res)=>{
+    const transaction = new transactionDAO();
+    console.log(req.params.id);
+    transaction.findId(req.params.id).then( data =>{
+        console.log(data);
+        res.render('payment', {data: data, user: req.user});
+    }).catch(err => res.status(500).send('Something broke!'));
 });
 
 app.listen(port, () => {
