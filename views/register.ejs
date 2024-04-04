@@ -68,7 +68,7 @@
                         </div>
                         <div class="div">
                             <h5>CEP</h5>
-                            <input type="text" name="cep" class="input">
+                            <input type="text" name="cep" id="cep" oninput="getCep()" class="input">
                         </div>
                     </div>
                     <div class="duo-input">
@@ -78,7 +78,7 @@
                             </div>
                             <div class="div">
                                 <h5>Cidade</h5>
-                                <input type="text" name="city" class="input">
+                                <input type="text" name="city" id="city" class="input">
                             </div>
                         </div>
                         <div class="input-div one">
@@ -86,8 +86,8 @@
                                 <i class="fas fa-house-user"></i>
                             </div>
                             <div class="div">
-                                <h5>Estado</h5>
-                                <input type="text" name="district" class="input">
+                                <h5>Bairro</h5>
+                                <input type="text" name="district" id="district"  class="input">
                             </div>
                         </div>
                     </div>
@@ -98,7 +98,7 @@
                             </div>
                             <div class="div">
                                 <h5>Rua</h5>
-                                <input type="text" name="adress" class="input">
+                                <input type="text" name="adress" id="adress" class="input">
                             </div>
                         </div>
                         <div class="input-div one">
@@ -133,6 +133,34 @@
                 </form>
             </div>
         </div>
+        <script>
+            async function getCep(){
+                let cep = document.getElementById('cep').value;
+                let adress = document.getElementById('adress');
+                let city = document.getElementById('city');
+                let district = document.getElementById('district');
+                cep.replace(/\s+|-/g, "");
+                
+                if(cep.length == 8){
+                    let res = await axios.get('https://viacep.com.br/ws/'+ cep +'/json/');
+
+                    console.log(res.data);
+
+                    if(!res.data.erro){
+                        adress.value = res.data.logradouro;
+                        city.value = res.data.localidade;
+                        district.value = res.data.bairro;
+                        adress.focus();
+                        city.focus();
+                        district.focus();
+                    }else{
+                        adress.value = "Não encontrado";
+                        city.value = "Não encontrado";
+                        district.value = "Não encontrado";
+                    }
+                }
+            }
+        </script>
         <script type="text/javascript" src="./script/scriptLogin.js"></script>
     </body>
     </html>
