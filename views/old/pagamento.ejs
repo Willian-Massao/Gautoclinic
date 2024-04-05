@@ -63,13 +63,11 @@
         item = getItem();
         let itemArr = [];
 
-        console.log(item);
 
         itemArr = item.map((element) => element.id);
 
         try{
             axios.post('/carrinho', {itemArr}).then((x)=>{
-                console.log(x.data);
                 let total = 0;
                 x.data.forEach(x => {
                     i = item.find((element) => element.id == x.id).qtd;;
@@ -87,7 +85,6 @@
 
         async function returnItens(json){
             let itens = await axios.post('/carrihno', {json});
-            console.log(itens);
             return itens;
         }
     </script>

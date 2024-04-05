@@ -190,7 +190,7 @@ app.post('/carrinho' ,async  (req, res) => {
 
 app.post('/image', upload.single('image') ,async (req, res) => {
     const images = new imageDAO();
-    let id = 1;
+    let id = 2;
     const image = await removeFile('./public/products/' + req.file.filename);
 
     images.insert({idproduct: id, image: image}).then(
@@ -297,9 +297,7 @@ app.get('/produtos/:sec', (req, res) =>{
     const images = new imageDAO();
 
     itens.findType(req.params.sec).then( itens =>{
-        images.findId(itens.id).then( image =>{
-            res.render('produtos', {itens: itens, user: req.user, image: image});
-        }).catch(err => res.status(500).send('Something broke!'));
+        res.render('produtos', {itens: itens, user: req.user});
     }).catch(err => res.status(500).send('Something broke!'));
 });
 
@@ -309,12 +307,14 @@ app.get('/item/:id', (req, res) =>{
     let rates = 0;
 
     itens.getItem(req.params.id).then( data =>{
-        data.comments.forEach(element => {
-            rates+= element.rate;
-        });
-        itens.newRate({mRate: (rates/(data.comments.length)), id: req.params.id});
+        if(data.comments.length != 0){
+            data.comments.forEach(element => {
+                rates+= element.rate;
+            })
+            itens.newRate({mRate: (rates/(data.comments.length)), id: req.params.id});
+        }
         res.render('item', {item: data, user: req.user, image: data.images});
-    }).catch(err => res.status(500).send('Something broke!'));
+    })
 });
 
 app.get('/profile', ensureAuthenticated, (req, res) => {
@@ -358,12 +358,21 @@ app.get('/admin/admins', ensureAdmin, (req, res) => {
 app.get('/info', (req, res)=>{
     res.render('info', {user: req.user});
 });
+
 app.get('/payment/:id', (req, res)=>{
     const transaction = new transactionDAO();
     console.log(req.params.id);
     transaction.findId(req.params.id).then( data =>{
-        console.log(data);
         res.render('payment', {data: data, user: req.user});
+    }).catch(err => res.status(500).send('Something broke!'));
+});
+
+app.get('/search', (req, res) =>{
+    const itens = new itemDAO();
+    const errorMessage = req.flash('error');
+
+    itens.search(req.query.e).then( data =>{
+        res.render('search', {itens: data, user: req.user, error: errorMessage});
     }).catch(err => res.status(500).send('Something broke!'));
 });
 

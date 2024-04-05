@@ -119,7 +119,6 @@
                     for(let i = 0; i<item.length; i++){
                         item[i].name == document.getElementById("qtd-input-0").parentNode.parentNode.childNodes[1].childNodes[1].textContent ? item.splice(i, 1) : console.log("não encontrado");
                     }
-                    console.log(item)
                     localStorage.setItem("item", JSON.stringify(item));
                     total()
                     location.reload();

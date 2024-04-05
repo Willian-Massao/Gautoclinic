@@ -70,7 +70,6 @@ function refreshCar(){
     let price = 0;
     let item = getItem();
 
-    console.log(item);
 
     item.forEach(i => {
         price += i.qtd * i.price;
@@ -87,7 +86,6 @@ function addLittleCar(){
     item.findIndex(function(x, i){
         if(x.id == window.location.href.split("/")[4]){
             isInside = true;
-            console.log(i);
             index = i;
         }
     });
@@ -281,7 +279,6 @@ function makeList(){
         console.log("localstorage criado!!");
     }
 
-    console.log(products);
 }
 
 //carregar uma função dps q a pagina carregar usando jquery
@@ -292,7 +289,6 @@ $(document).ready(function(){
 function makeListAppear(){
     let search_string = document.getElementById("search").value;
     let result = products.filter(product => product.name_temp.toLowerCase().includes(search_string.toLowerCase()));
-    console.log(result);
 
     //se a variavel products estiver vazia, preenchela com a do localstorage
     if(products.length == 0){

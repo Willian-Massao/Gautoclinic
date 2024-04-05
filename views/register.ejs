@@ -145,8 +145,6 @@
                 if(cep.value.length == 8){
                     let res = await axios.get('https://viacep.com.br/ws/'+ cep.value +'/json/');
 
-                    console.log(res.data);
-
                     if(!res.data.erro){
                         adress.value = res.data.logradouro;
                         city.value = res.data.localidade;
