@@ -145,7 +145,7 @@ app.post('/logout', function(req, res, next){
     });
 });
 
-app.post('/cadastro', (req, res) => {
+app.post('/register', async (req, res) => {
     const { name, email, lastname, tel, cpf, cep, city, district, adress, number, password} = req.body;
     // Verifica se o email já está cadastrado
     const users = new userDAO();
@@ -153,18 +153,24 @@ app.post('/cadastro', (req, res) => {
     users.findEmail(email)
     .then(user => {
         if (user) {
-            return res.render('cadastro', { message: 'Email já cadastrado.' });
+            req.flash('error', 'E-mail Ja cadastrado!');
+            throw Error;
         }
         // Gera o salt e a senha criptografada
         bcrypt.genSalt(10, (err, salt) => {
-            bcrypt.hash(password, salt, (err, hash) => {
+            bcrypt.hash(password, salt, async (err, hash) => {
                 // Salva o usuário no banco de dados
-                users.insert({name, email, lastname, tel, cpf, cep, city, district, adress, number, password: hash, salt}).then(
-                    res.redirect('/login')
-                );
+                users.insert({name, email, lastname, tel, cpf, cep, city, district, adress, number, password: hash, salt}).then(()=> {
+                    res.redirect('/login');
+                }).catch(err => {
+                    req.flash('error', 'campo preenchido incorretamente!');
+                    res.redirect('/register');
+                });
             });
         });
-    }).catch(err => res.status(500).send('Email not found!'));
+    }).catch(err => (
+        res.redirect('/register')
+    ));
 });
 
 app.post('/carrinho' ,async  (req, res) => {
@@ -277,11 +283,13 @@ app.get('/login', (req, res) => {
 });
 
 app.get('/register', (req, res) => {
-    res.render('register');
+    const errorMessage = req.flash('error');
+    res.render('register', {error: errorMessage});
 });
 
 app.get('/', (req, res) =>{
-    res.render('home', {itens: itens, user: req.user });
+    const errorMessage = req.flash('error');
+    res.render('home', {itens: itens, user: req.user, error: errorMessage  });
 });
 
 app.get('/produtos/:sec', (req, res) =>{

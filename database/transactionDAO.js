@@ -19,7 +19,7 @@ module.exports  = class itens{
             console.log("Tabela transaction criada com sucesso!");
         }catch(err){
             console.log(err);
-            conn.release();
+            throw err;
         }finally{
             conn.release();
         }
@@ -31,12 +31,12 @@ module.exports  = class itens{
     async insert(transaction){
         const conn = await pool.getConnection();
         try{
+            NN(transaction);
             const sql = "insert into transaction (id, idUser, check_ref, price, currency, pay2mail, status, date) values (?,?,?,?,?,?,?,?)"
             await conn.query(sql, [transaction.id, transaction.idUser, transaction.check_ref, transaction.price, transaction.currency, transaction.pay2mail, transaction.status, transaction.date])
             console.log("transaction inserido com sucesso!");
         }catch(err){
             console.log(err);
-            conn.release();
         }finally{
             conn.release();
         }
@@ -60,11 +60,12 @@ module.exports  = class itens{
     async update(transaction){
         const conn = await pool.getConnection();
         try {
+            NN(transaction);
             const sql = `UPDATE transaction SET status = ? WHERE id = ?`;
             await conn.query(sql, [transaction.status, transaction.id]);
         }catch(err){
             console.log(err);
-            conn.release();
+            throw err;
         }finally{
             conn.release();
         }
@@ -83,33 +84,13 @@ module.exports  = class itens{
             conn.release();
         }
     }
+}
 
-    // delete
-    //async delete(id){
-    //    const conn = await pool.getConnection();
-    //    try {
-    //        const sql = `DELETE FROM transaction WHERE id = ?`;
-    //        const [row] = await conn.query(sql, [id]);
-    //        return row;
-    //    }catch(err){
-    //        console.log(err);
-    //        conn.release();
-    //    }finally{
-    //        conn.release();
-    //    }
-    //}
-
-    //async executeQuery(query){
-    //    const conn = await pool.getConnection();
-    //    try {
-    //        const sql = query;
-    //        const [row] = await conn.query(sql);
-    //        return row;
-    //    }catch(err){
-    //        console.log(err);
-    //        conn.release();
-    //    }finally{
-    //        conn.release();
-    //    }
-    //}
+function NN(thing){
+    let objKeys = Object.keys(thing);
+    objKeys.forEach((key) => {
+        if(thing[key] == "" || thing[key] == null){
+            throw new Error("O Campo não pode ser nulo!");
+        };
+    });
 }

@@ -13,13 +13,14 @@
 </head>
 <body>
     <body>
+        <%- include ("partials/alert.ejs") %>
         <img class="wave" src="/src/wave.png">
         <div class="container">
             <div class="img">
                 <img src="/src/logo.png">
             </div>
             <div class="login-content">
-                <form method="post" action="/cadastro">
+                <form method="post" action="/register">
                     <img src="/src/logo.png">
                     <h2 class="title">Criar conta</h2>
                     <div class="duo-input">
@@ -135,14 +136,14 @@
         </div>
         <script>
             async function getCep(){
-                let cep = document.getElementById('cep').value;
+                let cep = document.getElementById('cep');
                 let adress = document.getElementById('adress');
                 let city = document.getElementById('city');
                 let district = document.getElementById('district');
-                cep.replace(/\s+|-/g, "");
+                cep.value.replace(/\s+|-/g, "");
                 
-                if(cep.length == 8){
-                    let res = await axios.get('https://viacep.com.br/ws/'+ cep +'/json/');
+                if(cep.value.length == 8){
+                    let res = await axios.get('https://viacep.com.br/ws/'+ cep.value +'/json/');
 
                     console.log(res.data);
 
@@ -153,10 +154,15 @@
                         adress.focus();
                         city.focus();
                         district.focus();
+                        cep.focus();
                     }else{
                         adress.value = "Não encontrado";
                         city.value = "Não encontrado";
                         district.value = "Não encontrado";
+                        adress.focus();
+                        city.focus();
+                        district.focus();
+                        cep.focus();
                     }
                 }
             }

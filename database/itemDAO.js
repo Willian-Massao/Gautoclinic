@@ -19,7 +19,6 @@ module.exports  = class itens{
             console.log("Tabela itens criada com sucesso!");
         }catch(err){
             console.log(err);
-            conn.release();
         }finally{
             conn.release();
         }
@@ -63,7 +62,6 @@ module.exports  = class itens{
             return temp;
         }catch(err){
             console.log(err);
-            conn.release();
         }finally{
             conn.release();
         }
@@ -75,12 +73,13 @@ module.exports  = class itens{
     async insert(itens){
         const conn = await pool.getConnection();
         try{
+            NN(itens);
             const sql = "insert into itens (name, qtd, price, descount, type, description) values (?,?,?,?,?,?)"
             await conn.query(sql, [itens.name, itens.qtd, itens.price, itens.descount, itens.type, itens.description])
             console.log("itens inserido com sucesso!");
         }catch(err){
             console.log(err);
-            conn.release();
+            throw err;
         }finally{
             conn.release();
         }
@@ -95,7 +94,6 @@ module.exports  = class itens{
             return rows[0];
         }catch(err){
             console.log(err);
-            conn.release();
         }finally{
             conn.release();
         }
@@ -119,11 +117,12 @@ module.exports  = class itens{
     async update(itens){
         const conn = await pool.getConnection();
         try {
+            NN(itens);
             const sql = `UPDATE itens SET name = ? qtd = ? price = ? descount = ? type = ? mRate = ? description = ? WHERE id = ?`;
             await conn.query(sql, [itens.name, itens.qtd, itens.price, itens.descount,itens.type, itens.mRate, itens.description, itens.id]);
         }catch(err){
             console.log(err);
-            conn.release();
+            throw err;
         }finally{
             conn.release();
         }
@@ -152,7 +151,6 @@ module.exports  = class itens{
             return row;
         }catch(err){
             console.log(err);
-            conn.release();
         }finally{
             conn.release();
         }
@@ -165,7 +163,6 @@ module.exports  = class itens{
             await conn.query(sql, [value.mRate, value.id]);
         }catch(err){
             console.log(err);
-            conn.release();
         }finally{
             conn.release();
         }
@@ -179,9 +176,17 @@ module.exports  = class itens{
             return row;
         }catch(err){
             console.log(err);
-            conn.release();
         }finally{
             conn.release();
         }
     }
+}
+
+function NN(thing){
+    let objKeys = Object.keys(thing);
+    objKeys.forEach((key) => {
+        if(thing[key] == "" || thing[key] == null){
+            throw new Error("O Campo não pode ser nulo!");
+        };
+    });
 }

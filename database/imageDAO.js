@@ -14,7 +14,6 @@ module.exports  = class itens{
             console.log("Tabela images criada com sucesso!");
         }catch(err){
             console.log(err);
-            conn.release();
         }finally{
             conn.release();
         }
@@ -26,12 +25,13 @@ module.exports  = class itens{
     async insert(images){
         const conn = await pool.getConnection();
         try{
+            NN(images);
             const sql = "insert into images (idproduct, image) values (?,?)"
             await conn.query(sql, [images.idproduct, images.image])
             console.log("images inserido com sucesso!");
         }catch(err){
             console.log(err);
-            conn.release();
+            throw err;
         }finally{
             conn.release();
         }
@@ -55,11 +55,12 @@ module.exports  = class itens{
     async update(images){
         const conn = await pool.getConnection();
         try {
+            NN(images);
             const sql = `UPDATE images SET image = ? WHERE id = ? and idproduct = ?`;
             await conn.query(sql, [images.image, images.id, images.idproduct]);
         }catch(err){
             console.log(err);
-            conn.release();
+            throw err;
         }finally{
             conn.release();
         }
@@ -73,7 +74,6 @@ module.exports  = class itens{
             return row;
         }catch(err){
             console.log(err);
-            conn.release();
         }finally{
             conn.release();
         }
@@ -88,7 +88,6 @@ module.exports  = class itens{
             return row;
         }catch(err){
             console.log(err);
-            conn.release();
         }finally{
             conn.release();
         }
@@ -102,9 +101,17 @@ module.exports  = class itens{
             return row;
         }catch(err){
             console.log(err);
-            conn.release();
         }finally{
             conn.release();
         }
     }
+}
+
+function NN(thing){
+    let objKeys = Object.keys(thing);
+    objKeys.forEach((key) => {
+        if(thing[key] == "" || thing[key] == null){
+            throw new Error("O Campo não pode ser nulo!");
+        };
+    });
 }
