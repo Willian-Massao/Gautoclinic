@@ -2,14 +2,13 @@
 <html lang="en">
 <head>
     <%- include ("partials/head.ejs") %>
+    <title>Gauto Clinic</title>
 </head>
 <body>
+    <%- include ("partials/alert.ejs") %>
     <%- include ("partials/navbar.ejs") %>
     <%- include ("partials/header.ejs") %>
     <main>
-        <div class="banner">
-            <img src="/src/gauto_pose1.jpg" alt="">
-        </div>
         <div class="itens">
             <% itens.forEach((item)=>{ %>
                 <a class="product" href="/item/<%= item.id %>">

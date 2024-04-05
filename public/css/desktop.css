@@ -430,7 +430,7 @@ button.item-buy:active{
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    width: 1100px;
+    width: 80%;
 
 }
 .item-rating{
@@ -496,7 +496,7 @@ button.item-buy:active{
     scale: 0.95;
 }
 .product-container{
-    width: 1100px;
+    width: 80%;
     margin-top: 100px;
 }
 #itens-container{
@@ -508,10 +508,10 @@ button.item-buy:active{
     width: 100%;
 }
 #itens-container #itens-list{
-    width: 75%;
+    width: calc(100% - 240px);
 }
 #itens-container #summary{
-    width: 20%;
+    min-width: 230px;
 }
 #itens-container #itens-list .item{
     height: 150px;
@@ -655,4 +655,74 @@ header.admin li:hover{
     width: 100%;
     min-width: none;
     border: 1px solid rgba(0, 0, 0, 0.15);
+}
+.info{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 80%;
+}
+.info .who{
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 50%;
+    min-width: 530px;
+}
+.info .info-container{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    margin-top: 10px;
+    text-align: center;
+}
+.info-container> div{
+    width: 30%;
+    min-width: 400px;
+    text-align: start;
+}
+.alert-container{
+    display: none;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    background: rgba(255, 255, 255, 0);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);;
+    z-index: 2;
+}
+.alert-container .alert{
+    background-color: white;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 5px;
+    padding: 30px;
+    padding-left: 10px;
+    padding-right: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 350px;
+}
+.alert button{
+    margin-top: 10px;
+    width: 50px;
+    padding: 10px;
+    border: 0;
+    border-radius: 5px;
+    background-color: #000000;
+    color: rgb(255, 255, 255);
+    transition: 50ms ease-in-out;
+}
+.alert button:active{
+    scale: 0.95;
 }

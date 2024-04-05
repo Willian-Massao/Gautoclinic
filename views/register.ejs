@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/login.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a81368914c.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Página de Cadastro</title>
+</head>
+<body>
+    <body>
+        <%- include ("partials/alert.ejs") %>
+        <img class="wave" src="/src/wave.png">
+        <div class="container">
+            <div class="img">
+                <img src="/src/logo.png">
+            </div>
+            <div class="login-content">
+                <form method="post" action="/register">
+                    <img src="/src/logo.png">
+                    <h2 class="title">Criar conta</h2>
+                    <div class="duo-input">
+                        <div class="input-div one">
+                            <div class="i">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="div">
+                                <h5>Nome</h5>
+                                <input type="text" name="name" class="input">
+                            </div>
+                        </div>
+                       <div class="input-div one">
+                           <div class="i">
+                               <i class="fas fa-user"></i>
+                           </div>
+                           <div class="div">
+                               <h5>Sobrenome</h5>
+                               <input type="text" name="lastname" class="input">
+                           </div>
+                        </div>
+                    </div>
+                   <div class="duo-input">
+                        <div class="input-div one">
+                            <div class="i">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="div">
+                                <h5>Telefone</h5>
+                                <input type="text" name="tel" class="input">
+                            </div>
+                        </div>
+                        <div class="input-div one">
+                            <div class="i">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="div">
+                                <h5>CPF</h5>
+                                <input type="text" name="cpf" class="input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-div one">
+                        <div class="i">
+                            <i class="fas fa-house-user"></i>
+                        </div>
+                        <div class="div">
+                            <h5>CEP</h5>
+                            <input type="text" name="cep" id="cep" oninput="getCep()" class="input">
+                        </div>
+                    </div>
+                    <div class="duo-input">
+                        <div class="input-div one">
+                            <div class="i">
+                                <i class="fas fa-house-user"></i>
+                            </div>
+                            <div class="div">
+                                <h5>Cidade</h5>
+                                <input type="text" name="city" id="city" class="input">
+                            </div>
+                        </div>
+                        <div class="input-div one">
+                            <div class="i">
+                                <i class="fas fa-house-user"></i>
+                            </div>
+                            <div class="div">
+                                <h5>Bairro</h5>
+                                <input type="text" name="district" id="district"  class="input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="duo-input">
+                        <div class="input-div one">
+                            <div class="i">
+                                <i class="fas fa-house-user"></i>
+                            </div>
+                            <div class="div">
+                                <h5>Rua</h5>
+                                <input type="text" name="adress" id="adress" class="input">
+                            </div>
+                        </div>
+                        <div class="input-div one">
+                            <div class="i">
+                                <i class="fas fa-house-user"></i>
+                            </div>
+                            <div class="div">
+                                <h5>Numero</h5>
+                                <input type="text" name="number" class="input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-div one">
+                        <div class="i">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="div">
+                            <h5>E-mail</h5>
+                            <input type="text" name="email" class="input">
+                        </div>
+                    </div>
+                    <div class="input-div pass">
+                        <div class="i"> 
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <div class="div">
+                            <h5>Senha</h5>
+                            <input type="password" name="password" class="input">
+                        </div>
+                    </div>
+                    <input type="submit" class="btn" value="Register">
+                </form>
+            </div>
+        </div>
+        <script>
+            async function getCep(){
+                let cep = document.getElementById('cep');
+                let adress = document.getElementById('adress');
+                let city = document.getElementById('city');
+                let district = document.getElementById('district');
+                cep.value.replace(/\s+|-/g, "");
+                
+                if(cep.value.length == 8){
+                    let res = await axios.get('https://viacep.com.br/ws/'+ cep.value +'/json/');
+
+                    if(!res.data.erro){
+                        adress.value = res.data.logradouro;
+                        city.value = res.data.localidade;
+                        district.value = res.data.bairro;
+                        adress.focus();
+                        city.focus();
+                        district.focus();
+                        cep.focus();
+                    }else{
+                        adress.value = "Não encontrado";
+                        city.value = "Não encontrado";
+                        district.value = "Não encontrado";
+                        adress.focus();
+                        city.focus();
+                        district.focus();
+                        cep.focus();
+                    }
+                }
+            }
+        </script>
+        <script type="text/javascript" src="./script/scriptLogin.js"></script>
+    </body>
+    </html>

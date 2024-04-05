@@ -12,7 +12,6 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
         function deleteById(id){
-            console.log("deleted : " + id);
             let table = window.location.pathname.split("/")[window.location.pathname.split("/").length - 1];
             axios.post("/debug/delete/" + table, {id: id}).then(Response =>{
                 window.location.reload();
@@ -30,7 +29,6 @@
                     values.push(child.innerHTML);
                 }
             });
-            console.log(values);
             const keys = "<%= Object.keys(result[0]) %>".replaceAll(`"`, '').split(",");
             trow.innerHTML = `<form action="/debug/update/${table}" method="post" id="fr${ElementId}" <%= crypt %>></form>`;
             for(let i = 0; i < keys.length; i++){

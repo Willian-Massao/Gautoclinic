@@ -182,6 +182,19 @@ a:hover{
 	background-position: right;
 }
 
+.n-user{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-direction: row-reverse;
+}
+.duo-input{
+	width: 100%;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-gap: 5px;
+}
+
 
 @media screen and (max-width: 1050px){
 	.container{
@@ -220,4 +233,44 @@ a:hover{
 	.login-content{
 		justify-content: center;
 	}
+}
+.alert-container{
+    display: none;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    background: rgba(255, 255, 255, 0);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);;
+    z-index: 2;
+}
+.alert-container .alert{
+    background-color: white;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 5px;
+    padding: 30px;
+    padding-left: 10px;
+    padding-right: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 350px;
+}
+.alert button{
+    margin-top: 10px;
+    width: 50px;
+    padding: 10px;
+    border: 0;
+    border-radius: 5px;
+    background-color: #000000;
+    color: rgb(255, 255, 255);
+    transition: 50ms ease-in-out;
+}
+.alert button:active{
+    scale: 0.95;
 }
