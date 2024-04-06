@@ -18,7 +18,7 @@
             <img src="/src/logo.png">
         </div>
         <div class="login-content">
-            <form method="post" id="formAlterarSenha" action =/alterarSenha >
+            <form method="post" id="formAlterarSenha" action="/alterarSenha" >
                 <img src="/src/logo.png">
                 <h2 class="title">Altere a sua senha</h2>
                 <div class="duo-input">
@@ -28,7 +28,7 @@
                         </div>
                         <div class="div">
                             <h5>Digite a sua senha</h5>
-                            <input type="password" id = "password" name="password" class="input">
+                            <input type="password" id = "password" name="password" oninput="comparePassword()" class="input">
                         </div>
                     </div>
                     <div class="input-div one">
@@ -37,7 +37,7 @@
                         </div>
                         <div class="div">
                             <h5>Confirme a sua senha</h5>
-                            <input type="password" id = "confirmedPassword" name="confirmedPassword" class="input">
+                            <input type="password" id = "confirmedPassword" name="confirmedPassword" oninput="comparePassword()" class="input">
                         </div>
                     </div>
                 </div>
