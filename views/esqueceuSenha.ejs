@@ -8,20 +8,20 @@
     <link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/a81368914c.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="./script/LogicaEmail.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Página de Login</title>
+    <title>Página de Esqueceu Senha</title>
 </head>
 <body>
-    <body>
         <img class="wave" src="/src/wave.png">
         <div class="container">
             <div class="img">
                 <img src="/src/logo.png">
             </div>
             <div class="login-content">
-                <form method="post" action="/login">
+                <form method="post" id="formEnvioEmail" action="/esqueceuSenha">
                     <img src="/src/logo.png">
-                    <h2 class="title">Bem Vindo</h2>
+                    <h2 class="title">Esqueceu sua senha?</h2>
                        <div class="input-div one">
                           <div class="i">
                                   <i class="fas fa-user"></i>
@@ -31,23 +31,35 @@
                                   <input type="text" name="email" class="input">
                           </div>
                        </div>
-                       <div class="input-div pass">
-                          <div class="i"> 
-                               <i class="fas fa-lock"></i>
+                    <div class="n-user">
+                        <a href="/register">Novo por aqui? Crie sua conta!</a>
+                    </div>
+                    <input type="submit" id="enviarEmail" class="btn" value="Enviar">
+                </form>
+                <form method="post" id="formConfirmaCodigo" action =/confirmarCodigo >
+                    <img src="/src/logo.png">
+                    <h2 class="title">Digite o código enviado</h2>
+                       <div class="input-div one">
+                          <div class="i">
+                                  <i class="fas fa-user"></i>
                           </div>
                           <div class="div">
-                               <h5>Senha</h5>
-                               <input type="password" name="password" class="input">
+                                  <h5>Digite seu codigo</h5>
+                                  <input type="number" id="inputNumber" name="codigo" class="input">
+                          </div>    
                        </div>
-                    </div>
-                    <div class="n-user">
-                        <a href="/esqueceuSenha">Esqueceu sua senha?</a>
-                        <a href="/register">Novo por aqui?</a>
-                    </div>
-                    <input type="submit" class="btn" value="Login">
+                    <input type="submit" class="btn" value="Confirmar">
                 </form>
             </div>
         </div>
         <script type="text/javascript" src="./script/scriptLogin.js"></script>
     </body>
+    <script>
+    // carregar no botão para editar e o form aparece
+    var btnEnviar = document.getElementById('enviarEmail');
+    btnEnviar.addEventListener('click', function() {
+    document.getElementById('formEnvioEmail').style.display = 'none';
+    document.getElementById('formConfirmaCodigo').style.display = 'block';
+});
+</script>
     </html>

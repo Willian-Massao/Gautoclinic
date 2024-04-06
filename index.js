@@ -11,7 +11,18 @@ const flash = require('connect-flash');
 const multer = require('multer');
 const User = require('./controllers/UserController.js');
 const uuid = require("uuid-lib");
+const crypto = require('crypto').webcrypto;
+const nodemailer = require('nodemailer');
 
+const mailer = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port:465,
+    secure: true,
+    auth: {
+        user: 'GautoClinicEmailAutomatico@gmail.com',
+        pass: 'tgfq iorn ebod apls',
+    }
+})
 // configuração do multer
 const storage = multer.diskStorage({
     destination: function(req, file, cb){
@@ -38,6 +49,8 @@ const transactionDAO = require("./database/transactionDAO.js");
 const commentDAO = require("./database/commentDAO.js");
 const imageDAO = require("./database/imageDAO.js");
 const adminDAO = require("./database/adminDAO.js");
+const passwordForgotDAO = require("./database/passwordFogotDAO.js");
+const { error } = require('console');
 
 // porta do servidor
 const port = 3000;
@@ -49,13 +62,15 @@ const transaction = new transactionDAO();
 const comments = new commentDAO();
 const images = new imageDAO();
 const admins = new adminDAO();
-
+const passwordForgot = new passwordForgotDAO();
+let id;
 itens.create();
 users.create();
 transaction.create();
 comments.create();
 images.create();
 admins.create();
+passwordForgot.create();
 
 let controllerUser
 
@@ -145,6 +160,122 @@ app.post('/logout', function(req, res, next){
     });
 });
 
+app.post('/esqueceuSenha', function(req,res){
+    const {email} = req.body;
+    let randomNumber;
+    let assunto= 'Redefinição de senha GautoClinic';
+    let html;
+    let text;
+    let date = new Date();
+    let datetime = date.getFullYear()+"-"+date.getMonth()+"-"+date.getDate()+" "+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds()
+    let userEmail
+    // Verifica se o email do usuário existe no banco de dados
+    const users = new userDAO();
+    let id;
+        users.findEmail(email)
+        .then(user => {        
+            if (user) {
+                controllerUser = new User(user);
+                randomNumber = numeroAleatorioRange(100000,999999)
+                html = '<h1>Número de verificação: <h1/><p>'+randomNumber+'</p>'
+                text = 'Número de verificação: '+randomNumber;
+                id = controllerUser.id
+                userEmail = controllerUser.email
+                passwordForgot.insertOrUpdate({id,userEmail,randomNumber, datetime})
+                sendEmail(email,assunto,html,text);
+            }else{
+                throw Error
+            }
+        })
+        .catch(err => {
+        req.flash('error', 'Email não encontrado');
+        res.redirect('/register');
+    });
+})
+
+app.post('/confirmarCodigo',function(req,res){
+    const {codigo} = req.body;
+    let date = new Date();
+    let tipoErro;
+    passwordForgot.findUser(controllerUser.id)  
+    .then(passwordForgot =>{
+        if( passwordForgot['dateTimeExpirationCod'] > date) {
+                if (passwordForgot['authVerificationCod'] == codigo){
+                    res.redirect('/alterarSenha');
+                }else{
+                    tipoErro = 1;
+                    throw Error()
+                }
+        }else{
+            tipoErro = 2;
+            throw Error()
+        }
+        
+    }).catch(err => {
+        if (tipoErro === 1){
+            req.flash('error', 'Código Incorreto');
+        }
+        if(tipoErro === 2){
+            req.flash('error', 'Código Expirado');
+            res.redirect('/esqueceuSenha');
+        }
+    })
+})
+
+app.post('/alterarSenha',function(req,res){
+    const {password}= req.body;
+    let id = controllerUser.id;
+    // Gera o salt e a senha criptografada
+    bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(password, salt, async (err, hash) => {
+            // Salva o usuário no banco de dados
+            users.updatePass({password: hash, salt, id}).then(()=> {
+                res.redirect('/login');
+            }).catch(err => {
+                req.flash('error', 'campo preenchido incorretamente!');
+                res.redirect('/alterarSenha');
+            });
+        });
+    });
+})
+
+function numeroAleatorioRange(min, max) {
+    var range = max - min;
+    if (range <= 0) {
+        throw new Exception('max must be larger than min');
+    }
+    var requestBytes = Math.ceil(Math.log2(range) / 8);
+    if (!requestBytes) { // No randomness required
+        return min;
+    }
+    var maxNum = Math.pow(256, requestBytes);
+    var ar = new Uint8Array(requestBytes);
+
+    while (true) {
+        crypto.getRandomValues(ar);
+
+        var val = 0;
+        for (var i = 0;i < requestBytes;i++) {
+            val = (val << 8) + ar[i];
+        }
+
+        if (val < maxNum - maxNum % range) {
+            return min + (val % range);
+        }
+    }
+}
+
+function sendEmail(destinatario, assunto,html,text){
+    mailer.sendMail({
+        from: 'GautoClinicEmailAutomatico@gmail.com',
+        to: destinatario,
+        subject: assunto,
+        html: html,
+        text: text
+    })
+    .then((response)=> console.log('Email enviado com sucesso'))
+    .catch((err)=> console.log('Erro ao enviar email: ', err))
+}
 app.post('/register', async (req, res) => {
     const { name, email, lastname, tel, cpf, cep, city, district, adress, number, password} = req.body;
     // Verifica se o email já está cadastrado
@@ -280,6 +411,10 @@ app.post('/payment', async(req, res) => {
 // Rotas get
 app.get('/login', (req, res) => {
     res.render('login');
+});
+
+app.get('/esqueceuSenha', (req, res) => {
+    res.render('esqueceuSenha');
 });
 
 app.get('/register', (req, res) => {
