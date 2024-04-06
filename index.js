@@ -417,6 +417,10 @@ app.get('/esqueceuSenha', (req, res) => {
     res.render('esqueceuSenha');
 });
 
+app.get('/alterarSenha', (req, res) => {
+    res.render('alterarSenha');
+});
+
 app.get('/register', (req, res) => {
     const errorMessage = req.flash('error');
     res.render('register', {error: errorMessage});
