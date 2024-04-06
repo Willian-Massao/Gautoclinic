@@ -197,6 +197,9 @@ a:hover{
 #formConfirmaCodigo{
 	display:none;
 }
+#alterar{
+	color: #ff0303;;
+}
 
 input[type=number]::-webkit-inner-spin-button { 
     -webkit-appearance: none;
