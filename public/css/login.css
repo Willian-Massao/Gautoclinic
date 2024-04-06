@@ -194,7 +194,19 @@ a:hover{
 	grid-template-columns: 1fr 1fr;
 	grid-gap: 5px;
 }
+#formConfirmaCodigo{
+	display:none;
+}
 
+input[type=number]::-webkit-inner-spin-button { 
+    -webkit-appearance: none;
+    
+}
+input[type=number] { 
+   -moz-appearance: textfield;
+   appearance: textfield;
+
+}
 
 @media screen and (max-width: 1050px){
 	.container{
