@@ -13,14 +13,15 @@ const User = require('./controllers/UserController.js');
 const uuid = require("uuid-lib");
 const crypto = require('crypto').webcrypto;
 const nodemailer = require('nodemailer');
+require('dotenv/config');
 
 const mailer = nodemailer.createTransport({
     host: 'smtp.gmail.com',
-    port:465,
+    port: 465,
     secure: true,
     auth: {
-        user: 'GautoClinicEmailAutomatico@gmail.com',
-        pass: 'tgfq iorn ebod apls',
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
     }
 })
 // configuração do multer
@@ -365,8 +366,8 @@ app.post('/payment', async(req, res) => {
     let idUser;
     let check_ref = uuid.create().toString();
     let price = 0;
-    let currency = 'BRL';
-    let pay2mail = 'phelpsxd@hotmail.com';
+    let currency = process.env.SUMUP_CURRENCY;
+    let pay2mail = process.env.SUMUP_EMAIL;
     let status = '';
     let date = '';
 
@@ -381,7 +382,7 @@ app.post('/payment', async(req, res) => {
     const apiRes = await fetch('https://api.sumup.com/v0.1/checkouts',{
         method: 'POST',
         headers: {
-            "Authorization": "Bearer sup_sk_**",
+            "Authorization": "Bearer " + process.env.SUMUP_KEY,
             "Content-Type": "application/json",
         }, body:JSON.stringify({
             "checkout_reference": check_ref,
@@ -479,6 +480,14 @@ app.get('/admin/users', ensureAdmin, (req, res) => {
         res.render('admin', {data: item, table: 'users'});
     }).catch(err => res.status(500).send('Something broke!'));
 });
+
+app.get('/admin/images', ensureAdmin, (req, res) => {
+    const images = new imageDAO();
+
+    images.select().then( item =>{
+        res.render('admin', {data: item, table: 'users'});
+    }).catch(err => res.status(500).send('Something broke!'));
+}); 
 app.get('/admin/products', ensureAdmin, (req, res) => {
     const itens = new itemDAO();
 
