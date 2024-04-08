@@ -17,7 +17,7 @@ async function refreshTransactions() {
                 }
             });
             temp = await apiRes.json();
-            if(temp.status == 'PAID' || temp.status == 'FAILED'){
+            if(temp.status != 'PENDING'){
                 transactions.update(temp);
             }
         }
