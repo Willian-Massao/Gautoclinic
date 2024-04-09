@@ -52,6 +52,7 @@ const imageDAO = require("./database/imageDAO.js");
 const adminDAO = require("./database/adminDAO.js");
 const passwordForgotDAO = require("./database/passwordFogotDAO.js");
 const { error } = require('console');
+const { KeyObject } = require('crypto');
 
 // porta do servidor
 const port = 3000;
@@ -409,6 +410,22 @@ app.post('/payment', async(req, res) => {
         });
 });
 
+app.post('/admin/envio', async(req, res) => {
+    const { client_id, client_secret } = req.body;
+    let url = 'https://sandbox.melhorenvio.com.br/oauth/authorize';
+    let concatenatedString = '';
+
+    for (const key in req.body) {
+        if (req.body[key] === 'on') {
+            concatenatedString += key + ' ';
+        }
+    }
+    url += `?client_id=${client_id}`
+    url += `&redirect_uri=${process.env.MELHORENVIO_REDIRECT_URI}`
+    url += `&response_type=code`
+    url += `&scope=${concatenatedString}`
+    res.redirect(url);
+});
 // Rotas get
 app.get('/login', (req, res) => {
     res.render('login');
@@ -490,17 +507,26 @@ app.get('/admin/images', ensureAdmin, (req, res) => {
 }); 
 app.get('/admin/products', ensureAdmin, (req, res) => {
     const itens = new itemDAO();
-
+    
     itens.select().then( item =>{
         res.render('admin', {data: item, table: 'products'});
     }).catch(err => res.status(500).send('Something broke!'));
 });
 app.get('/admin/admins', ensureAdmin, (req, res) => {
     const admins = new adminDAO();
-
+    
     admins.select().then( item =>{
         res.render('admin', {data: item, table: 'admins'});
     }).catch(err => res.status(500).send('Something broke!'));
+});
+
+app.get('/admin/envio', ensureAdmin, (req, res) => {
+   if(req.query.code){
+        let code = req.query.code;
+        console.log(code);
+   }
+
+    res.render('frete');
 });
 
 app.get('/info', (req, res)=>{
@@ -523,6 +549,7 @@ app.get('/search', (req, res) =>{
         res.render('search', {itens: data, user: req.user, error: errorMessage});
     }).catch(err => res.status(500).send('Something broke!'));
 });
+
 
 app.listen(port, () => {
     console.log(`Servidor rodando em http://localhost:${port}`);
