@@ -1,3 +1,4 @@
+const { use } = require("passport");
 const pool  = require("./database");
 
 module.exports  = class itens{
@@ -19,12 +20,12 @@ module.exports  = class itens{
                 number varchar(45) NOT NULL,
                 password varchar(255) NOT NULL,
                 salt varchar(255) NOT NULL,
-                PRIMARY KEY (id))`;
+                PRIMARY KEY (id, cpf, email),
+                KEY INDICEEMAIL (email))`;
             await conn.query(sql);
             console.log("Tabela users criada com sucesso!");
         }catch(err){
             console.log(err);
-            conn.release();
         }finally{
             conn.release();
         }
@@ -36,12 +37,13 @@ module.exports  = class itens{
     async insert(users){
         const conn = await pool.getConnection();
         try{
+            NN(users);
             const sql = "insert into users (name, email, lastname, tel, cpf, cep, city, district, adress, number, password, salt) values (?,?,?,?,?,?,?,?,?,?,?,?)"
             await conn.query(sql, [users.name, users.email, users.lastname, users.tel, users.cpf, users.cep, users.city, users.district, users.adress, users.number, users.password, users.salt])
             console.log("users inserido com sucesso!");
         }catch(err){
             console.log(err);
-            conn.release();
+            throw err;
         }finally{
             conn.release();
         }
@@ -78,11 +80,26 @@ module.exports  = class itens{
     async update(users){
         const conn = await pool.getConnection();
         try {
+            NN(users);
             const sql = `UPDATE users SET name = ? email = ? lastname = ? tel = ? cpf = ? cep = ? city = ? district = ? adress = ? number = ? hasAdmin = ? WHERE id = ?`;
             await conn.query(sql, [users.name, users.email, users.lastname, users.tel, users.cpf, users.cep, users.city, users.district, users.adress, users.number, users.hasAdmin, users.id]);
         }catch(err){
             console.log(err);
+            throw err;
+        }finally{
             conn.release();
+        }
+    }
+
+    async updatePass(users){
+        const conn = await pool.getConnection();
+        try {
+            NN(users);
+            const sql = `UPDATE users SET password =?, salt =? WHERE id = ?`;
+            await conn.query(sql, [users.password, users.salt, users.id]);
+        }catch(err){
+            console.log(err);
+            throw err;
         }finally{
             conn.release();
         }
@@ -96,7 +113,6 @@ module.exports  = class itens{
             return row;
         }catch(err){
             console.log(err);
-            conn.release();
         }finally{
             conn.release();
         }
@@ -111,7 +127,6 @@ module.exports  = class itens{
             return row;
         }catch(err){
             console.log(err);
-            conn.release();
         }finally{
             conn.release();
         }
@@ -125,9 +140,17 @@ module.exports  = class itens{
             return row;
         }catch(err){
             console.log(err);
-            conn.release();
         }finally{
             conn.release();
         }
     }
+}
+
+function NN(thing){
+    let objKeys = Object.keys(thing);
+    objKeys.forEach((key) => {
+        if(thing[key] == "" || thing[key] == null){
+            throw new Error("O Campo não pode ser nulo!");
+        };
+    });
 }

@@ -26,12 +26,13 @@ module.exports  = class admins{
     async insert(admins){
         const conn = await pool.getConnection();
         try{
+            NN(admins);
             const sql = "insert into admins (idUser, name) values (?,?)"
             await conn.query(sql, [admins.idUser, admins.name])
             console.log("admins inserido com sucesso!");
         }catch(err){
             console.log(err);
-            conn.release();
+            throw err;
         }finally{
             conn.release();
         }
@@ -55,11 +56,12 @@ module.exports  = class admins{
     async update(admins){
         const conn = await pool.getConnection();
         try {
+            NN(admins);
             const sql = `UPDATE admins SET name = ? idUser = ? WHERE id = ?`;
             await conn.query(sql, [admins.name, admins.idUser, admins.id]);
         }catch(err){
             console.log(err);
-            conn.release();
+            throw err;
         }finally{
             conn.release();
         }
@@ -73,7 +75,6 @@ module.exports  = class admins{
             return row;
         }catch(err){
             console.log(err);
-            conn.release();
         }finally{
             conn.release();
         }
@@ -88,7 +89,6 @@ module.exports  = class admins{
             return row;
         }catch(err){
             console.log(err);
-            conn.release();
         }finally{
             conn.release();
         }
@@ -102,9 +102,17 @@ module.exports  = class admins{
             return row;
         }catch(err){
             console.log(err);
-            conn.release();
         }finally{
             conn.release();
         }
     }
+}
+
+function NN(thing){
+    let objKeys = Object.keys(thing);
+    objKeys.forEach((key) => {
+        if(thing[key] == "" || thing[key] == null){
+            throw new Error("O Campo não pode ser nulo!");
+        };
+    });
 }

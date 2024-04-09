@@ -1,0 +1,16 @@
+<div class="alert-container" id="error">
+    <div class="alert">
+        <p><%= error %></p>
+        <button onclick="errorbtn()">Ok</button>
+    </div>
+    <script>
+        let error = '<%= error %>';
+
+        if(error){
+            document.getElementById('error').style.display = 'flex';
+        }
+        function errorbtn(){
+            document.getElementById('error').style.display = 'none';
+        }
+    </script>
+</div>

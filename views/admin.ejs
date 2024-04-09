@@ -4,19 +4,7 @@
     <%- include ("partials/head.ejs") %>
 </head>
 <body>
-    <header class="admin">
-        <ul>
-            <li>
-                <a href="/admin/products">Produtos</a>
-            </li>
-            <li>
-                <a href="/admin/users">Usuarios</a>
-            </li>
-            <li>
-                <a href="/admin/admins">Administradores</a>
-            </li>
-        </ul>
-    </header>
+    <%- include ("partials/navbaradmin.ejs") %>
     <main>
         <table class="green-table">
             <tr>
@@ -40,6 +28,49 @@
                 <td><input type="submit" value="Adicionar" form="myform"></td>
             </tr>
         </table>
+        <div class="mobile-table">
+            <div class="header">
+                <% Object.keys(data[0]).forEach((headers)=>{ %>
+                    <p><%= headers %></p>
+                <% }) %>
+                <p>Acões</p>
+            </div>
+            <div class="content">
+                <div class="window">
+                    <% data.forEach((itens)=>{ %>
+                        <div>
+                        <% Object.keys(data[0]).forEach((headers)=>{ %>
+                                <p><%= itens[headers] %></p>
+                        <% }) %>
+                            <form action="/database/delete" method="POST"><input type="text" name="idContatos" value="<%= itens.id %>" class="disable" readonly><button><i class="fi fi-rr-trash-xmark"></i></button></form>
+                        </div>
+                    <% }) %>
+                </div>
+            </div>
+        </div>
+        <div class="mobile-table">
+            <div class="header">
+                <% Object.keys(data[0]).forEach((headers)=>{ %>
+                    <% if(headers != "id"){ %>
+                        <p><%= headers %></p>
+                    <% } %>
+                <% }) %>
+                <p>Acões</p>
+            </div>
+            <div class="content">
+                <div class="window">
+                    <div>
+                        <% Object.keys(data[0]).forEach((headers)=>{ %>
+                            <% if(headers != "id"){ %>
+                                <input type="text" name="<%= headers %>" form="myform">
+                            <% } %>
+                        <% }) %>
+                        <input type="submit" form="myform" value="Adicionar">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <form action="/database/add/<%= table %>" method="post" id="myform"></form>
     </main>
 </body>

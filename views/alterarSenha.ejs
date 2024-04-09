@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/login.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a81368914c.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Alterar Senha</title>
+</head>
+<body>
+    <img class="wave" src="/src/wave.png">
+    <div class="container">
+        <div class="img">
+            <img src="/src/logo.png">
+        </div>
+        <div class="login-content">
+            <form method="post" id="formAlterarSenha" action="/alterarSenha" >
+                <img src="/src/logo.png">
+                <h2 class="title">Altere a sua senha</h2>
+                <div class="duo-input">
+                    <div class="input-div one">
+                        <div class="i"> 
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <div class="div">
+                            <h5>Digite a sua senha</h5>
+                            <input type="password" id = "password" name="password" oninput="comparePassword()" class="input">
+                        </div>
+                    </div>
+                    <div class="input-div one">
+                        <div class="i"> 
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <div class="div">
+                            <h5>Confirme a sua senha</h5>
+                            <input type="password" id = "confirmedPassword" name="confirmedPassword" oninput="comparePassword()" class="input">
+                        </div>
+                    </div>
+                </div>
+                <input type="submit" id = "alterar" class="btn" value="Alterar">
+            </form>
+        </div>
+    </div>
+    <script type="text/javascript" src="./script/scriptLogin.js"></script>
+</body>
+<script>
+function comparePassword(){
+    var password = document.getElementById("password").value;
+    var confirmedPassword = document.getElementById("confirmedPassword").value;
+
+    if (password === confirmedPassword) {
+        document.getElementById('alterar').disabled = false;
+    }else{
+        document.getElementById('alterar').disabled = true;
+    }
+}
+</script>
+</html>

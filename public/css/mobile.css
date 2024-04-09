@@ -592,67 +592,111 @@ button.item-buy:active{
     transition: 50ms ease-in-out;
 }
 table.green-table{
-    border-collapse: collapse;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 0 10px 0px rgba(0,0,0,0.5);
-    border-radius: 10px 10px 0 0;
-    overflow: hidden;
-    width: fit-content;
-    max-width: 80%;
-    width: min-content;
+    display: none;
 }
-.green-table tr:nth-child(2n){
+div.mobile-table{
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: row;
+    overflow-x: hidden;
+    text-align: center;
+    border-radius: 5px 0px 0px 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.30);
+}
+.mobile-table p,.mobile-table form, .mobile-table input{
+    height: 50px;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.mobile-table input{
+    margin:  0;
+    padding: 0;
+    border: 0;
+    width: 100%;
+}
+.mobile-table input[type="text"]{
+    width: calc(100% - 15px);
+    padding-left: 15px;
+}
+input:nth-child(2n){
     background-color: #f4f4f2;
 }
-.green-table tr{
-    justify-content: start;
-    align-items: start;
-    flex-direction: row;
-    background-color: #ffffff;
-    margin: 0;
-    border-bottom: 1px solid lightgray;
-    height: 50px;
+.mobile-table form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-.green-table tr button{
+.mobile-table button{
     background-color: #ff5454;
     color: white;
     border: none;
     padding: 10px 20px 10px 20px;
     border-radius: 3px;;
 }
-.green-table tr button:hover{
+.mobile-table button:hover{
     background-color: #cc4343;
     color: white;
 }
-.green-table tr button:active{
+.mobile-table button:active{
     background-color: #ff5454;
 }
-.green-table tr:hover{
-    color: #009979;
-}
-.green-table td{
-    max-width: 150px;
-    width: fit-content;
-    margin: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-.green-table th{
-    background-color: #009979;
+.mobile-table .header{
+    width: 25vw;
     color: white;
+    background-color: #00bf97;
 }
-.green-table td, th{
+.mobile-table .content{
+    width: 75vw;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: row;
+    overflow-x: hidden;
+}
+.mobile-table .header p,.mobile-table .header form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.mobile-table .content .window{
+    width: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: row;
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+}
+.mobile-table .content>div>div{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: #f4f4f2;
+    scroll-snap-align: center;
+}
+.window>div>p:nth-child(2n){
+    background-color: #fff;
+}
+.mobile-table .content p{
+    width: calc(75vw - 15px);
+    text-align: start;
+    display: flex;
+    justify-content: start;
+    align-items: center;
     padding-left: 15px;
-    padding-right: 15px;
-    text-align: center;
 }
 header.admin ul{
     display: flex;
     justify-content: start;
     align-items: start;
     flex-direction: row;
+    margin: 0;
+    padding: 0% ;
 }
 header.admin li{
     list-style: none;
@@ -668,11 +712,6 @@ header.admin li a{
 header.admin li:hover{
     background-color: #00bf97;
 }
-.green-table input{
-    width: 100%;
-    min-width: none;
-    border: 1px solid rgba(0, 0, 0, 0.15);
-}
 .info{
     display: flex;
     justify-content: center;
@@ -687,14 +726,14 @@ header.admin li:hover{
     align-items: center;
     flex-direction: column;
     width: 50%;
-    min-width: 530px;
+    min-width: 90vw;
 }
 .info .info-container{
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-direction: row;
+    flex-direction: column;
     margin-top: 10px;
     text-align: center;
 }

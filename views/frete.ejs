@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include ("partials/head.ejs") %>
+</head>
+<body>
+    <%- include ("partials/navbaradmin.ejs") %>
+    <main>
+        <form action="/admin/envio" method="post" id="frete-form">
+            <div class="input-container">
+                <label for="client_secret">client_id</label>
+                <input type="text" name="client_id" id="client_id">
+            </div>
+            <div class="input-container">
+                <label for="client_secret">client_secret</label>
+                <input type="text" name="client_secret" id="client_secret">
+            </div>
+    
+            <div class="check-container">
+                <input type="checkbox" id="all" onclick="selectAll()">
+                <label for="all">Selecionar todos</label>
+            </div>
+            <fieldset>
+                <legend>Permissões</legend>
+                <div class="check-container">
+                    <input type="checkbox" class="perm" id="cart-read" name="cart-read">
+                    <label for="cart-write">Visualização dos itens do carrinho</label>
+                </div>
+                <div class="check-container">
+                    <input type="checkbox" class="perm" id="cart-write" name="cart-write">
+                    <label for="cart-write">Cadastro e edição dos itens do carrinho</label>
+                </div>
+                <div class="check-container">
+                    <input type="checkbox" class="perm" id="companies-read" name="companies-read">
+                    <label for="cart-write">Visualização das informações de empresas</label>
+                </div>
+                <div class="check-container">
+                    <input type="checkbox" class="perm" id="companies-write" name="companies-write">
+                    <label for="cart-write">Cadastro e edição das informações de empresas</label>
+                </div>
+                <div class="check-container">
+                    <input type="checkbox" class="perm" id="coupons-read" name="coupons-read">
+                    <label for="cart-write">Visualização dos cupons cadastrados</label>
+                </div>
+                <div class="check-container">
+                    <input type="checkbox" class="perm" id="coupons-write" name="coupons-write">
+                    <label for="cart-write">Cadastro de novos cupons</label>
+                </div>
+                <div class="check-container">
+                    <input type="checkbox" class="perm" id="notifications-read" name="notifications-read">
+                    <label for="cart-write">Visualização das notificações</label>
+                </div>
+                <div class="check-container">
+                    <input type="checkbox" class="perm" id="orders-read" name="orders-read">
+                    <label for="cart-write">Visualização das etiquetas</label>
+                </div>
+                <div class="check-container">
+                    <input type="checkbox" class="perm" id="products-read" name="products-read">
+                    <label for="cart-write">Visualização de produtos</label>
+                </div>
+                <div class="check-container">
+                    <input type="checkbox" class="perm" id="products-write" name="products-write">
+                    <label for="cart-write">Cadastro e edição de produtos</label>
+                </div>
+                <div class="check-container">
+                    <input type="checkbox" class="perm" id="purchases-read" name="purchases-read">
+                    <label for="cart-write">Visualização das compras</label>
+                </div>
+                <div class="check-container">
+                    <input type="checkbox" class="perm" id="shipping-calculate" name="shipping-calculate">
+                    <label for="cart-write">Cotação de fretes</label>
+                </div>
+                <div class="check-container">
+                    <input type="checkbox" class="perm" id="shipping-cancel" name="shipping-cancel">
+                    <label for="cart-write">Cancelamento de etiquetas</label>
+                </div>
+                <div class="check-container">
+                    <input type="checkbox" class="perm" id="shipping-checkout" name="shipping-checkout">
+                    <label for="cart-write">Checkout para compra de fretes, utiliza saldo da carteira</label>
+                </div>
+                <div class="check-container">
+                    <input type="checkbox" class="perm" id="shipping-companies" name="shipping-companies">
+                    <label for="cart-write">Consulta de transaportadoras</label>
+                </div>
+                <div class="check-container">
+                    <input type="checkbox" class="perm" id="shipping-generate" name="shipping-generate">
+                    <label for="cart-write">Geração de novas etiquetas</label>
+                </div>
+                <div class="check-container">
+                    <input type="checkbox" class="perm" id="shipping-preview" name="shipping-preview">
+                    <label for="cart-write">Pré-visualização de etiquetas</label>
+                </div>
+                <div class="check-container">
+                    <input type="checkbox" class="perm" id="shipping-print" name="shipping-print">
+                    <label for="cart-write">Impressão de etiquetas</label>
+                </div>
+                <div class="check-container">
+                    <input type="checkbox" class="perm" id="shipping-share" name="shipping-share">
+                    <label for="cart-write">Compartilhamento de etiquetas</label>
+                </div>
+                <div class="check-container">
+                    <input type="checkbox" class="perm" id="shipping-tracking" name="shipping-tracking">
+                    <label for="cart-write">Rastreio de fretes</label>
+                </div>
+                <div class="check-container">
+                    <input type="checkbox" class="perm" id="ecommerce-shipping" name="ecommerce-shipping">
+                    <label for="cart-write">Cotação e compra de fretes para sua loja</label>
+                </div>
+                <div class="check-container">
+                    <input type="checkbox" class="perm" id="transactions-read" name="transactions-read">
+                    <label for="cart-write">Visualização das transações da carteira</label>
+                </div>
+                <div class="check-container">
+                    <input type="checkbox" class="perm" id="users-read" name="users-read">
+                    <label for="cart-write">Visualização das informações pessoais</label>
+                </div>
+                <div class="check-container">
+                    <input type="checkbox" class="perm" id="users-write" name="users-write">
+                    <label for="cart-write">Edição das informações pessoais</label>
+                </div>
+            </fieldset>
+    
+            <input type="submit" value="Obter código">
+        </form>
+    </main>
+    <script>
+        function selectAll(){
+            let perms = document.querySelectorAll('.perm');
+            let all = document.getElementById('all');
+            perms.forEach((perm)=>{
+                perm.checked = all.checked;
+            });
+        }
+    </script>
+</body>
+</html>
