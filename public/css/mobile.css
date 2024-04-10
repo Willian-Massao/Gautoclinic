@@ -695,6 +695,7 @@ header.admin ul{
     justify-content: start;
     align-items: start;
     flex-direction: row;
+    flex-wrap: wrap;
     margin: 0;
     padding: 0% ;
 }
@@ -848,4 +849,72 @@ header.admin li:hover{
     justify-content: center;
     align-items: center;
     flex-direction: column;
+}
+#frete-form .input-container{
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    width: 100%;
+}
+#frete-form {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.input-container,
+.check-container {
+    margin-bottom: 15px;
+}
+
+#frete-form label {
+    margin-bottom: 5px;
+}
+
+#frete-form input[type="text"],
+#frete-form input[type="checkbox"],
+#frete-form input[type="submit"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+#frete-form input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+#frete-form fieldset {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+#frete-form legend {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+input[type="submit"] {
+    background-color: #315292;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 3px;
+}
+
+input[type="submit"]:hover {
+    background-color: #223966;
 }
