@@ -13,6 +13,9 @@
                     <li><a href="/profile/account">Minha conta</a></li>
                     <li><a href="/profile/request">Meus pedidos</a></li>
                     <li><a href="/profile/edit">Editar conta</a></li>
+                    <% if(admin){ %>
+                        <li><a href="/admin/users">Administrador</a></li>
+                    <% } %>
                 </ul>
             </div>
             <div class="account-info">

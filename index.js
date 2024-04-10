@@ -495,7 +495,7 @@ app.get('/profile/account', ensureAuthenticated, (req, res) => {
     const user = new userDAO();
 
     user.findId(req.user.id).then( itens =>{
-        res.render('profile', { user: req.user, itens: itens});
+        res.render('profile', { user: req.user, itens: itens, admin: controllerUser.hasAdmin});
     }).catch(err => res.status(500).send('Something broke!'));
 });
 
@@ -503,7 +503,7 @@ app.get('/profile/request', ensureAuthenticated, (req, res) => {
     const user = new userDAO();
 
     user.findId(req.user.id).then( itens =>{
-        res.render('profile', { user: req.user, itens: itens});
+        res.render('profile', { user: req.user, itens: itens, admin: controllerUser.hasAdmin});
     }).catch(err => res.status(500).send('Something broke!'));
 });
 
@@ -511,7 +511,7 @@ app.get('/profile/edit', ensureAuthenticated, (req, res) => {
     const user = new userDAO();
 
     user.findId(req.user.id).then( itens =>{
-        res.render('editprofile', { user: req.user, itens: itens});
+        res.render('editprofile', { user: req.user, itens: itens, admin: controllerUser.hasAdmin});
     }).catch(err => res.status(500).send('Something broke!'));
 });
 
