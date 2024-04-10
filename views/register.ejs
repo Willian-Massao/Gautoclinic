@@ -50,7 +50,7 @@
                             </div>
                             <div class="div">
                                 <h5>Telefone</h5>
-                                <input type="text" name="tel" class="input">
+                                <input type="number" name="tel" onkeydown="return event.keyCode !== 69" class="input">
                             </div>
                         </div>
                         <div class="input-div one">
@@ -59,7 +59,7 @@
                             </div>
                             <div class="div">
                                 <h5>CPF</h5>
-                                <input type="text" name="cpf" class="input">
+                                <input type="number" name="cpf" onkeydown="return event.keyCode !== 69" class="input">
                             </div>
                         </div>
                     </div>
@@ -69,7 +69,7 @@
                         </div>
                         <div class="div">
                             <h5>CEP</h5>
-                            <input type="text" name="cep" id="cep" oninput="getCep()" class="input">
+                            <input type="number" name="cep" id="cep" onkeydown="return event.keyCode !== 69" oninput="getCep()" class="input">
                         </div>
                     </div>
                     <div class="duo-input">
@@ -107,8 +107,8 @@
                                 <i class="fas fa-house-user"></i>
                             </div>
                             <div class="div">
-                                <h5>Numero</h5>
-                                <input type="text" name="number" class="input">
+                                <h5>Número</h5>
+                                <input type="number" name="number" onkeydown="return event.keyCode !== 69" class="input">
                             </div>
                         </div>
                     </div>
@@ -163,7 +163,7 @@
                         cep.focus();
                     }
                 }
-            }
+            } 
         </script>
         <script type="text/javascript" src="./script/scriptLogin.js"></script>
     </body>
