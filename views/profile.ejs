@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include ("partials/head.ejs") %>
+</head>
+<body>
+    <%- include ("partials/navbar.ejs") %>
+    <%- include ("partials/header.ejs") %>
+    <main>
+        <div class="profile-container">
+            <div class="navlist">
+                <ul>
+                    <li><a href="/profile/account">Minha conta</a></li>
+                    <li><a href="/profile/request">Meus pedidos</a></li>
+                    <li><a href="/profile/edit">Editar conta</a></li>
+                </ul>
+            </div>
+            <div class="account-info">
+                <h1>Minha conta</h1>
+                <div class="info-contaner">
+                    <h2>Informações da Conta</h2>
+
+                    <div class="end-container">
+                        <h1>Conta</h1>
+                        <p class="name"><%= user.name %> <%= user.lastname %></p>
+                        <p class="email"><%= user.email %></p>
+                    </div>
+    
+                </div>
+                <div class="info-contaner">
+                    <h2>Lista de Endereços</h2>
+    
+                    <div class="end-container">
+                        <h1>Endereço</h1>
+                        <p class="name"><%= user.name %></p>
+                        <p class="street"><%= user.adress %></p>
+                        <p class="district"><%= user.district %></p>
+                        <p class="city"><%= user.city %>, <%= user.cep %></p>
+                        <p class="tel">Cel: <%= user.tel %></p>
+                        <p class="cep">CPF: <%= user.cpf %></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <%- include ("partials/footer.ejs") %>
+</body>
+</html>

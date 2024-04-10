@@ -9,9 +9,12 @@ module.exports  = class melhorEnvioTokens{
                 id INT NOT NULL AUTO_INCREMENT,
                 client_id INT NOT NULL,
                 client_secret varchar(40) NOT NULL,
-                code TEXT(1700) NOT NULL,
-                token TEXT(1700) NOT NULL,
-                `;
+                redirect_uri TEXT(1700) NOT NULL,
+                refresh_token TEXT(1700) NOT NULL,
+                access_token TEXT(1700) NOT NULL,
+                expired_at TIMESTAMP NOT NULL,
+                indicador_ativo BOOLEAN DEFAULT TRUE,
+                PRIMARY KEY (id));`;
             await conn.query(sql);
             console.log("Tabela melhorEnvioTokens criada com sucesso!");
         }catch(err){
@@ -26,8 +29,8 @@ module.exports  = class melhorEnvioTokens{
         const conn = await pool.getConnection();
         try{
             NN(melhorEnvioTokens);
-            const sql = "insert into melhorEnvioTokens (id, email, authVerificationCod, dateTimeVerificationCod, dateTimeExpirationCod) values (?,?,?,?,DATE_ADD(?, INTERVAL 30 MINUTE)) ON DUPLICATE KEY UPDATE authVerificationCod= ?, dateTimeVerificationCod = ?, dateTimeExpirationCod = DATE_ADD(now(), INTERVAL 30 MINUTE)"
-            await conn.query(sql, [melhorEnvioTokens.id, melhorEnvioTokens.userEmail, melhorEnvioTokens.randomNumber, melhorEnvioTokens.datetime, melhorEnvioTokens.datetime, melhorEnvioTokens.randomNumber, melhorEnvioTokens.datetime])
+            const sql = "insert into melhorEnvioTokens (id, redirect_uri, client_id, client_secret, refresh_token, access_token, expired_at, indicador_ativo) values (?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE refresh_token = ?, access_token=?,expired_at = ?, indicador_ativo= ?"
+            await conn.query(sql, [melhorEnvioTokens.id, melhorEnvioTokens.redirect_uri, melhorEnvioTokens.client_id, melhorEnvioTokens.client_secret, melhorEnvioTokens.refresh_token, melhorEnvioTokens.access_token, melhorEnvioTokens.expired_at, melhorEnvioTokens.indicador_ativo, melhorEnvioTokens.refresh_token, melhorEnvioTokens.access_token, melhorEnvioTokens.expired_at, melhorEnvioTokens.indicador_ativo])
             console.log("melhorEnvioTokens inserido/updatado com sucesso!");
         }catch(err){
             console.log(err);
@@ -36,15 +39,16 @@ module.exports  = class melhorEnvioTokens{
             conn.release();
         }
     }
-
-    async findUser(id){
+    async equalsNull(){
         const conn = await pool.getConnection();
-        try {
-            const sql = `SELECT authVerificationCod, dateTimeExpirationCod FROM melhorEnvioTokens WHERE id = ?;`;
-            const [rows] = await conn.query(sql, [id]);
-            return rows[0];
+        try{
+            const sql = "select id, redirect_uri, client_id, client_secret from melhorEnvioTokens where refesh_token = null"
+            const row = await conn.query(sql)
+            console.log("melhorEnvioTokens inserido/updatado com sucesso!");
+            return row;
         }catch(err){
             console.log(err);
+            throw err;
         }finally{
             conn.release();
         }

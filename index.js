@@ -9,11 +9,13 @@ const passport = require('passport');
 const bcrypt = require('bcryptjs');
 const flash = require('connect-flash');
 const multer = require('multer');
-const User = require('./controllers/UserController.js');
 const uuid = require("uuid-lib");
 const crypto = require('crypto').webcrypto;
 const nodemailer = require('nodemailer');
 require('dotenv/config');
+
+const User = require('./controllers/UserController.js');
+const Envio = require('./controllers/EnvioController.js');
 
 const mailer = nodemailer.createTransport({
     host: 'smtp.gmail.com',
@@ -51,8 +53,7 @@ const commentDAO = require("./database/commentDAO.js");
 const imageDAO = require("./database/imageDAO.js");
 const adminDAO = require("./database/adminDAO.js");
 const passwordForgotDAO = require("./database/passwordFogotDAO.js");
-const { error } = require('console');
-const { KeyObject } = require('crypto');
+const envioDAO = require("./database/melhorenvioDAO.js");
 
 // porta do servidor
 const port = 3000;
@@ -65,7 +66,8 @@ const comments = new commentDAO();
 const images = new imageDAO();
 const admins = new adminDAO();
 const passwordForgot = new passwordForgotDAO();
-let id;
+const envio = new envioDAO();
+
 itens.create();
 users.create();
 transaction.create();
@@ -73,8 +75,11 @@ comments.create();
 images.create();
 admins.create();
 passwordForgot.create();
+envio.create();
 
+let id;
 let controllerUser
+let controllerEnvio
 
 // Autenticação
 passport.use(new LocalStrategy({
@@ -410,10 +415,22 @@ app.post('/payment', async(req, res) => {
         });
 });
 
+app.put('/admin/envio', async(req, res) => {
+    const envio = new envioDAO();
+    const { code } = req.body;
+
+    envio.equalsNull().then( data => {
+        console.log(data);
+    }).catch(err => res.status(500).send('Something broke!'));
+});
+
 app.post('/admin/envio', async(req, res) => {
-    const { client_id, client_secret } = req.body;
+    const envio = new envioDAO();
+    const { client_id, client_secret, redirect_uri } = req.body;
     let url = 'https://sandbox.melhorenvio.com.br/oauth/authorize';
     let concatenatedString = '';
+    controllerEnvio = new Envio({ client_id, client_secret, redirect_uri });
+    console.log(controllerEnvio);
 
     for (const key in req.body) {
         if (req.body[key] === 'on') {
@@ -421,7 +438,7 @@ app.post('/admin/envio', async(req, res) => {
         }
     }
     url += `?client_id=${client_id}`
-    url += `&redirect_uri=${process.env.MELHORENVIO_REDIRECT_URI}`
+    url += `&redirect_uri=${redirect_uri}`
     url += `&response_type=code`
     url += `&scope=${concatenatedString}`
     res.redirect(url);
@@ -474,11 +491,36 @@ app.get('/item/:id', (req, res) =>{
     })
 });
 
-app.get('/profile', ensureAuthenticated, (req, res) => {
-    const itens = new itemDAO();
+app.get('/profile/account', ensureAuthenticated, (req, res) => {
+    const user = new userDAO();
 
-    itens.findId(req.user.id).then( itens =>{
+    user.findId(req.user.id).then( itens =>{
         res.render('profile', { user: req.user, itens: itens});
+    }).catch(err => res.status(500).send('Something broke!'));
+});
+
+app.get('/profile/request', ensureAuthenticated, (req, res) => {
+    const user = new userDAO();
+
+    user.findId(req.user.id).then( itens =>{
+        res.render('profile', { user: req.user, itens: itens});
+    }).catch(err => res.status(500).send('Something broke!'));
+});
+
+app.get('/profile/edit', ensureAuthenticated, (req, res) => {
+    const user = new userDAO();
+
+    user.findId(req.user.id).then( itens =>{
+        res.render('editprofile', { user: req.user, itens: itens});
+    }).catch(err => res.status(500).send('Something broke!'));
+});
+
+app.put('/profile/edit', (req, res) => {
+    const { } = req.body;
+    const user = new userDAO();
+
+    user.update(req.body).then( itens =>{
+        res.redirect('/profile/account');
     }).catch(err => res.status(500).send('Something broke!'));
 });
 
@@ -520,11 +562,38 @@ app.get('/admin/admins', ensureAdmin, (req, res) => {
     }).catch(err => res.status(500).send('Something broke!'));
 });
 
-app.get('/admin/envio', ensureAdmin, (req, res) => {
+app.get('/admin/envio', ensureAdmin, async(req, res) => {
    if(req.query.code){
+        let envio = new envioDAO();
         let code = req.query.code;
         console.log(code);
-   }
+        
+        let fetchres = await fetch('https://sandbox.melhorenvio.com.br/oauth/token',{
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+            }, body:JSON.stringify({
+                "client_id": controllerEnvio.client_id,
+                "client_secret": controllerEnvio.client_secret,
+                "redirect_uri": controllerEnvio.redirect_uri,
+                "code": code,
+                "grant_type": "authorization_code"
+            })
+        });
+
+        if(fetchres.ok){
+            let temp = await fetchres.json();
+
+            controllerEnvio.access_token = temp.access_token;
+            controllerEnvio.refresh_token = temp.refresh_token;
+            let date = new Date();
+            date.setSeconds(date.getSeconds() + temp.expires_in);
+            controllerEnvio.expired_at = date;
+
+            console.log(controllerEnvio);
+            envio.insertOrUpdate(controllerEnvio);
+        }
+    }
     res.render('frete');
 });
 
