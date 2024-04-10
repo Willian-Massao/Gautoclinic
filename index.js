@@ -206,7 +206,7 @@ app.post('/confirmarCodigo',function(req,res){
                     res.redirect('/alterarSenha');
                 }else{
                     tipoErro = 1;
-                    throw Error()
+                    throw new Error()
                 }
         }else{
             tipoErro = 2;
@@ -411,7 +411,6 @@ app.post('/payment', async(req, res) => {
 });
 
 app.post('/admin/envio', async(req, res) => {
-    const { client_id, client_secret } = req.body;
     let url = 'https://sandbox.melhorenvio.com.br/oauth/authorize';
     let concatenatedString = '';
 
@@ -420,7 +419,7 @@ app.post('/admin/envio', async(req, res) => {
             concatenatedString += key + ' ';
         }
     }
-    url += `?client_id=${client_id}`
+    url += `?client_id=${process.env.MELHORENVIO_CLIENT_ID}`
     url += `&redirect_uri=${process.env.MELHORENVIO_REDIRECT_URI}`
     url += `&response_type=code`
     url += `&scope=${concatenatedString}`
