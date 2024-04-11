@@ -5,7 +5,7 @@ module.exports  = class itens{
     async create(){
         const conn = await pool.getConnection();
         try{
-            const sql = `CREATE TABLE images (
+            const sql = `CREATE TABLE if not exists images (
                 id int NOT NULL AUTO_INCREMENT,
                 idproduct int NOT NULL,
                 image longblob NOT NULL,

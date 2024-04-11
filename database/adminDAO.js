@@ -5,7 +5,7 @@ module.exports  = class admins{
     async create(){
         const conn = await pool.getConnection();
         try{
-            const sql = `CREATE TABLE admins (
+            const sql = `CREATE TABLE if not exists admins (
                 id int NOT NULL AUTO_INCREMENT,
                 name varchar(45) NOT NULL,
                 PRIMARY KEY (id),

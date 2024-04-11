@@ -5,7 +5,7 @@ module.exports  = class itens{
     async create(){
         const conn = await pool.getConnection();
         try{
-            const sql = `CREATE TABLE comments (
+            const sql = `CREATE TABLE if not exists comments (
                 id int NOT NULL AUTO_INCREMENT,
                 idUser int NOT NULL,
                 comment varchar(255) NOT NULL,
