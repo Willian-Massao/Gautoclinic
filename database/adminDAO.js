@@ -29,7 +29,7 @@ module.exports  = class admins{
         try{
             NN(admins);
             const sql = "insert into admins (id, name) values (?,?)"
-            await conn.query(sql, [admins.idUser, admins.name])
+            await conn.query(sql, [admins.id, admins.name])
             console.log("admins inserido com sucesso!");
         }catch(err){
             console.log(err);
@@ -59,7 +59,7 @@ module.exports  = class admins{
         try {
             NN(admins);
             const sql = `UPDATE admins SET name = ? id = ? WHERE id = ?`;
-            await conn.query(sql, [admins.name, admins.idUser, admins.id]);
+            await conn.query(sql, [admins.name, admins.id, admins.id]);
         }catch(err){
             console.log(err);
             throw err;
@@ -99,6 +99,18 @@ module.exports  = class admins{
         const conn = await pool.getConnection();
         try {
             const sql = query;
+            const [row] = await conn.query(sql);
+            return row;
+        }catch(err){
+            console.log(err);
+        }finally{
+            conn.release();
+        }
+    }
+    async describe(){
+        const conn = await pool.getConnection();
+        try {
+            const sql = `DESCRIBE admins`;
             const [row] = await conn.query(sql);
             return row;
         }catch(err){

@@ -4,9 +4,9 @@
     <%- include ("partials/head.ejs") %>
 </head>
 <body>
+    <%- include ("partials/alert.ejs") %>
     <%- include ("partials/navbar.ejs") %>
     <%- include ("partials/header.ejs") %>
-    <%- include ("partials/alert.ejs") %>
     <main>
         <div class="profile-container">
             <div class="navlist">
@@ -21,7 +21,7 @@
             </div>
             <div class="account-info">
                 <h1>Minha conta</h1>
-                <form action="">
+                <form action="/profile/edit" method="post">
                     <h2>Editar</h2>
                     <div class="account-container">
                         <div class="account-sub">

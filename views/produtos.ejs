@@ -15,7 +15,9 @@
             <% itens.forEach((item)=>{ %>
                 <a class="product" href="/item/<%= item.id %>">
                     <div class="image">
-                        <img src="data:image/jpg;base64,<%= item.images[0].image %>" alt="">
+                        <% if(item.images[0]){%>
+                            <img src="data:image/jpg;base64,<%= item.images[0].image %>" alt="">
+                        <% } %>
                     </div>
                     <p class="description"><%= item.name %></p>
                     <div class="rate">

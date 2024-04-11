@@ -326,23 +326,6 @@ app.post('/carrinho' ,async  (req, res) => {
     res.send(itemList);
 });
 
-app.post('/image', upload.single('image') ,async (req, res) => {
-    const images = new imageDAO();
-    let id = 1;
-    const image = await removeFile('./public/products/' + req.file.filename);
-
-    images.insert({idproduct: id, image: image}).then(
-        res.redirect('/')
-    ).catch(err => res.status(500).send('Something broke!'));
-})
-
-async function removeFile(file){
-    let contents = await fs.readFile(file, {encoding: 'base64'});
-    await fs.unlink(file);
-
-    return contents;
-}
-
 app.post('/comment/add/:id', async(req, res) => {
     const comments = new commentDAO();
     const users = new userDAO();
@@ -528,13 +511,16 @@ app.get('/profile/edit', ensureAuthenticated, (req, res) => {
     }).catch(err => res.status(500).send('Something broke!'));
 });
 
-app.put('/profile/edit', (req, res) => {
-    const { } = req.body;
+app.post('/profile/edit', (req, res) => {
+    const { name, lastname, email, cpf, tel, cep, adress, district, city, number } = req.body;
     const user = new userDAO();
 
-    user.update(req.body).then( itens =>{
-        res.redirect('/profile/account',{error: errorMessage});
-    }).catch(err => res.status(500).send('Something broke!'));
+    user.update({ name, lastname, email, cpf, tel, cep, adress, district, city, number, id: req.user.id }).then( itens =>{
+        res.redirect('/profile/account');
+    }).catch(err => {
+        req.flash('error', 'campo preenchido incorretamente!');
+        res.redirect('/profile/edit');
+    });
 });
 
 app.get('/carrinho', ensureAuthenticated, (req, res) => {
@@ -546,21 +532,56 @@ app.get('/carrinho', ensureAuthenticated, (req, res) => {
     }).catch(err => res.status(500).send('Something broke!'));
 });
 
+app.post('/database/add/products', (req, res) => {
+    const { name, qtd, price, descount, type, description, mRate, height, width, depth, weight } = req.body;
+    const itens = new itemDAO();
+
+    itens.insert({ name, qtd, price, descount, type, description, mRate, height, width, depth, weight }).then(()=>{
+        res.redirect('/admin/products')}
+    ).catch(err => {
+        req.flash('error', 'Preenchido incorretamente!');
+        res.redirect('/admin/admins');
+    });
+});
+
 app.get('/admin/users', ensureAdmin, (req, res) => {
     const errorMessage = req.flash('error');
     const users = new userDAO();
 
     users.select().then( item =>{
-        res.render('admin', {data: item, table: 'users', error: errorMessage});
+        users.describe().then( index =>{
+            res.render('admin', {data: item, indexes: index, table: 'users', error: errorMessage});
+        }).catch(err => res.status(500).send('Something broke!'));
     }).catch(err => res.status(500).send('Something broke!'));
 });
+app.post('/database/add/images', upload.single('image') ,async (req, res) => {
+    const img = new imageDAO();
+    let { idItem } = req.body;
+    const image = await removeFile('./public/products/' + req.file.filename);
+
+    img.insert({idproduct: idItem, image: image}).then(
+        res.redirect('/admin/images')
+    ).catch(err => {
+        req.flash('error', 'Preenchido incorretamente!');
+        res.redirect('/admin/images');
+    });
+});
+
+async function removeFile(file){
+    let contents = await fs.readFile(file, {encoding: 'base64'});
+    await fs.unlink(file);
+
+    return contents;
+}
 
 app.get('/admin/images', ensureAdmin, (req, res) => {
     const errorMessage = req.flash('error');
     const images = new imageDAO();
 
     images.select().then( item =>{
-        res.render('admin', {data: item, table: 'users', error: errorMessage});
+        images.describe().then( index =>{
+            res.render('admin', {data: item, indexes: index, table: 'images', error: errorMessage});
+        }).catch(err => res.status(500).send('Something broke!'));
     }).catch(err => res.status(500).send('Something broke!'));
 }); 
 app.get('/admin/products', ensureAdmin, (req, res) => {
@@ -568,15 +589,32 @@ app.get('/admin/products', ensureAdmin, (req, res) => {
     const itens = new itemDAO();
     
     itens.select().then( item =>{
-        res.render('admin', {data: item, table: 'products', error: errorMessage});
+        itens.describe().then( index =>{
+            res.render('admin', {data: item, indexes: index, table: 'products', error: errorMessage});
+        }).catch(err => res.status(500).send('Something broke!'));
     }).catch(err => res.status(500).send('Something broke!'));
 });
+
+app.post('/database/add/admins', (req, res) => {
+    const { id, name } = req.body;
+    const admin = new adminDAO();
+
+    admin.insert({ id, name }).then(()=>{
+        res.redirect('/admin/products');
+    }).catch(err => {
+        req.flash('error', 'ID do usuario incorreto!');
+        res.redirect('/admin/admins');
+    });
+});
+
 app.get('/admin/admins', ensureAdmin, (req, res) => {
     const errorMessage = req.flash('error');
     const admins = new adminDAO();
     
     admins.select().then( item =>{
-        res.render('admin', {data: item, table: 'admins', error: errorMessage});
+        admins.describe().then( index =>{
+            res.render('admin', {data: item, indexes: index, table: 'admins', error: errorMessage});
+        }).catch(err => res.status(500).send('Something broke!'));
     }).catch(err => res.status(500).send('Something broke!'));
 });
 

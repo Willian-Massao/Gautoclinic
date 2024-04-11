@@ -4,34 +4,39 @@
     <%- include ("partials/head.ejs") %>
 </head>
 <body>
+    <%- include ("partials/alert.ejs") %>
     <%- include ("partials/navbaradmin.ejs") %>
     <main>
         <table class="green-table">
-            <tr>
-                <% Object.keys(data[0]).forEach((e)=>{ %>
-                    <th> <%= e %> </th>
-                <% }) %>
-                <th>Apagar</th>
-            </tr>
-            <% data.forEach((e)=>{ %>
                 <tr>
-                    <% Object.keys(e).forEach((key)=>{ %>
-                        <td> <%= e[key] %> </td>
+                    <% indexes.forEach((e)=>{ %>
+                        <th> <%= e.Field %> </th>
                     <% }) %>
-                    <td><form action="/database/delete" method="POST"><input type="text" name="idContatos" value="<%= e.id %>" class="disable" readonly><button><i class="fi fi-rr-trash-xmark"></i></button></form></td>
+                    <th>Apagar</th>
                 </tr>
-            <% }) %>
-            <tr>
-                <% Object.keys(data[0]).forEach((e)=>{ %>
-                    <td> <input type="text" name="<%= e %>" form="myform"> </td>
+                <% data.forEach((e)=>{ %>
+                    <tr>
+                        <% Object.keys(e).forEach((key)=>{ %>
+                            <td> <%= e[key] %> </td>
+                        <% }) %>
+                        <td><form action="/database/delete" method="POST"><input type="text" name="idContatos" value="<%= e.id %>" class="disable" readonly><button><i class="fi fi-rr-trash-xmark"></i></button></form></td>
+                    </tr>
                 <% }) %>
-                <td><input type="submit" value="Adicionar" form="myform"></td>
-            </tr>
+                <tr>
+                    <% indexes.forEach((e)=>{ %>
+                        <% if(e.Field == "image"){ %>
+                            <td><input type="file" name="<%= e.Field %>" form="myform"></td>
+                        <% }else{ %>
+                            <td> <input type="text" name="<%= e.Field %>" form="myform"> </td>
+                        <% } %>
+                    <% }) %>
+                    <td><input type="submit" value="Adicionar" form="myform"></td>
+                </tr>
         </table>
         <div class="mobile-table">
             <div class="header">
-                <% Object.keys(data[0]).forEach((headers)=>{ %>
-                    <p><%= headers %></p>
+                <% indexes.forEach((headers)=>{ %>
+                    <p><%= headers.Field %></p>
                 <% }) %>
                 <p>Acões</p>
             </div>
@@ -39,8 +44,8 @@
                 <div class="window">
                     <% data.forEach((itens)=>{ %>
                         <div>
-                        <% Object.keys(data[0]).forEach((headers)=>{ %>
-                                <p><%= itens[headers] %></p>
+                        <% indexes.forEach((headers)=>{ %>
+                                <p><%= itens[headers.Field] %></p>
                         <% }) %>
                             <form action="/database/delete" method="POST"><input type="text" name="idContatos" value="<%= itens.id %>" class="disable" readonly><button><i class="fi fi-rr-trash-xmark"></i></button></form>
                         </div>
@@ -50,9 +55,9 @@
         </div>
         <div class="mobile-table">
             <div class="header">
-                <% Object.keys(data[0]).forEach((headers)=>{ %>
-                    <% if(headers != "id"){ %>
-                        <p><%= headers %></p>
+                <% indexes.forEach((headers)=>{ %>
+                    <% if(headers.Field != "id"){ %>
+                        <p><%= headers.Field %></p>
                     <% } %>
                 <% }) %>
                 <p>Acões</p>
@@ -60,8 +65,8 @@
             <div class="content">
                 <div class="window">
                     <div>
-                        <% Object.keys(data[0]).forEach((headers)=>{ %>
-                            <% if(headers != "id"){ %>
+                        <% indexes.forEach((headers)=>{ %>
+                            <% if(headers.Field != "id"){ %>
                                 <input type="text" name="<%= headers %>" form="myform">
                             <% } %>
                         <% }) %>
@@ -70,8 +75,7 @@
                 </div>
             </div>
         </div>
-        
-        <form action="/database/add/<%= table %>" method="post" id="myform"></form>
+        <form action="/database/add/<%= table %>" method="post" id="myform" enctype="multipart/form-data"></form>
     </main>
 </body>
 </html>

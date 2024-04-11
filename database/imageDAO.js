@@ -109,6 +109,18 @@ module.exports  = class itens{
             conn.release();
         }
     }
+    async describe(){
+        const conn = await pool.getConnection();
+        try {
+            const sql = `DESCRIBE images`;
+            const [row] = await conn.query(sql);
+            return row;
+        }catch(err){
+            console.log(err);
+        }finally{
+            conn.release();
+        }
+    }
 }
 
 function NN(thing){

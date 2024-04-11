@@ -60,6 +60,18 @@ module.exports  = class passwordForgot{
             conn.release();
         }
     }
+    async describe(){
+        const conn = await pool.getConnection();
+        try {
+            const sql = `DESCRIBE passwordforgot;`;
+            const [row] = await conn.query(sql);
+            return row;
+        }catch(err){
+            console.log(err);
+        }finally{
+            conn.release();
+        }
+    }
 }
 
 function NN(thing){

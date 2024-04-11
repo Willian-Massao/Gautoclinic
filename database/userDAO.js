@@ -83,8 +83,8 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try {
             NN(users);
-            const sql = `UPDATE users SET name = ? email = ? lastname = ? tel = ? cpf = ? cep = ? city = ? district = ? adress = ? number = ? hasAdmin = ? WHERE id = ?`;
-            await conn.query(sql, [users.name, users.email, users.lastname, users.tel, users.cpf, users.cep, users.city, users.district, users.adress, users.number, users.hasAdmin, users.id]);
+            const sql = `UPDATE users SET name = ?, email = ?, lastname = ?, tel = ?, cpf = ?, cep = ?, city = ?, district = ?, adress = ?, number = ? WHERE id = ?;`;
+            await conn.query(sql, [users.name, users.email, users.lastname, users.tel, users.cpf, users.cep, users.city, users.district, users.adress, users.number, users.id]);
         }catch(err){
             console.log(err);
             throw err;
@@ -138,6 +138,19 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try {
             const sql = query;
+            const [row] = await conn.query(sql);
+            return row;
+        }catch(err){
+            console.log(err);
+        }finally{
+            conn.release();
+        }
+    }
+    
+    async describe(){
+        const conn = await pool.getConnection();
+        try {
+            const sql = `DESCRIBE users`;
             const [row] = await conn.query(sql);
             return row;
         }catch(err){

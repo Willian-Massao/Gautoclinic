@@ -49,8 +49,8 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try{
             NN(itens);
-            const sql = "insert into itens (name, qtd, price, descount, type, description) values (?,?,?,?,?,?)"
-            await conn.query(sql, [itens.name, itens.qtd, itens.price, itens.descount, itens.type, itens.description])
+            const sql = "insert into itens (name ,qtd ,price ,descount ,type ,description ,mRate ,height ,width ,depth ,weight) values (?,?,?,?,?,?,?,?,?,?,?)"
+            await conn.query(sql, [itens.name,itens.qtd,itens.price,itens.descount,itens.type,itens.description,itens.mRate,itens.height,itens.width,itens.depth,itens.weight])
             console.log("itens inserido com sucesso!");
         }catch(err){
             console.log(err);
@@ -95,8 +95,8 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try {
             NN(itens);
-            const sql = `UPDATE itens SET name = ? qtd = ? price = ? descount = ? type = ? mRate = ? description = ? WHERE id = ?`;
-            await conn.query(sql, [itens.name, itens.qtd, itens.price, itens.descount,itens.type, itens.mRate, itens.description, itens.id]);
+            const sql = `UPDATE itens SET name = ? ,qtd = ? ,price = ? ,descount = ? ,type = ? ,description = ? ,mRate = ? ,height = ? ,width = ? depth = ? ,weight = ? WHERE id = ?`;
+            await conn.query(sql, [itens.name,itens.qtd,itens.price,itens.descount,itens.type,itens.description,itens.mRate,itens.height,itens.width,itens.depth,itens.weight]);
         }catch(err){
             console.log(err);
             throw err;
@@ -166,6 +166,18 @@ module.exports  = class itens{
         }catch(err){
             console.log(err);
             throw err;
+        }finally{
+            conn.release();
+        }
+    }
+    async describe(){
+        const conn = await pool.getConnection();
+        try {
+            const sql = `DESCRIBE itens;`;
+            const [row] = await conn.query(sql);
+            return row;
+        }catch(err){
+            console.log(err);
         }finally{
             conn.release();
         }
