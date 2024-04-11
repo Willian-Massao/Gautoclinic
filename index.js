@@ -443,17 +443,21 @@ app.post('/admin/envio', async(req, res) => {
     url += `&scope=${concatenatedString}`
     res.redirect(url);
 });
+
 // Rotas get
 app.get('/login', (req, res) => {
-    res.render('login');
+    const errorMessage = req.flash('error');
+    res.render('login',{error: errorMessage});
 });
 
 app.get('/esqueceuSenha', (req, res) => {
-    res.render('esqueceuSenha');
+    const errorMessage = req.flash('error');
+    res.render('esqueceuSenha',{error: errorMessage});
 });
 
 app.get('/alterarSenha', (req, res) => {
-    res.render('alterarSenha');
+    const errorMessage = req.flash('error');
+    res.render('alterarSenha', {error: errorMessage});
 });
 
 app.get('/register', (req, res) => {
@@ -467,15 +471,17 @@ app.get('/', (req, res) =>{
 });
 
 app.get('/produtos/:sec', (req, res) =>{
+    const errorMessage = req.flash('error');
     const itens = new itemDAO();
     const images = new imageDAO();
 
     itens.findType(req.params.sec).then( itens =>{
-        res.render('produtos', {itens: itens, user: req.user});
+        res.render('produtos', {itens: itens, user: req.user, error: errorMessage});
     }).catch(err => res.status(500).send('Something broke!'));
 });
 
 app.get('/item/:id', (req, res) =>{
+    const errorMessage = req.flash('error');
     const itens = new itemDAO();
 
     let rates = 0;
@@ -487,31 +493,34 @@ app.get('/item/:id', (req, res) =>{
             })
             itens.newRate({mRate: (rates/(data.comments.length)), id: req.params.id});
         }
-        res.render('item', {item: data, user: req.user, image: data.images});
+        res.render('item', {item: data, user: req.user, image: data.images, error: errorMessage});
     })
 });
 
 app.get('/profile/account', ensureAuthenticated, (req, res) => {
+    const errorMessage = req.flash('error');
     const user = new userDAO();
 
     user.findId(req.user.id).then( itens =>{
-        res.render('profile', { user: req.user, itens: itens, admin: controllerUser.hasAdmin});
+        res.render('profile', { user: req.user, itens: itens, admin: controllerUser.hasAdmin, error: errorMessage});
     }).catch(err => res.status(500).send('Something broke!'));
 });
 
 app.get('/profile/request', ensureAuthenticated, (req, res) => {
+    const errorMessage = req.flash('error');
     const user = new userDAO();
 
     user.findId(req.user.id).then( itens =>{
-        res.render('profile', { user: req.user, itens: itens, admin: controllerUser.hasAdmin});
+        res.render('profile', { user: req.user, itens: itens, admin: controllerUser.hasAdmin, error: errorMessage});
     }).catch(err => res.status(500).send('Something broke!'));
 });
 
 app.get('/profile/edit', ensureAuthenticated, (req, res) => {
+    const errorMessage = req.flash('error');
     const user = new userDAO();
 
     user.findId(req.user.id).then( itens =>{
-        res.render('editprofile', { user: req.user, itens: itens, admin: controllerUser.hasAdmin});
+        res.render('editprofile', { user: req.user, itens: itens, admin: controllerUser.hasAdmin, error: errorMessage});
     }).catch(err => res.status(500).send('Something broke!'));
 });
 
@@ -520,49 +529,55 @@ app.put('/profile/edit', (req, res) => {
     const user = new userDAO();
 
     user.update(req.body).then( itens =>{
-        res.redirect('/profile/account');
+        res.redirect('/profile/account',{error: errorMessage});
     }).catch(err => res.status(500).send('Something broke!'));
 });
 
 app.get('/carrinho', ensureAuthenticated, (req, res) => {
+    const errorMessage = req.flash('error');
     const itens = new itemDAO();
 
     itens.findId(req.params.id).then( itens =>{
-        res.render('carrinho', {itens: itens, user: req.user});
+        res.render('carrinho', {itens: itens, user: req.user, error: errorMessage});
     }).catch(err => res.status(500).send('Something broke!'));
 });
 
 app.get('/admin/users', ensureAdmin, (req, res) => {
+    const errorMessage = req.flash('error');
     const users = new userDAO();
 
     users.select().then( item =>{
-        res.render('admin', {data: item, table: 'users'});
+        res.render('admin', {data: item, table: 'users', error: errorMessage});
     }).catch(err => res.status(500).send('Something broke!'));
 });
 
 app.get('/admin/images', ensureAdmin, (req, res) => {
+    const errorMessage = req.flash('error');
     const images = new imageDAO();
 
     images.select().then( item =>{
-        res.render('admin', {data: item, table: 'users'});
+        res.render('admin', {data: item, table: 'users', error: errorMessage});
     }).catch(err => res.status(500).send('Something broke!'));
 }); 
 app.get('/admin/products', ensureAdmin, (req, res) => {
+    const errorMessage = req.flash('error');
     const itens = new itemDAO();
     
     itens.select().then( item =>{
-        res.render('admin', {data: item, table: 'products'});
+        res.render('admin', {data: item, table: 'products', error: errorMessage});
     }).catch(err => res.status(500).send('Something broke!'));
 });
 app.get('/admin/admins', ensureAdmin, (req, res) => {
+    const errorMessage = req.flash('error');
     const admins = new adminDAO();
     
     admins.select().then( item =>{
-        res.render('admin', {data: item, table: 'admins'});
+        res.render('admin', {data: item, table: 'admins', error: errorMessage});
     }).catch(err => res.status(500).send('Something broke!'));
 });
 
 app.get('/admin/envio', ensureAdmin, async(req, res) => {
+    const errorMessage = req.flash('error');
    if(req.query.code){
         let envio = new envioDAO();
         let code = req.query.code;
@@ -594,18 +609,20 @@ app.get('/admin/envio', ensureAdmin, async(req, res) => {
             envio.insertOrUpdate(controllerEnvio);
         }
     }
-    res.render('frete');
+    res.render('frete',{error: errorMessage});
 });
 
 app.get('/info', (req, res)=>{
-    res.render('info', {user: req.user});
+    const errorMessage = req.flash('error');
+    res.render('info', {user: req.user, error: errorMessage});
 });
 
 app.get('/payment/:id', (req, res)=>{
+    const errorMessage = req.flash('error');
     const transaction = new transactionDAO();
     console.log(req.params.id);
     transaction.findId(req.params.id).then( data =>{
-        res.render('payment', {data: data, user: req.user});
+        res.render('payment', {data: data, user: req.user, error: errorMessage});
     }).catch(err => res.status(500).send('Something broke!'));
 });
 
