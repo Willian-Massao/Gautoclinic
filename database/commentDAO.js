@@ -36,7 +36,7 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try{
             NN(comments);
-            const sql = "insert into comments (idUser, idProduct, nameUser, rate, comment) values (?,?,?,?,?)"
+            const sql = "insert into comments (idUser, idItem, name, rate, comment) values (?,?,?,?,?)"
             await conn.query(sql, [comments.idUser, comments.idProduct, comments.nameUser, comments.rate, comments.comment])
             console.log("comments inserido com sucesso!");
         }catch(err){
@@ -65,7 +65,7 @@ module.exports  = class itens{
     async productId(id){
         const conn = await pool.getConnection();
         try {
-            const sql = `SELECT * FROM comments WHERE idProduct = ?`;
+            const sql = `SELECT * FROM comments WHERE idItem = ?`;
             const [rows] = await conn.query(sql, [id]);
             return rows;
         }catch(err){

@@ -7,11 +7,11 @@ module.exports  = class itens{
         try{
             const sql = `CREATE TABLE if not exists images (
                 id int NOT NULL AUTO_INCREMENT,
-                idproduct int NOT NULL,
+                idItem int NOT NULL,,
                 image longblob NOT NULL,
                 PRIMARY KEY (id),
-                KEY \`id item imagem_idx\` (idproduct),
-                CONSTRAINT \`id item imagem\` FOREIGN KEY (idproduct) REFERENCES itens (id)
+                KEY \`id item imagem_idx\` (idItem),
+                CONSTRAINT \`id item imagem\` FOREIGN KEY (idItem) REFERENCES itens (id)
               )
               `;
             await conn.query(sql);
@@ -30,7 +30,7 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try{
             NN(images);
-            const sql = "insert into images (idproduct, image) values (?,?)"
+            const sql = "insert into images (idItem, image) values (?,?)"
             await conn.query(sql, [images.idproduct, images.image])
             console.log("images inserido com sucesso!");
         }catch(err){
@@ -60,7 +60,7 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try {
             NN(images);
-            const sql = `UPDATE images SET image = ? WHERE id = ? and idproduct = ?`;
+            const sql = `UPDATE images SET image = ? WHERE id = ? and idItem = ?`;
             await conn.query(sql, [images.image, images.id, images.idproduct]);
         }catch(err){
             console.log(err);

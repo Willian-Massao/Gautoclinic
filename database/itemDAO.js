@@ -32,7 +32,7 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try{
             NN(id);
-            const sql = `SELECT P.id, P.name, P.qtd, P.price, P.descount, P.description, P.mRate, I.id as idImage, I.idproduct as img2product, I.image, C.id as idComment, C.idproduct as comment2product, C.rate, C.nameUser, C.comment from gauto.itens P left join gauto.images I on I.idProduct = P.id left join gauto.comments C on C.idProduct = P.id where P.id = ?`;
+            const sql = `SELECT P.id, P.name, P.qtd, P.price, P.descount, P.description, P.mRate, I.id as idImage, I.idItem as img2product, I.image, C.id as idComment, C.idItem as comment2product, C.rate, C.name, C.comment from gauto.itens P left join gauto.images I on I.idItem = P.id left join gauto.comments C on C.idItem = P.id where P.id = ?`;
             const [rows] = await conn.query(sql, [id]);
             return compac(rows)[0];
         }catch(err){
@@ -79,7 +79,7 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try{
             NN(type);
-            const sql = `SELECT P.id, P.name, P.qtd, P.price, P.descount, P.description, P.mRate, I.id as idImage, I.idproduct as img2product, I.image, C.id as idComment, C.idproduct as comment2product, C.rate, C.nameUser, C.comment from gauto.itens P left join gauto.images I on I.idProduct = P.id left join gauto.comments C on C.idProduct = P.id where P.type = ?`;
+            const sql = `SELECT P.id, P.name, P.qtd, P.price, P.descount, P.description, P.mRate, I.id as idImage, I.idItem as img2product, I.image, C.id as idComment, C.idItem as comment2product, C.rate, C.name, C.comment from gauto.itens P left join gauto.images I on I.idItem = P.id left join gauto.comments C on C.idItem = P.id where P.type = ?`;
             const [rows] = await conn.query(sql, [type]);
             return compac(rows);
         }catch(err){
@@ -160,7 +160,7 @@ module.exports  = class itens{
     async search(search){
         const conn = await pool.getConnection();
         try{
-            const sql = `SELECT P.id, P.name, P.qtd, P.price, P.descount, P.description, P.mRate, I.id as idImage, I.idproduct as img2product, I.image, C.id as idComment, C.idproduct as comment2product, C.rate, C.nameUser, C.comment from gauto.itens P left join gauto.images I on I.idProduct = P.id left join gauto.comments C on C.idProduct = P.id where P.name like ?`;
+            const sql = `SELECT P.id, P.name, P.qtd, P.price, P.descount, P.description, P.mRate, I.id as idImage, I.idItem as img2product, I.image, C.id as idComment, C.idItem as comment2product, C.rate, C.name, C.comment from gauto.itens P left join gauto.images I on I.idItem = P.id left join gauto.comments C on C.idItem = P.id where P.name like ?`;
             const [rows] = await conn.query(sql, ['%' + search + '%']);
             return compac(rows);
         }catch(err){

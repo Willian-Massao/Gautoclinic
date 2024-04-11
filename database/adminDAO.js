@@ -28,7 +28,7 @@ module.exports  = class admins{
         const conn = await pool.getConnection();
         try{
             NN(admins);
-            const sql = "insert into admins (idUser, name) values (?,?)"
+            const sql = "insert into admins (id, name) values (?,?)"
             await conn.query(sql, [admins.idUser, admins.name])
             console.log("admins inserido com sucesso!");
         }catch(err){
@@ -43,7 +43,7 @@ module.exports  = class admins{
     async findIdUser(){
         const conn = await pool.getConnection();
         try {
-            const sql = `SELECT users.id, users.name FROM users LEFT JOIN admins ON users.id = admins.idUser`;
+            const sql = `SELECT users.id, users.name FROM users LEFT JOIN admins ON users.id = admins.id`;
             const [rows] = await conn.query(sql);
             return rows[0];
         }catch(err){
@@ -58,7 +58,7 @@ module.exports  = class admins{
         const conn = await pool.getConnection();
         try {
             NN(admins);
-            const sql = `UPDATE admins SET name = ? idUser = ? WHERE id = ?`;
+            const sql = `UPDATE admins SET name = ? id = ? WHERE id = ?`;
             await conn.query(sql, [admins.name, admins.idUser, admins.id]);
         }catch(err){
             console.log(err);
