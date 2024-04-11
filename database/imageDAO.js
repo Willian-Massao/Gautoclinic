@@ -7,7 +7,7 @@ module.exports  = class itens{
         try{
             const sql = `CREATE TABLE if not exists images (
                 id int NOT NULL AUTO_INCREMENT,
-                idItem int NOT NULL,,
+                idItem int NOT NULL,
                 image longblob NOT NULL,
                 PRIMARY KEY (id),
                 KEY \`id item imagem_idx\` (idItem),
