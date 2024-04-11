@@ -25,6 +25,12 @@ header{
 header .align{
     width: 370px;
 }
+header .icons a.user p{
+    min-width: 124px;
+}
+header .icons a.cart p{
+    min-width: 78px;
+}
 header .icons, header .icons a, header .icons button{
     display: flex;
     justify-content: space-between;
@@ -351,9 +357,25 @@ main .item-container{
     justify-content: center;
     align-items: start;
     flex-direction: row;
-    flex-wrap: wrap;
     width: 1100px;
     margin-top: 100px;
+}
+.item-images{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
+.item-images .image-list{
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+    width: calc(500px/3);
+    height: 500px;
+}
+.image-list .mini-image{
+    width: calc(500px/3);
 }
 main .item-images div{
     --img-size: 500px;
@@ -411,7 +433,9 @@ main .item-images div img{
 .item-rate .item-stock i{
     margin-top: 4px;
 }
-
+.image-sidebar:hover{
+    filter: brightness(90%);
+}
 button.item-buy{
     margin-top: 10px;
     width: 50%;

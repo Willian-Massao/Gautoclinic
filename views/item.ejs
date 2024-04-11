@@ -11,9 +11,18 @@
     <main>
         <div class="item-container">
             <div class="item-images">
+                <div class="image-list">
+                    <% if(item.images[0]){%>
+                        <% item.images.forEach((e)=>{%>
+                            <div class="mini-image">
+                                <img id="img-<%= e.id %>" class="image-sidebar" src="data:image/jpg;base64,<%= e.image %>" onmouseenter="setPrincipal(<%= e.id %>)" alt="">
+                            </div>
+                        <% })%>
+                    <% } %>
+                </div>
                 <div>
                     <% if(item.images[0]){%>
-                        <img id="img-info" src="data:image/jpg;base64,<%= image[0].image %>" alt="">
+                        <img id="image-principal" src="data:image/jpg;base64,<%= image[0].image %>" alt="">
                     <% } %>
                 </div>
             </div>
@@ -97,6 +106,15 @@
             </div>
         </div>
     </main>
+    <script>
+        // quando o mouse passar em cima de uma classe image-sidebar pegar a imagem e colocar na image-principal
+        function setPrincipal(e){
+            let img = document.getElementById(`img-${e}`);
+            console.log(img);
+            let imgPrincipal = document.getElementById("image-principal");
+            imgPrincipal.src = img.src;
+        }
+    </script>
     <%- include ("partials/footer.ejs") %>
 </body>
 </html>
