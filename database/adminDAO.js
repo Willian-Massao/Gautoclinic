@@ -5,11 +5,12 @@ module.exports  = class admins{
     async create(){
         const conn = await pool.getConnection();
         try{
-            const sql = `CREATE TABLE if not exists admins (
-                id INT NOT NULL AUTO_INCREMENT,
-                idUser BOOLEAN NOT NULL,
+            const sql = `CREATE TABLE admins (
+                id int NOT NULL AUTO_INCREMENT,
                 name varchar(45) NOT NULL,
-                PRIMARY KEY (id))`;
+                PRIMARY KEY (id),
+                CONSTRAINT \`id user\` FOREIGN KEY (id) REFERENCES users (id)
+              )`;
             await conn.query(sql);
             console.log("Tabela admins criada com sucesso!");
         }catch(err){

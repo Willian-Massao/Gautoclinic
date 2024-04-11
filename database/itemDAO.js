@@ -5,16 +5,21 @@ module.exports  = class itens{
     async create(){
         const conn = await pool.getConnection();
         try{
-            const sql = `CREATE TABLE if not exists itens (
-                id INT NOT NULL AUTO_INCREMENT,
+            const sql = `CREATE TABLE itens (
+                id int NOT NULL AUTO_INCREMENT,
                 name varchar(45) NOT NULL,
-                qtd INT NOT NULL DEFAULT 0,
-                price FLOAT NOT NULL,
-                descount FLOAT,
-                type VARCHAR(45) NOT NULL,
-                description TEXT,
-                mRate FLOAT DEFAULT 0,
-                PRIMARY KEY (id))`;
+                qtd int NOT NULL DEFAULT '0',
+                price float NOT NULL,
+                descount float DEFAULT NULL,
+                type varchar(45) NOT NULL,
+                description text,
+                mRate float DEFAULT '0',
+                height float NOT NULL,
+                width float NOT NULL,
+                depth float NOT NULL,
+                weight float NOT NULL,
+                PRIMARY KEY (id)
+              )`;
             await conn.query(sql);
             console.log("Tabela itens criada com sucesso!");
         }catch(err){

@@ -5,16 +5,19 @@ module.exports  = class itens{
     async create(){
         const conn = await pool.getConnection();
         try{
-            const sql = `CREATE TABLE if not exists transaction (
-                id VARCHAR(36) NOT NULL,
-                idUser INT NOT NULL,
-                check_ref VARCHAR(32) NOT NULL,
-                price FLOAT NOT NULL,
-                currency VARCHAR(3) NOT NULL,
+            const sql = `CREATE TABLE transaction (
+                id varchar(36) NOT NULL,
+                idUser int NOT NULL,
+                check_ref varchar(32) NOT NULL,
+                price float NOT NULL,
+                currency varchar(3) NOT NULL,
                 pay2mail varchar(255) NOT NULL,
                 status varchar(45) NOT NULL,
-                date DATETIME NOT NULL,
-                PRIMARY KEY (id))`;
+                date datetime NOT NULL,
+                PRIMARY KEY (id),
+                KEY \`is user transaction_idx\` (idUser),
+                CONSTRAINT \`is user transaction\` FOREIGN KEY (idUser) REFERENCES users (id)
+              )`;
             await conn.query(sql);
             console.log("Tabela transaction criada com sucesso!");
         }catch(err){

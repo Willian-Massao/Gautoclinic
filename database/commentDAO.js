@@ -5,14 +5,20 @@ module.exports  = class itens{
     async create(){
         const conn = await pool.getConnection();
         try{
-            const sql = `CREATE TABLE if not exists comments (
-                id INT NOT NULL AUTO_INCREMENT,
-                idProduct INT NOT NULL,
-                idUser INT NOT NULL,
-                nameUser VARCHAR(45) NOT NULL,
-                comment VARCHAR(255) NOT NULL,
-                rate FLOAT NOT NULL,
-                PRIMARY KEY (id))`;
+            const sql = `CREATE TABLE comments (
+                id int NOT NULL AUTO_INCREMENT,
+                idUser int NOT NULL,
+                comment varchar(255) NOT NULL,
+                rate float NOT NULL,
+                name varchar(45) NOT NULL,
+                idItem int NOT NULL,
+                PRIMARY KEY (id),
+                KEY name_idx (name),
+                KEY \`id item_idx\` (idItem),
+                CONSTRAINT \`id item\` FOREIGN KEY (idItem) REFERENCES itens (id),
+                CONSTRAINT idUser FOREIGN KEY (id) REFERENCES users (id),
+                CONSTRAINT name FOREIGN KEY (name) REFERENCES users (name)
+              )`;
             await conn.query(sql);
             console.log("Tabela comments criada com sucesso!");
         }catch(err){

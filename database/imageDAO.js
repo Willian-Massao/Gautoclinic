@@ -5,11 +5,15 @@ module.exports  = class itens{
     async create(){
         const conn = await pool.getConnection();
         try{
-            const sql = `CREATE TABLE if not exists images (
-                id INT NOT NULL AUTO_INCREMENT,
-                idproduct INT NOT NULL,
-                image LONGBLOB NOT NULL,
-                PRIMARY KEY (id))`;
+            const sql = `CREATE TABLE images (
+                id int NOT NULL AUTO_INCREMENT,
+                idproduct int NOT NULL,
+                image longblob NOT NULL,
+                PRIMARY KEY (id),
+                KEY \`id item imagem_idx\` (idproduct),
+                CONSTRAINT \`id item imagem\` FOREIGN KEY (idproduct) REFERENCES itens (id)
+              )
+              `;
             await conn.query(sql);
             console.log("Tabela images criada com sucesso!");
         }catch(err){
