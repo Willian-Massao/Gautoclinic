@@ -17,7 +17,13 @@
                 <% data.forEach((e)=>{ %>
                     <tr>
                         <% Object.keys(e).forEach((key)=>{ %>
-                            <td> <%= e[key] %> </td>
+                            <% if(key == "image"){ %>
+                                <td>
+                                    <img id="image-admin" src="data:image/jpg;base64,<%= e[key] %>" alt="<%= e[key] %>" value="Botar" accept="image/png, image/jpeg">
+                                </td>
+                            <% }else{ %>
+                                <td> <%= e[key] %> </td>
+                            <% } %>
                         <% }) %>
                         <td><form action="/database/delete" method="POST"><input type="text" name="idContatos" value="<%= e.id %>" class="disable" readonly><button><i class="fi fi-rr-trash-xmark"></i></button></form></td>
                     </tr>
@@ -25,7 +31,9 @@
                 <tr>
                     <% indexes.forEach((e)=>{ %>
                         <% if(e.Field == "image"){ %>
-                            <td><input type="file" name="<%= e.Field %>" form="myform"></td>
+                            <td>
+                                <input id="image-admin" type="file" name="<%= e.Field %>" form="myform">
+                            </td>
                         <% }else{ %>
                             <td> <input type="text" name="<%= e.Field %>" form="myform"> </td>
                         <% } %>

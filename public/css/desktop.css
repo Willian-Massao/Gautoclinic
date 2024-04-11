@@ -1,3 +1,12 @@
+:root{
+    --secodary-color: #bdbdbd;
+}
+h1,h2,p,i,a{
+    color: black;
+}
+footer h1,footer h2,footer p{
+    color: white;
+}
 body{
     margin: 0;
     padding: 0;
@@ -12,7 +21,7 @@ a{
     text-decoration: none;
 }
 header{
-    color: black;
+    color: var(--secodary-color);
     padding: 10px;
     text-align: center;
     display: flex;
@@ -38,7 +47,7 @@ header .icons, header .icons a, header .icons button{
     flex-direction: row;
     padding-left: 15px;
     padding-right: 15px;
-    color: black;
+    color: var(--secodary-color);
     background-color: white;
     border: 0;
     border-radius: 5px;
@@ -169,7 +178,7 @@ main .product p{
     white-space: nowrap;
 }
 main a.product{
-    color: black;
+    color: var(--secodary-color);
 }
 main .product .image{
     width: 200px;
@@ -197,7 +206,7 @@ main .product div.buy button{
     padding: 10px;
     border: 0;
     border-radius: 5px;
-    background-color: #000000;
+    background-color: var(--secodary-color);
     color: rgb(255, 255, 255);
     transition: 50ms ease-in-out;
 }
@@ -215,7 +224,7 @@ footer {
     justify-content: space-evenly;
     align-items: center;
     flex-direction: row-reverse;
-    background-color: black;
+    background-color: var(--secodary-color);
     color: white;
     width: 100%;
     height: 350px;
@@ -327,15 +336,15 @@ nav ul{
 nav ul li, nav ul form{
     width: 100%;
     height: 50px;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid var(--secodary-color);
     list-style: none;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #000000;
+    color: var(--secodary-color);
 }
 nav ul li a{
-    color: #000000;
+    color: var(--secodary-color);
 }
 nav ul input{
     width: 100%;
@@ -442,7 +451,7 @@ button.item-buy{
     padding: 10px;
     border: 0;
     border-radius: 5px;
-    background-color: #000000;
+    background-color: var(--secodary-color);
     color: rgb(255, 255, 255);
     transition: 50ms ease-in-out;
 }
@@ -478,7 +487,7 @@ button.item-buy:active{
     align-items: start;
     flex-direction: column;
     width: calc(100% - 150px);
-    border-left: 1px solid black;
+    border-left: 1px solid var(--secodary-color);
     padding-left: 10px;
 }
 .comment-form, .comment-form form{
@@ -508,7 +517,7 @@ button.item-buy:active{
     padding: 10px;
     border: 0;
     border-radius: 5px;
-    background-color: #000000;
+    background-color: var(--secodary-color);
     color: rgb(255, 255, 255);
     transition: 50ms ease-in-out;
     margin-bottom: 5px;
@@ -575,7 +584,7 @@ button.item-buy:active{
     width: 30px;
     height: 30px;
     border: 0;
-    background-color: #000000;
+    background-color: var(--secodary-color);
     color: rgb(255, 255, 255);
     transition: 50ms ease-in-out;
 }
@@ -593,7 +602,7 @@ button.item-buy:active{
     margin-top: 15px;
     padding: 15px;
     border: 0;
-    background-color: #000000;
+    background-color: var(--secodary-color);
     border-radius: 5px;
     color: rgb(255, 255, 255);
     transition: 50ms ease-in-out;
@@ -624,6 +633,12 @@ table.green-table{
     border-bottom: 1px solid lightgray;
     height: 50px;
 }
+.green-table tr img{
+    flex-shrink:  0;
+    -webkit-flex-shrink: 0;
+    max-width:  100%;
+    max-height:  100%;
+}
 .green-table tr button{
     background-color: #ff5454;
     color: white;
@@ -648,6 +663,11 @@ table.green-table{
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+.green-table td input[type="file"]{
+    width: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+
 }
 .green-table th{
     background-color: #009979;
@@ -699,6 +719,9 @@ header.admin li:hover{
     width: 50%;
     min-width: 530px;
 }
+.info p{
+    text-align: justify;
+}
 .info .info-container{
     width: 100%;
     display: flex;
@@ -746,7 +769,7 @@ header.admin li:hover{
     padding: 10px;
     border: 0;
     border-radius: 5px;
-    background-color: #000000;
+    background-color: var(--secodary-color);
     color: rgb(255, 255, 255);
     transition: 50ms ease-in-out;
 }
@@ -859,7 +882,6 @@ input[type="submit"]:hover {
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #000000;
 }
 .info-contaner{
     display: flex;
@@ -916,7 +938,7 @@ input[type="submit"]:hover {
     padding: 10px;
     border: 0;
     border-radius: 5px;
-    background-color: #000000;
+    background-color: var(--secodary-color);
     color: rgb(255, 255, 255);
     transition: 50ms ease-in-out;
 }
