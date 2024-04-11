@@ -328,7 +328,7 @@ app.post('/carrinho' ,async  (req, res) => {
 
 app.post('/image', upload.single('image') ,async (req, res) => {
     const images = new imageDAO();
-    let id = 2;
+    let id = 1;
     const image = await removeFile('./public/products/' + req.file.filename);
 
     images.insert({idproduct: id, image: image}).then(
@@ -353,7 +353,7 @@ app.post('/comment/add/:id', async(req, res) => {
 
     if(comment != ""){
         users.findId(req.user.id).then( user =>{
-            comments.insert({idProduct: id, idUser: user.id, nameUser: user.name, comment, rate}).then(
+            comments.insert({idProduct: id, idUser: user.id, name: user.name, comment, rate}).then(
                 res.redirect(`/item/${id}`)
             ).catch(err => res.status(500).send('Something broke!'));
         }).catch(err => res.status(500).send('Something broke!'));
@@ -397,6 +397,7 @@ app.post('/payment', async(req, res) => {
             "pay_to_email": pay2mail,
         })
     });
+    
     if(apiRes.ok){
         let data = await apiRes.json();
 
@@ -406,13 +407,16 @@ app.post('/payment', async(req, res) => {
         status = data.status;
         date = data.date;
         price = data.amount;
+
+        transaction.insert({id, idUser, check_ref, price, currency, pay2mail, status, date}).then(
+            res.json({ url: check_ref})
+        ).catch(err => {
+                res.status(500).send('Something broke!')
+        });
+    }else{
+        res.status(500).send('sumup unauthorized')
     }
 
-    transaction.insert({id, idUser, check_ref, price, currency, pay2mail, status, date}).then(
-        res.json({ url: check_ref})
-    ).catch(err => {
-            res.status(500).send('Something broke!')
-        });
 });
 
 app.put('/admin/envio', async(req, res) => {

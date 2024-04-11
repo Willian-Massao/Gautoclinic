@@ -7,7 +7,7 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try{
             const sql = `CREATE TABLE if not exists users (
-                id INT NOT NULL AUTO_INCREMENT,
+                id int NOT NULL AUTO_INCREMENT,
                 name varchar(45) NOT NULL,
                 email varchar(45) NOT NULL,
                 lastname varchar(45) NOT NULL,
@@ -20,8 +20,10 @@ module.exports  = class itens{
                 number varchar(45) NOT NULL,
                 password varchar(255) NOT NULL,
                 salt varchar(255) NOT NULL,
-                PRIMARY KEY (id, cpf, email),
-                KEY INDICEEMAIL (email))`;
+                PRIMARY KEY (id,cpf,email,name),
+                KEY INDICEEMAIL (email),
+                KEY INDICENAME (name)
+              )`;
             await conn.query(sql);
             console.log("Tabela users criada com sucesso!");
         }catch(err){

@@ -207,7 +207,7 @@ function compac(result){
                     newRows.comments.push({
                         id: element.idComment,
                         rate: element.rate,
-                        nameUser: element.nameUser,
+                        name: element.name,
                         comment: element.comment
                     });
                 } 

@@ -15,8 +15,9 @@ module.exports  = class itens{
                 PRIMARY KEY (id),
                 KEY name_idx (name),
                 KEY \`id item_idx\` (idItem),
+                KEY idUser (idUser),
                 CONSTRAINT \`id item\` FOREIGN KEY (idItem) REFERENCES itens (id),
-                CONSTRAINT idUser FOREIGN KEY (id) REFERENCES users (id),
+                CONSTRAINT idUser FOREIGN KEY (idUser) REFERENCES users (id),
                 CONSTRAINT name FOREIGN KEY (name) REFERENCES users (name)
               )`;
             await conn.query(sql);
@@ -37,7 +38,7 @@ module.exports  = class itens{
         try{
             NN(comments);
             const sql = "insert into comments (idUser, idItem, name, rate, comment) values (?,?,?,?,?)"
-            await conn.query(sql, [comments.idUser, comments.idProduct, comments.nameUser, comments.rate, comments.comment])
+            await conn.query(sql, [comments.idUser, comments.idProduct, comments.name, comments.rate, comments.comment])
             console.log("comments inserido com sucesso!");
         }catch(err){
             console.log(err);
