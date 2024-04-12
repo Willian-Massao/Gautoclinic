@@ -32,7 +32,6 @@ routes.post('/add/admins', (req, res) => {
 routes.post('/add/products', (req, res) => {
     const { name, qtd, price, descount, type, description, mRate, height, width, depth, weight } = req.body;
     const itens = new itemDAO();
-    console.log(req.body);
 
     itens.insert({ name, qtd, price, descount, type, description, mRate, height, width, depth, weight }).then(()=>{
         res.redirect('/admin/products')}

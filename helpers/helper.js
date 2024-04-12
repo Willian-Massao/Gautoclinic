@@ -1,11 +1,14 @@
 const nodemailer = require('nodemailer');
 const multer = require('multer');
 
+const fs = require('fs').promises;
+const crypto = require('crypto').webcrypto;
+
 function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
       return next();
     }
-    res.redirect('/login');
+    res.redirect('/user/login');
 }
 
 async function ensureAdmin(req, res, next) {
@@ -16,7 +19,7 @@ async function ensureAdmin(req, res, next) {
             res.redirect('/');
         }
     }else{
-        res.redirect('/login');
+        res.redirect('/user/login');
     }
 }
 

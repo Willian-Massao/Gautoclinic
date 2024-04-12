@@ -1,6 +1,8 @@
 const routes = require('express').Router();
 const helper = require('../helpers/helper');
 
+const userDAO = require('../database/UserDAO.js');
+
 //Profile routes
 routes.get('/account', helper.ensureAuthenticated, (req, res) => {
     const errorMessage = req.flash('error');
@@ -17,7 +19,7 @@ routes.get('/request', helper.ensureAuthenticated, (req, res) => {
 routes.get('/edit', helper.ensureAuthenticated, (req, res) => {
     const errorMessage = req.flash('error');
     
-    res.render('profile', { user: req.user, error: errorMessage});
+    res.render('editprofile', { user: req.user, error: errorMessage});
 });
 
 routes.post('/edit', helper.ensureAuthenticated, (req, res) => {

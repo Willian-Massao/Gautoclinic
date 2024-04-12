@@ -5,6 +5,7 @@ const userDAO = require('../database/UserDAO.js');
 const imageDAO = require('../database/imageDAO.js');
 const itemDAO = require('../database/itemDAO.js');
 const adminDAO = require('../database/adminDAO.js');
+const envioDAO = require('../database/melhorenvioDAO.js');
 
 const Envio = require('../controllers/EnvioController.js');
 
@@ -58,7 +59,6 @@ routes.get('/envio', helper.ensureAdmin, async(req, res) => {
    if(req.query.code){
         let envio = new envioDAO();
         let code = req.query.code;
-        console.log(code);
         
         let fetchres = await fetch('https://sandbox.melhorenvio.com.br/oauth/token',{
             method: 'POST',
@@ -82,7 +82,6 @@ routes.get('/envio', helper.ensureAdmin, async(req, res) => {
             date.setSeconds(date.getSeconds() + temp.expires_in);
             controllerEnvio.expired_at = date;
 
-            console.log(controllerEnvio);
             envio.insertOrUpdate(controllerEnvio);
         }
     }
@@ -94,7 +93,6 @@ routes.post('/envio', async(req, res) => {
     let url = 'https://sandbox.melhorenvio.com.br/oauth/authorize';
     let concatenatedString = '';
     controllerEnvio = new Envio({ client_id, client_secret, redirect_uri });
-    console.log(controllerEnvio);
 
     for (const key in req.body) {
         if (req.body[key] === 'on') {
@@ -107,6 +105,5 @@ routes.post('/envio', async(req, res) => {
     url += `&scope=${concatenatedString}`
     res.redirect(url);
 });
-
 
 module.exports = routes;
