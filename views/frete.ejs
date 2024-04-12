@@ -4,10 +4,23 @@
     <%- include ("partials/head.ejs") %>
 </head>
 <body>
+    <%- include ("partials/alert.ejs") %>
     <%- include ("partials/navbaradmin.ejs") %>
     <main>
         <form action="/admin/envio" method="post" id="frete-form">
-            
+            <div class="input-container">
+                <label for="client_secret">client_id</label>
+                <input type="text" name="client_id" id="client_id">
+            </div>
+            <div class="input-container">
+                <label for="client_secret">client_secret</label>
+                <input type="text" name="client_secret" id="client_id">
+            </div>
+            <div class="input-container">
+                <label for="client_secret">redirect_uri</label>
+                <input type="text" name="redirect_uri" id="client_secret">
+            </div>
+    
             <div class="check-container">
                 <input type="checkbox" id="all" onclick="selectAll()">
                 <label for="all">Selecionar todos</label>

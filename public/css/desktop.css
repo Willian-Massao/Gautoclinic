@@ -1,3 +1,12 @@
+:root{
+    --secodary-color: #bdbdbd;
+}
+h1,h2,p,i,a{
+    color: black;
+}
+footer h1,footer h2,footer p{
+    color: white;
+}
 body{
     margin: 0;
     padding: 0;
@@ -12,7 +21,7 @@ a{
     text-decoration: none;
 }
 header{
-    color: black;
+    color: var(--secodary-color);
     padding: 10px;
     text-align: center;
     display: flex;
@@ -25,6 +34,12 @@ header{
 header .align{
     width: 370px;
 }
+header .icons a.user p{
+    min-width: 124px;
+}
+header .icons a.cart p{
+    min-width: 78px;
+}
 header .icons, header .icons a, header .icons button{
     display: flex;
     justify-content: space-between;
@@ -32,7 +47,7 @@ header .icons, header .icons a, header .icons button{
     flex-direction: row;
     padding-left: 15px;
     padding-right: 15px;
-    color: black;
+    color: var(--secodary-color);
     background-color: white;
     border: 0;
     border-radius: 5px;
@@ -163,7 +178,7 @@ main .product p{
     white-space: nowrap;
 }
 main a.product{
-    color: black;
+    color: var(--secodary-color);
 }
 main .product .image{
     width: 200px;
@@ -191,7 +206,7 @@ main .product div.buy button{
     padding: 10px;
     border: 0;
     border-radius: 5px;
-    background-color: #000000;
+    background-color: var(--secodary-color);
     color: rgb(255, 255, 255);
     transition: 50ms ease-in-out;
 }
@@ -209,7 +224,7 @@ footer {
     justify-content: space-evenly;
     align-items: center;
     flex-direction: row-reverse;
-    background-color: black;
+    background-color: var(--secodary-color);
     color: white;
     width: 100%;
     height: 350px;
@@ -321,15 +336,15 @@ nav ul{
 nav ul li, nav ul form{
     width: 100%;
     height: 50px;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid var(--secodary-color);
     list-style: none;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #000000;
+    color: var(--secodary-color);
 }
 nav ul li a{
-    color: #000000;
+    color: var(--secodary-color);
 }
 nav ul input{
     width: 100%;
@@ -351,9 +366,25 @@ main .item-container{
     justify-content: center;
     align-items: start;
     flex-direction: row;
-    flex-wrap: wrap;
     width: 1100px;
     margin-top: 100px;
+}
+.item-images{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
+.item-images .image-list{
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+    width: calc(500px/3);
+    height: 500px;
+}
+.image-list .mini-image{
+    width: calc(500px/3);
 }
 main .item-images div{
     --img-size: 500px;
@@ -411,14 +442,16 @@ main .item-images div img{
 .item-rate .item-stock i{
     margin-top: 4px;
 }
-
+.image-sidebar:hover{
+    filter: brightness(90%);
+}
 button.item-buy{
     margin-top: 10px;
     width: 50%;
     padding: 10px;
     border: 0;
     border-radius: 5px;
-    background-color: #000000;
+    background-color: var(--secodary-color);
     color: rgb(255, 255, 255);
     transition: 50ms ease-in-out;
 }
@@ -454,7 +487,7 @@ button.item-buy:active{
     align-items: start;
     flex-direction: column;
     width: calc(100% - 150px);
-    border-left: 1px solid black;
+    border-left: 1px solid var(--secodary-color);
     padding-left: 10px;
 }
 .comment-form, .comment-form form{
@@ -484,7 +517,7 @@ button.item-buy:active{
     padding: 10px;
     border: 0;
     border-radius: 5px;
-    background-color: #000000;
+    background-color: var(--secodary-color);
     color: rgb(255, 255, 255);
     transition: 50ms ease-in-out;
     margin-bottom: 5px;
@@ -551,7 +584,7 @@ button.item-buy:active{
     width: 30px;
     height: 30px;
     border: 0;
-    background-color: #000000;
+    background-color: var(--secodary-color);
     color: rgb(255, 255, 255);
     transition: 50ms ease-in-out;
 }
@@ -569,7 +602,7 @@ button.item-buy:active{
     margin-top: 15px;
     padding: 15px;
     border: 0;
-    background-color: #000000;
+    background-color: var(--secodary-color);
     border-radius: 5px;
     color: rgb(255, 255, 255);
     transition: 50ms ease-in-out;
@@ -600,6 +633,12 @@ table.green-table{
     border-bottom: 1px solid lightgray;
     height: 50px;
 }
+.green-table tr img{
+    flex-shrink:  0;
+    -webkit-flex-shrink: 0;
+    max-width:  100%;
+    max-height:  100%;
+}
 .green-table tr button{
     background-color: #ff5454;
     color: white;
@@ -624,6 +663,11 @@ table.green-table{
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+.green-table td input[type="file"]{
+    width: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+
 }
 .green-table th{
     background-color: #009979;
@@ -675,6 +719,9 @@ header.admin li:hover{
     width: 50%;
     min-width: 530px;
 }
+.info p{
+    text-align: justify;
+}
 .info .info-container{
     width: 100%;
     display: flex;
@@ -722,7 +769,7 @@ header.admin li:hover{
     padding: 10px;
     border: 0;
     border-radius: 5px;
-    background-color: #000000;
+    background-color: var(--secodary-color);
     color: rgb(255, 255, 255);
     transition: 50ms ease-in-out;
 }
@@ -797,4 +844,107 @@ input[type="submit"] {
 
 input[type="submit"]:hover {
     background-color: #223966;
+}
+
+.profile-container{
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    flex-direction: row;
+}
+.profile-container .navlist{
+    margin-top: 75px;
+    width: 15%;
+}
+.profile-container .account-info{
+    width: 80%;
+}
+.account-info{
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+}
+.profile-container ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.profile-container ul li{
+    height: 50px;
+    width: 100%;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+}
+.profile-container ul li a{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.info-contaner{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    margin-bottom: 15px;
+}
+.info-contaner h2{
+    width: 95%;
+    text-align: start;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+}
+.end-container p, .end-container h1{
+    margin: 2px;
+    padding: 0;
+}
+.end-container{
+    margin: 25px;
+}
+.account-info .input-container{
+    width: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    margin: 15px;
+}
+.account-info form{
+    width: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
+    flex-wrap: wrap;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    margin-bottom: 15px;
+}
+.account-info form h2{
+    width: 95%;
+    text-align: start;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+}
+.account-info .input-container input[type="text"]{
+    width: calc(100% - 20px);
+    padding: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    margin-bottom: 5px;
+}
+.account-info .input-container input[type="submit"]{
+    width: 100%;
+    padding: 10px;
+    border: 0;
+    border-radius: 5px;
+    background-color: var(--secodary-color);
+    color: rgb(255, 255, 255);
+    transition: 50ms ease-in-out;
+}
+.account-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
 }

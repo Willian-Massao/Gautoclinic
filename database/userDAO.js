@@ -7,7 +7,7 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try{
             const sql = `CREATE TABLE if not exists users (
-                id INT NOT NULL AUTO_INCREMENT,
+                id int NOT NULL AUTO_INCREMENT,
                 name varchar(45) NOT NULL,
                 email varchar(45) NOT NULL,
                 lastname varchar(45) NOT NULL,
@@ -20,8 +20,10 @@ module.exports  = class itens{
                 number varchar(45) NOT NULL,
                 password varchar(255) NOT NULL,
                 salt varchar(255) NOT NULL,
-                PRIMARY KEY (id, cpf, email),
-                KEY INDICEEMAIL (email))`;
+                PRIMARY KEY (id,cpf,email,name),
+                KEY INDICEEMAIL (email),
+                KEY INDICENAME (name)
+              )`;
             await conn.query(sql);
             console.log("Tabela users criada com sucesso!");
         }catch(err){
@@ -66,7 +68,7 @@ module.exports  = class itens{
     async findEmail(email){
         const conn = await pool.getConnection();
         try {
-            const sql = `SELECT US.id, US.email, US.name, US.password, US.salt, case when AD.id is not null then true else false end AS hasAdmin FROM users US left join admins AD on US.id = AD.idUser WHERE US.email = ?;`;
+            const sql = `SELECT US.id, US.email, US.name, US.password, US.salt, case when AD.id is not null then true else false end AS hasAdmin FROM users US left join admins AD on US.id = AD.id WHERE US.email = ?;`;
             const [rows] = await conn.query(sql, [email]);
             return rows[0];
         }catch(err){
@@ -81,8 +83,8 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try {
             NN(users);
-            const sql = `UPDATE users SET name = ? email = ? lastname = ? tel = ? cpf = ? cep = ? city = ? district = ? adress = ? number = ? hasAdmin = ? WHERE id = ?`;
-            await conn.query(sql, [users.name, users.email, users.lastname, users.tel, users.cpf, users.cep, users.city, users.district, users.adress, users.number, users.hasAdmin, users.id]);
+            const sql = `UPDATE users SET name = ?, email = ?, lastname = ?, tel = ?, cpf = ?, cep = ?, city = ?, district = ?, adress = ?, number = ? WHERE id = ?;`;
+            await conn.query(sql, [users.name, users.email, users.lastname, users.tel, users.cpf, users.cep, users.city, users.district, users.adress, users.number, users.id]);
         }catch(err){
             console.log(err);
             throw err;
@@ -136,6 +138,19 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try {
             const sql = query;
+            const [row] = await conn.query(sql);
+            return row;
+        }catch(err){
+            console.log(err);
+        }finally{
+            conn.release();
+        }
+    }
+    
+    async describe(){
+        const conn = await pool.getConnection();
+        try {
+            const sql = `DESCRIBE users`;
             const [row] = await conn.query(sql);
             return row;
         }catch(err){

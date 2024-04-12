@@ -6,15 +6,20 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try{
             const sql = `CREATE TABLE if not exists itens (
-                id INT NOT NULL AUTO_INCREMENT,
+                id int NOT NULL AUTO_INCREMENT,
                 name varchar(45) NOT NULL,
-                qtd INT NOT NULL DEFAULT 0,
-                price FLOAT NOT NULL,
-                descount FLOAT,
-                type VARCHAR(45) NOT NULL,
-                description TEXT,
-                mRate FLOAT DEFAULT 0,
-                PRIMARY KEY (id))`;
+                qtd int NOT NULL DEFAULT '0',
+                price float NOT NULL,
+                descount float DEFAULT NULL,
+                type varchar(45) NOT NULL,
+                description text,
+                mRate float DEFAULT '0',
+                height float NOT NULL,
+                width float NOT NULL,
+                depth float NOT NULL,
+                weight float NOT NULL,
+                PRIMARY KEY (id)
+              )`;
             await conn.query(sql);
             console.log("Tabela itens criada com sucesso!");
         }catch(err){
@@ -27,7 +32,7 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try{
             NN(id);
-            const sql = `SELECT P.id, P.name, P.qtd, P.price, P.descount, P.description, P.mRate, I.id as idImage, I.idproduct as img2product, I.image, C.id as idComment, C.idproduct as comment2product, C.rate, C.nameUser, C.comment from gauto.itens P left join gauto.images I on I.idProduct = P.id left join gauto.comments C on C.idProduct = P.id where P.id = ?`;
+            const sql = `SELECT P.id, P.name, P.qtd, P.price, P.descount, P.description, P.mRate, I.id as idImage, I.idItem as img2product, I.image, C.id as idComment, C.idItem as comment2product, C.rate, C.name, C.comment from gauto.itens P left join gauto.images I on I.idItem = P.id left join gauto.comments C on C.idItem = P.id where P.id = ?`;
             const [rows] = await conn.query(sql, [id]);
             return compac(rows)[0];
         }catch(err){
@@ -44,8 +49,8 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try{
             NN(itens);
-            const sql = "insert into itens (name, qtd, price, descount, type, description) values (?,?,?,?,?,?)"
-            await conn.query(sql, [itens.name, itens.qtd, itens.price, itens.descount, itens.type, itens.description])
+            const sql = "insert into itens (name ,qtd ,price ,descount ,type ,description ,mRate ,height ,width ,depth ,weight) values (?,?,?,?,?,?,?,?,?,?,?)"
+            await conn.query(sql, [itens.name,itens.qtd,itens.price,itens.descount,itens.type,itens.description,itens.mRate,itens.height,itens.width,itens.depth,itens.weight])
             console.log("itens inserido com sucesso!");
         }catch(err){
             console.log(err);
@@ -74,7 +79,7 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try{
             NN(type);
-            const sql = `SELECT P.id, P.name, P.qtd, P.price, P.descount, P.description, P.mRate, I.id as idImage, I.idproduct as img2product, I.image, C.id as idComment, C.idproduct as comment2product, C.rate, C.nameUser, C.comment from gauto.itens P left join gauto.images I on I.idProduct = P.id left join gauto.comments C on C.idProduct = P.id where P.type = ?`;
+            const sql = `SELECT P.id, P.name, P.qtd, P.price, P.descount, P.description, P.mRate, I.id as idImage, I.idItem as img2product, I.image, C.id as idComment, C.idItem as comment2product, C.rate, C.name, C.comment from gauto.itens P left join gauto.images I on I.idItem = P.id left join gauto.comments C on C.idItem = P.id where P.type = ?`;
             const [rows] = await conn.query(sql, [type]);
             return compac(rows);
         }catch(err){
@@ -90,8 +95,8 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try {
             NN(itens);
-            const sql = `UPDATE itens SET name = ? qtd = ? price = ? descount = ? type = ? mRate = ? description = ? WHERE id = ?`;
-            await conn.query(sql, [itens.name, itens.qtd, itens.price, itens.descount,itens.type, itens.mRate, itens.description, itens.id]);
+            const sql = `UPDATE itens SET name = ? ,qtd = ? ,price = ? ,descount = ? ,type = ? ,description = ? ,mRate = ? ,height = ? ,width = ? depth = ? ,weight = ? WHERE id = ?`;
+            await conn.query(sql, [itens.name,itens.qtd,itens.price,itens.descount,itens.type,itens.description,itens.mRate,itens.height,itens.width,itens.depth,itens.weight]);
         }catch(err){
             console.log(err);
             throw err;
@@ -155,12 +160,24 @@ module.exports  = class itens{
     async search(search){
         const conn = await pool.getConnection();
         try{
-            const sql = `SELECT P.id, P.name, P.qtd, P.price, P.descount, P.description, P.mRate, I.id as idImage, I.idproduct as img2product, I.image, C.id as idComment, C.idproduct as comment2product, C.rate, C.nameUser, C.comment from gauto.itens P left join gauto.images I on I.idProduct = P.id left join gauto.comments C on C.idProduct = P.id where P.name like ?`;
+            const sql = `SELECT P.id, P.name, P.qtd, P.price, P.descount, P.description, P.mRate, I.id as idImage, I.idItem as img2product, I.image, C.id as idComment, C.idItem as comment2product, C.rate, C.name, C.comment from gauto.itens P left join gauto.images I on I.idItem = P.id left join gauto.comments C on C.idItem = P.id where P.name like ?`;
             const [rows] = await conn.query(sql, ['%' + search + '%']);
             return compac(rows);
         }catch(err){
             console.log(err);
             throw err;
+        }finally{
+            conn.release();
+        }
+    }
+    async describe(){
+        const conn = await pool.getConnection();
+        try {
+            const sql = `DESCRIBE itens;`;
+            const [row] = await conn.query(sql);
+            return row;
+        }catch(err){
+            console.log(err);
         }finally{
             conn.release();
         }
@@ -202,7 +219,7 @@ function compac(result){
                     newRows.comments.push({
                         id: element.idComment,
                         rate: element.rate,
-                        nameUser: element.nameUser,
+                        name: element.name,
                         comment: element.comment
                     });
                 } 

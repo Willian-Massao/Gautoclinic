@@ -6,10 +6,14 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try{
             const sql = `CREATE TABLE if not exists images (
-                id INT NOT NULL AUTO_INCREMENT,
-                idproduct INT NOT NULL,
-                image LONGBLOB NOT NULL,
-                PRIMARY KEY (id))`;
+                id int NOT NULL AUTO_INCREMENT,
+                idItem int NOT NULL,
+                image longblob NOT NULL,
+                PRIMARY KEY (id),
+                KEY \`id item imagem_idx\` (idItem),
+                CONSTRAINT \`id item imagem\` FOREIGN KEY (idItem) REFERENCES itens (id)
+              )
+              `;
             await conn.query(sql);
             console.log("Tabela images criada com sucesso!");
         }catch(err){
@@ -26,7 +30,7 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try{
             NN(images);
-            const sql = "insert into images (idproduct, image) values (?,?)"
+            const sql = "insert into images (idItem, image) values (?,?)"
             await conn.query(sql, [images.idproduct, images.image])
             console.log("images inserido com sucesso!");
         }catch(err){
@@ -56,7 +60,7 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try {
             NN(images);
-            const sql = `UPDATE images SET image = ? WHERE id = ? and idproduct = ?`;
+            const sql = `UPDATE images SET image = ? WHERE id = ? and idItem = ?`;
             await conn.query(sql, [images.image, images.id, images.idproduct]);
         }catch(err){
             console.log(err);
@@ -97,6 +101,18 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try {
             const sql = query;
+            const [row] = await conn.query(sql);
+            return row;
+        }catch(err){
+            console.log(err);
+        }finally{
+            conn.release();
+        }
+    }
+    async describe(){
+        const conn = await pool.getConnection();
+        try {
+            const sql = `DESCRIBE images`;
             const [row] = await conn.query(sql);
             return row;
         }catch(err){

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include ("partials/head.ejs") %>
+</head>
+<body>
+    <%- include ("partials/alert.ejs") %>
+    <%- include ("partials/navbar.ejs") %>
+    <%- include ("partials/header.ejs") %>
+    <main>
+        <div class="profile-container">
+            <div class="navlist">
+                <ul>
+                    <li><a href="/profile/account">Minha conta</a></li>
+                    <li><a href="/profile/request">Meus pedidos</a></li>
+                    <li><a href="/profile/edit">Editar conta</a></li>
+                    <% if(admin){ %>
+                        <li><a href="/admin/users">Administrador</a></li>
+                    <% } %>
+                </ul>
+            </div>
+            <div class="account-info">
+                <h1>Minha conta</h1>
+                <form action="/profile/edit" method="post">
+                    <h2>Editar</h2>
+                    <div class="account-container">
+                        <div class="account-sub">
+                            <h1>Pessoais</h1>
+                            <div class="input-container">
+                                <label for="name">Nome</label>
+                                <input type="text" name="name" id="name" value="<%= user.name %>">
+                            </div>
+                            <div class="input-container">
+                                <label for="lastname">Sobrenome</label>
+                                <input type="text" name="lastname" id="lastname" value="<%= user.lastname %>">
+                            </div>
+                            <div class="input-container">
+                                <label for="email">Email</label>
+                                <input type="text" name="email" id="email" value="<%= user.email %>">
+                            </div>
+                            <div class="input-container">
+                                <label for="cpf">CPF</label>
+                                <input type="text" name="cpf" id="cpf" value="<%= user.cpf %>">
+                            </div>
+                            <div class="input-container">
+                                <label for="tel">Telefone</label>
+                                <input type="text" name="tel" id="tel" value="<%= user.tel %>">
+                            </div>
+                        </div>
+                        <div>
+                            <h1>Endereço</h1>
+                            <div class="input-container">
+                                <label for="cep">CEP</label>
+                                <input type="text" name="cep" id="cep" oninput="getCep()" value="<%= user.cep %>">
+                            </div>
+                            <div class="input-container">
+                                <label for="adress">Endereço</label>
+                                <input type="text" name="adress" id="adress" value="<%= user.adress %>">
+                            </div>
+                            <div class="input-container">
+                                <label for="district">Bairro</label>
+                                <input type="text" name="district" id="district" value="<%= user.district %>">
+                            </div>
+                            <div class="input-container">
+                                <label for="city">Cidade</label>
+                                <input type="text" name="city" id="city" value="<%= user.city %>">
+                            </div>
+                            <div class="input-container">
+                                <label for="number">Numero</label>
+                                <input type="text" name="number" id="number" value="<%= user.number %>">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-container">
+                        <input type="submit" value="Salvar">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+    <script>
+        async function getCep(){
+            let cep = document.getElementById('cep');
+            let adress = document.getElementById('adress');
+            let city = document.getElementById('city');
+            let district = document.getElementById('district');
+            cep.value.replace(/\s+|-/g, "");
+            
+            if(cep.value.length == 8){
+                let res = await axios.get('https://viacep.com.br/ws/'+ cep.value +'/json/');
+
+                if(!res.data.erro){
+                    adress.value = res.data.logradouro;
+                    city.value = res.data.localidade;
+                    district.value = res.data.bairro;
+                    adress.focus();
+                    city.focus();
+                    district.focus();
+                    cep.focus();
+                }else{
+                    adress.value = "Não encontrado";
+                    city.value = "Não encontrado";
+                    district.value = "Não encontrado";
+                    adress.focus();
+                    city.focus();
+                    district.focus();
+                    cep.focus();
+                }
+            }
+        } 
+    </script>
+    <%- include ("partials/footer.ejs") %>
+</body>
+</html>

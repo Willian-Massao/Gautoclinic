@@ -6,15 +6,18 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try{
             const sql = `CREATE TABLE if not exists transaction (
-                id VARCHAR(36) NOT NULL,
-                idUser INT NOT NULL,
-                check_ref VARCHAR(32) NOT NULL,
-                price FLOAT NOT NULL,
-                currency VARCHAR(3) NOT NULL,
+                id varchar(36) NOT NULL,
+                idUser int NOT NULL,
+                check_ref varchar(32) NOT NULL,
+                price float NOT NULL,
+                currency varchar(3) NOT NULL,
                 pay2mail varchar(255) NOT NULL,
                 status varchar(45) NOT NULL,
-                date DATETIME NOT NULL,
-                PRIMARY KEY (id))`;
+                date datetime NOT NULL,
+                PRIMARY KEY (id),
+                KEY \`is user transaction_idx\` (idUser),
+                CONSTRAINT \`is user transaction\` FOREIGN KEY (idUser) REFERENCES users (id)
+              )`;
             await conn.query(sql);
             console.log("Tabela transaction criada com sucesso!");
         }catch(err){
@@ -80,6 +83,18 @@ module.exports  = class itens{
         }catch(err){
             console.log(err);
             conn.release();
+        }finally{
+            conn.release();
+        }
+    }
+    async describe(){
+        const conn = await pool.getConnection();
+        try {
+            const sql = `DESCRIBE transaction`;
+            const [row] = await conn.query(sql);
+            return row;
+        }catch(err){
+            console.log(err);
         }finally{
             conn.release();
         }

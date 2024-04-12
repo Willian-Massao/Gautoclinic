@@ -6,13 +6,20 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try{
             const sql = `CREATE TABLE if not exists comments (
-                id INT NOT NULL AUTO_INCREMENT,
-                idProduct INT NOT NULL,
-                idUser INT NOT NULL,
-                nameUser VARCHAR(45) NOT NULL,
-                comment VARCHAR(255) NOT NULL,
-                rate FLOAT NOT NULL,
-                PRIMARY KEY (id))`;
+                id int NOT NULL AUTO_INCREMENT,
+                idUser int NOT NULL,
+                comment varchar(255) NOT NULL,
+                rate float NOT NULL,
+                name varchar(45) NOT NULL,
+                idItem int NOT NULL,
+                PRIMARY KEY (id),
+                KEY name_idx (name),
+                KEY \`id item_idx\` (idItem),
+                KEY idUser (idUser),
+                CONSTRAINT \`id item\` FOREIGN KEY (idItem) REFERENCES itens (id),
+                CONSTRAINT idUser FOREIGN KEY (idUser) REFERENCES users (id),
+                CONSTRAINT name FOREIGN KEY (name) REFERENCES users (name)
+              )`;
             await conn.query(sql);
             console.log("Tabela comments criada com sucesso!");
         }catch(err){
@@ -30,8 +37,8 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try{
             NN(comments);
-            const sql = "insert into comments (idUser, idProduct, nameUser, rate, comment) values (?,?,?,?,?)"
-            await conn.query(sql, [comments.idUser, comments.idProduct, comments.nameUser, comments.rate, comments.comment])
+            const sql = "insert into comments (idUser, idItem, name, rate, comment) values (?,?,?,?,?)"
+            await conn.query(sql, [comments.idUser, comments.idProduct, comments.name, comments.rate, comments.comment])
             console.log("comments inserido com sucesso!");
         }catch(err){
             console.log(err);
@@ -59,7 +66,7 @@ module.exports  = class itens{
     async productId(id){
         const conn = await pool.getConnection();
         try {
-            const sql = `SELECT * FROM comments WHERE idProduct = ?`;
+            const sql = `SELECT * FROM comments WHERE idItem = ?`;
             const [rows] = await conn.query(sql, [id]);
             return rows;
         }catch(err){
@@ -115,6 +122,18 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try {
             const sql = query;
+            const [row] = await conn.query(sql);
+            return row;
+        }catch(err){
+            console.log(err);
+        }finally{
+            conn.release();
+        }
+    }
+    async describe(){
+        const conn = await pool.getConnection();
+        try {
+            const sql = `DESCRIBE comments`;
             const [row] = await conn.query(sql);
             return row;
         }catch(err){

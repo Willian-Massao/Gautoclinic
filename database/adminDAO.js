@@ -6,10 +6,11 @@ module.exports  = class admins{
         const conn = await pool.getConnection();
         try{
             const sql = `CREATE TABLE if not exists admins (
-                id INT NOT NULL AUTO_INCREMENT,
-                idUser BOOLEAN NOT NULL,
+                id int NOT NULL AUTO_INCREMENT,
                 name varchar(45) NOT NULL,
-                PRIMARY KEY (id))`;
+                PRIMARY KEY (id),
+                CONSTRAINT \`id user\` FOREIGN KEY (id) REFERENCES users (id)
+              )`;
             await conn.query(sql);
             console.log("Tabela admins criada com sucesso!");
         }catch(err){
@@ -27,8 +28,8 @@ module.exports  = class admins{
         const conn = await pool.getConnection();
         try{
             NN(admins);
-            const sql = "insert into admins (idUser, name) values (?,?)"
-            await conn.query(sql, [admins.idUser, admins.name])
+            const sql = "insert into admins (id, name) values (?,?)"
+            await conn.query(sql, [admins.id, admins.name])
             console.log("admins inserido com sucesso!");
         }catch(err){
             console.log(err);
@@ -42,7 +43,7 @@ module.exports  = class admins{
     async findIdUser(){
         const conn = await pool.getConnection();
         try {
-            const sql = `SELECT users.id, users.name FROM users LEFT JOIN admins ON users.id = admins.idUser`;
+            const sql = `SELECT users.id, users.name FROM users LEFT JOIN admins ON users.id = admins.id`;
             const [rows] = await conn.query(sql);
             return rows[0];
         }catch(err){
@@ -57,8 +58,8 @@ module.exports  = class admins{
         const conn = await pool.getConnection();
         try {
             NN(admins);
-            const sql = `UPDATE admins SET name = ? idUser = ? WHERE id = ?`;
-            await conn.query(sql, [admins.name, admins.idUser, admins.id]);
+            const sql = `UPDATE admins SET name = ? id = ? WHERE id = ?`;
+            await conn.query(sql, [admins.name, admins.id, admins.id]);
         }catch(err){
             console.log(err);
             throw err;
@@ -98,6 +99,18 @@ module.exports  = class admins{
         const conn = await pool.getConnection();
         try {
             const sql = query;
+            const [row] = await conn.query(sql);
+            return row;
+        }catch(err){
+            console.log(err);
+        }finally{
+            conn.release();
+        }
+    }
+    async describe(){
+        const conn = await pool.getConnection();
+        try {
+            const sql = `DESCRIBE admins`;
             const [row] = await conn.query(sql);
             return row;
         }catch(err){
