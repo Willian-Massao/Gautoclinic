@@ -65,6 +65,18 @@ module.exports  = class melhorEnvioTokens{
             conn.release();
         }
     }
+    async buscaToken(){
+        const conn = await pool.getConnection();
+        try{
+            const sql = `select refresh_token melhorenviotokens where indicador_ativo = 1;`;
+            const [row] = await conn.query(sql);
+            return row;
+        }catch(err){
+
+        }finally{
+            conn.release();
+        }
+    }
 }
 
 function NN(thing){

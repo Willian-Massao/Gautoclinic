@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
     <%- include ("partials/head.ejs") %>
+    <head>
+        <script src="../script/script.js"></script>
+        
+    </head>
 <body onload="">
     <%- include ("partials/navbar.ejs") %>
     <%- include ("partials/header.ejs") %>
@@ -22,15 +26,12 @@
                             <p>Total</p>
                             <p id="total">R$ 0,00</p>
                         </div>
-                        <fieldset>
+                        <fieldset id="freteMelhorEnvio">
                             <legend>Frete</legend>
                             <div>
-                                <input type="radio" class="normal" name="normal" onchange="total()" value="0" checked>
-                                <label for="normal">Entrega normal <br><strong>gratis</strong> 1 - 3 dias</label>
-                            </div>
-                            <div>
-                                <input type="radio" class="normal" name="normal" onchange="total()" value="5">
-                                <label for="normal">Entrega express <br><strong>R$ 5.00</strong>hoje mesmo</label>
+                                <input type="number" name="CEP" onkeydown="return event.keyCode !== 69" class="input">
+                                <label for="normal">Digite seu CEP <br>
+                                <button class="summary-box-button" onclick="CalculeFrete()">Calcule seu frete</button>
                             </div>
                         </fieldset>
                         <button class="summary-box-button" onclick="sendItens()">Pagamento</button>
@@ -141,6 +142,54 @@
                     window.location.href = '/payment/' + res.data.url;
                 })
             }
+            // function CalculeFrete() 
+            // {
+            //     itens = JSON.parse(localStorage.getItem("item"));
+            //     let produtos = "";
+            //     let melhorEnvioDAO = new melhorenvioDAO()
+                
+            //     itens.forEach(i => {
+            //         produtos += "\"id\":" + i.id + ", width: "+ i.width + ", height: " + i.height + ", length: " + i.length +", weight: " + i.weight + ", insurance_value: "+ i.value+", quantity: " + i.qtd
+            //     });
+
+            //     const fetch = await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/shipment/calculate',
+            //     {
+            //         method: 'POST',
+            //         headers: 
+            //         {
+            //             "Content-Type": "routeslication/json",
+            //             "Authorization": melhorEnvioDAO.buscaToken(),
+            //         },
+            //         body:
+            //         JSON.stringify(
+            //             {
+            //                 "from": 
+            //                 {
+            //                     "postal_code": "03533200"
+            //                 },
+            //                 "to": 
+            //                 {
+            //                     "postal_code": document.getElementById("CEP").innerHTML
+            //                 },
+            //                 "products": 
+            //                 [{
+
+            //                     produtos
+            //             }],
+            //             })
+            //     });
+            //     if(fetch.ok){
+            //         let data = await fetch.json();
+            //         let fretes = "";
+            //         data.forEach(dat => {
+            //             fretes += "<div><input type=\"radio\" class=\"normal\" name=\"normal\" value=\""+dat.price+"\"><label for=\"normal\">Entrega feita por: " + dat.name+ "<br><strong>R$ "+dat.price+"</strong> " + dat.name+ "</label></div>"
+            //         })
+            //         document.getElementById("freteMelhorEnvio").innerHTML = fretes;
+
+            //         }else{
+            //             res.status(500).send('MelhorEnvio falhou na busca dos fretes')
+            //         }
+            // }
         </script>
     </main>
     <%- include ("partials/footer.ejs") %>
