@@ -94,8 +94,7 @@ function addLittleCar(){
             id: window.location.href.split("/")[4],
             name: document.getElementById("name-info").innerText,
             price: document.getElementById("price-info").innerText.replace("R$ ",""),
-            section: 'facial',
-            img: document.getElementById("img-info").src,
+            img: document.getElementById("image-principal").src,
             qtd: 1
         });
     }else{

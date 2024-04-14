@@ -369,6 +369,42 @@ main .item-container{
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: row;
+}
+.item-images .image-list{
+    display: flex;
+    justify-content: start;
+    height: calc(500px/3);
+    width: 100%;
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+}
+.image-list .mini-image{
+    width: calc(500px/3);
+    min-width: calc(500px/3);
+    height: calc(500px/3);
+    min-height: calc(500px/3);
+    scroll-snap-align: center;
+}
+main .item-images .mini-image img{
+    flex-shrink:  0;
+    -webkit-flex-shrink: 0;
+    max-width:  100%;
+    max-height:  100%;
+}
+.image-list::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.image-list {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+.item-images{
+    display: flex;
+    justify-content: center;
+    align-items: center;
     flex-direction: column-reverse;
     width: 100%;
 
@@ -524,6 +560,41 @@ button.item-buy:active{
     width: 80%;
     margin-top: 100px;
 }
+.summary-box-info{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    flex-direction: row;
+}
+.summary-box-info>div{
+    display: flex;
+    flex-direction: row;
+}
+.summary-box-cep label{
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+.summary-box-cep input{
+    width: calc(100% - 20px);
+    padding: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    margin-bottom: 5px;
+
+}
+.summary-box-cep{
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    margin-top: 10px;
+}
+.box-itens-name{
+    max-width: 130px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 #itens-container{
     display: flex;
     justify-content: center;
@@ -539,7 +610,9 @@ button.item-buy:active{
 #itens-container #summary{
     width: 20%;
     min-width: 315px;
+    margin-bottom: 15px;
 }
+
 #itens-container #itens-list .item{
     height: 150px;
     min-width: 315px;
@@ -547,12 +620,17 @@ button.item-buy:active{
     justify-content: start;
     align-items: center;
     flex-direction: row;
+    box-shadow: 0 0 10px 0px rgba(0,0,0,0.5);
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 15px;
 }
 .img-container{
     width: 150px;
     height: 150px;
     overflow: hidden;
     display: flex;
+    min-width: 122px;
     justify-content: center;
     align-items: center;
 }
@@ -771,6 +849,7 @@ header.admin li:hover{
     align-items: center;
     flex-direction: column;
     width: 80%;
+
 }
 .info .who{
     text-align: center;
@@ -780,6 +859,7 @@ header.admin li:hover{
     flex-direction: column;
     width: 50%;
     min-width: 90vw;
+    text-align: justify;
 }
 .info .info-container{
     width: 100%;
@@ -792,10 +872,12 @@ header.admin li:hover{
 }
 .info-container> div{
     width: 30%;
-    min-width: 400px;
+    min-width: 90vw;
     text-align: start;
 }
-
+.info-container p{
+    text-align: justify;
+}
 .profile-container{
     width: 80%;
     display: flex;
@@ -969,4 +1051,13 @@ input[type="submit"] {
 
 input[type="submit"]:hover {
     background-color: #223966;
+}
+input[type=number]::-webkit-inner-spin-button { 
+    -webkit-appearance: none;
+    
+}
+input[type=number] { 
+   -moz-appearance: textfield;
+   appearance: textfield;
+
 }

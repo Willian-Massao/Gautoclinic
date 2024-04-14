@@ -10,22 +10,26 @@
             <div id="itens-container">
                 <div id="itens-list">
                     <p>Carrinho de compras</p>
+                    <hr>
                 </div>
                 <div id="summary">
-                    <h1>ORDER</h1>
                     <div class="summary-box">
-                        <div class="summary-box-itens" id="box-itens">
-
+                        <div class="summary-box-info">
+                            <p>Frete</p>
+                            <p id="frete">R$ 0,00</p>
                         </div>
-                        <hr>
                         <div class="summary-box-info">
                             <p>Total</p>
                             <p id="total">R$ 0,00</p>
                         </div>
-                        <div class="summary-box-cep">
-                            <label for="normal">Digite seu CEP</label>
-                            <input type="number" name="CEP" onkeydown="return event.keyCode !== 69" class="input">
-                        </div>
+                        <fieldset id="freteMelhorEnvio">
+                            <legend>Frete</legend>
+                            <div>
+                                <input type="number" name="CEP" onkeydown="return event.keyCode !== 69" class="input">
+                                <label for="normal">Digite seu CEP <br>
+                                <button class="summary-box-button" onclick="CalculeFrete()">Calcule seu frete</button>
+                            </div>
+                        </fieldset>
                         <button class="summary-box-button" onclick="sendItens()">Pagamento</button>
                     </div>
                 </div>
@@ -44,23 +48,21 @@
                 let subtotal = 0; 
                 let carrinho = 0
 
-                //for(let i = 0; i < document.getElementsByClassName("normal").length; i++){
-                //    if(document.getElementsByClassName("normal")[i].checked){
-                //        frete = parseFloat(document.getElementsByClassName("normal")[i].value)
-                //    }
-                //}
+                for(let i = 0; i < document.getElementsByClassName("normal").length; i++){
+                    if(document.getElementsByClassName("normal")[i].checked){
+                        frete = parseFloat(document.getElementsByClassName("normal")[i].value)
+                    }
+                }
 
                 itens.forEach(i => {
                     subtotal += parseFloat(i.price.replace(",", ".")) * i.qtd;
                     carrinho += parseInt(i.qtd);
-                    document.getElementById("item-"+[i.id]).innerHTML = `(${i.qtd})`;
                 });
 
-                //total = subtotal + frete;
-                total = subtotal;
+                total = subtotal + frete;
 
-                //document.getElementById("subtotal").innerHTML = `Subtotal (${carrinho} produtos): <strong>R$${subtotal.toFixed(2)}</strong>`;
-                //document.getElementById("frete").innerHTML = `R$${frete.toFixed(2)}`;
+                document.getElementById("subtotal").innerHTML = `Subtotal (${carrinho} produtos): <strong>R$${subtotal.toFixed(2)}</strong>`;
+                document.getElementById("frete").innerHTML = `R$${frete.toFixed(2)}`;
                 document.getElementById("total").innerHTML = `R$${total.toFixed(2)}`;
             }
             function render(){
@@ -72,38 +74,27 @@
                                 <img src="${itens[i].img}">
                             </div>
                             <div class="desc-container">
-                                <p id="name-info">${itens[i].name}</p>
+                                <div>
+                                    <p id="name-info">${itens[i].name}</p>
+                                    <p id="preco-info">R$ ${itens[i].price}</p>
+                                </div>
                                 <div class="qtd">
                                     <button id="left" onclick="qtdButton(0,${itens[i].id},${i})"><i class="fi fi-rr-plus"></i></button>
                                     <input type="number" value="${itens[i].qtd}" id="qtd-input-${i}">
                                     <button id="right" onclick="qtdButton(1,${itens[i].id},${i})"><i class="fi fi-rr-minus-small"></i></button>
                                 </div>
-                                <p id="preco-info">R$ ${itens[i].price}</p>
                             </div>
                         </div>
+                        <hr>
                     `;
 
                     if(i == itens.length -1){
-                        itens.forEach(i => {
-                            document.getElementById("box-itens").innerHTML += `
-                            <div class="summary-box-info">
-                                <div>
-                                    <p class="box-itens-name">${i.name}</p>  
-                                    <p class="box-itens-qtd" id="item-${i.id}">(${i.qtd})</p>  
-                                </div>
-                                <p id="item-total">R$${i.price}</p>
-                            </div>
-                            `
-                        });
+                        document.getElementById("itens-list").innerHTML += `
+                        <div class="summary-box-info">
+                            <p id="subtotal"></p>
+                        </div>
+                        `
                     }
-
-                    //if(i == itens.length -1){
-                    //    document.getElementById("itens-list").innerHTML += `
-                    //    <div class="summary-box-info">
-                    //        <p id="subtotal"></p>
-                    //    </div>
-                    //    `
-                    //}
                 }
             }
             function qtdButton(dir, id, val){
@@ -128,8 +119,7 @@
 
                 if(qtd == 0){
                     for(let i = 0; i<item.length; i++){
-                        console.log(item[i].name);
-                        item[i].name == document.getElementById("qtd-input-0").parentNode.parentNode.childNodes[1].textContent ? item.splice(i, 1) : console.log("não encontrado");
+                        item[i].name == document.getElementById("qtd-input-0").parentNode.parentNode.childNodes[1].childNodes[1].textContent ? item.splice(i, 1) : console.log("não encontrado");
                     }
                     location.reload();
                 }

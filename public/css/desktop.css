@@ -47,8 +47,8 @@ header .icons, header .icons a, header .icons button{
     flex-direction: row;
     padding-left: 15px;
     padding-right: 15px;
+    background-color: rgba(0, 0, 0, 0.0);
     color: var(--secodary-color);
-    background-color: white;
     border: 0;
     border-radius: 5px;
 }
@@ -376,15 +376,44 @@ main .item-container{
     flex-direction: row;
 }
 .item-images .image-list{
-    display: flex;
-    justify-content: start;
-    align-items: start;
-    flex-direction: column;
     width: calc(500px/3);
     height: 500px;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
 }
 .image-list .mini-image{
     width: calc(500px/3);
+    height: calc(500px/3);
+    scroll-snap-align: center;
+}
+.image-list::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.image-list {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+.desc-container{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-direction: row;
+    width: 100%;
+    max-width: 550px;
+    min-width: 430px;
+    padding-right: 10px;
+}
+.desc-container p{
+    margin: 0;
+    padding: 0;
+}
+.desc-container p#name-info{
+    width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 main .item-images div{
     --img-size: 500px;
@@ -532,19 +561,60 @@ button.item-buy:active{
     width: 80%;
     margin-top: 100px;
 }
-#itens-container{
+.summary-box-info{
+    width: 100%;
     display: flex;
     justify-content: space-between;
+    align-items: start;
+    flex-direction: row;
+}
+.summary-box-info>div{
+    display: flex;
+    flex-direction: row;
+}
+.summary-box-cep label{
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+.summary-box-cep input{
+    width: calc(100% - 20px);
+    padding: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    margin-bottom: 5px;
+
+}
+.summary-box-cep{
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    margin-top: 10px;
+}
+.box-itens-name{
+    max-width: 130px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+#itens-container{
+    display: flex;
+    justify-content: space-evenly;
     align-items: start;
     flex-direction: row;
     flex-wrap: wrap;
     width: 100%;
 }
 #itens-container #itens-list{
-    width: calc(100% - 240px);
+    width: calc(70% - 240px);
+
+}
+#itens-list{
+    min-width: 550px;
 }
 #itens-container #summary{
-    min-width: 230px;
+    min-width: 350px;
+    margin-left: 15px;
+    margin-bottom: 15px;
 }
 #itens-container #itens-list .item{
     height: 150px;
@@ -552,10 +622,15 @@ button.item-buy:active{
     justify-content: start;
     align-items: center;
     flex-direction: row;
+    box-shadow: 0 0 10px 0px rgba(0,0,0,0.5);
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 15px;
 }
 .img-container{
     width: 150px;
     height: 150px;
+    min-width: 122px;
     overflow: hidden;
     display: flex;
     justify-content: center;

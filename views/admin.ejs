@@ -83,7 +83,12 @@
                 </div>
             </div>
         </div>
-        <form action="/database/add/<%= table %>" method="post" id="myform" enctype="multipart/form-data"></form>
+        <form action="/database/add/<%= table %>" method="post" id="myform"></form>
+        <script>
+            if(document.URL.split('/')[document.URL.split('/').length -1] == 'images'){
+                document.getElementById('myform').setAttribute('enctype', 'multipart/form-data');
+            }
+        </script>
     </main>
 </body>
 </html>

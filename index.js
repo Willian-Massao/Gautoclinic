@@ -166,7 +166,6 @@ app.get('/', (req, res) =>{
 app.get('/produtos/:sec', (req, res) =>{
     const errorMessage = req.flash('error');
     const itens = new itemDAO();
-    const images = new imageDAO();
 
     itens.findType(req.params.sec).then( itens =>{
         res.render('produtos', {itens: itens, user: req.user, error: errorMessage});
