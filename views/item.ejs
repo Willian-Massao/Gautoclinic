@@ -40,13 +40,17 @@
                     <div class="item-stock">
                         <% if(item.qtd != 0){ %>
                             <i class="fi fi-rr-check-circle instock"></i>
-                            <p class="instock">em stock</p>
+                            <p class="instock">em estoque</p>
                         <% }else{ %>
                             <i class="fi fi-rr-cross-circle outstock"></i>
-                            <p class="outstock">sem stock</p>
+                            <p class="outstock">sem estoque</p>
                         <% } %>
                     </div>
                 </div>
+                <div id="height-info" data-value= "<%= item.height %>"></div>
+                <div id="width-info" data-value= "<%= item.width %>"></div>
+                <div id="depth-info" data-value= "<%= item.depth %>"></div>
+                <div id="weight-info" data-value= "<%= item.weight %>"></div>
                 <div class="item-price">
                     <h1 id="price-info">R$ <%= item.price.toFixed(2) %></h1>
                     <p>6x R$ <%= ((item.price)/6).toFixed(2) %> sem juros</p>

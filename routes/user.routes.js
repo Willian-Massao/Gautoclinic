@@ -8,6 +8,7 @@ const passport = require('passport');
 const bcrypt = require('bcryptjs');
 
 const userDAO = require('../database/UserDAO.js');
+const melhorenvioDAO = require('../database/melhorenvioDAO.js')
 
 passport.use(new LocalStrategy({
     usernameField: 'email', // nome do campo de email no formulário de login
@@ -50,7 +51,7 @@ passport.deserializeUser(function(user, done) {
 });
 
 
-routes.post('/login', passport.authenticate('local', { successRedirect: '/', failureRedirect: '/user/login', failureFlash: true  }));
+routes.post('/login', passport.authenticate('local', { successRedirect: '/', failureRedirect: '/login', failureFlash: true  }));
 
 routes.post('/logout', function(req, res, next){
     req.logout(function(err) {
@@ -88,7 +89,7 @@ routes.post('/esqueceuSenha', function(req,res){
         })
         .catch(err => {
         req.flash('error', 'Email não encontrado');
-        res.redirect('/user/register');
+        res.redirect('/register');
     });
 })
 
@@ -100,7 +101,7 @@ routes.post('/confirmarCodigo',function(req,res){
     .then(passwordForgot =>{
         if( passwordForgot['dateTimeExpirationCod'] > date) {
                 if (passwordForgot['authVerificationCod'] == codigo){
-                    res.redirect('/user/alterarSenha');
+                    res.redirect('/alterarSenha');
                 }else{
                     tipoErro = 1;
                     throw new Error()
@@ -116,7 +117,7 @@ routes.post('/confirmarCodigo',function(req,res){
         }
         if(tipoErro === 2){
             req.flash('error', 'Código Expirado');
-            res.redirect('/user/esqueceuSenha');
+            res.redirect('/esqueceuSenha');
         }
     })
 })
@@ -129,10 +130,10 @@ routes.post('/alterarSenha',function(req,res){
         bcrypt.hash(password, salt, async (err, hash) => {
             // Salva o usuário no banco de dados
             users.updatePass({password: hash, salt, id}).then(()=> {
-                res.redirect('/user/login');
+                res.redirect('/login');
             }).catch(err => {
                 req.flash('error', 'campo preenchido incorretamente!');
-                res.redirect('/user/alterarSenha');
+                res.redirect('/alterarSenha');
             });
         });
     });
@@ -157,14 +158,83 @@ routes.post('/register', async (req, res) => {
                     res.redirect('/login');
                 }).catch(err => {
                     req.flash('error', 'campo preenchido incorretamente!');
-                    res.redirect('/user/register');
+                    res.redirect('/register');
                 });
             });
         });
     }).catch(err => (
-        res.redirect('/user/register')
+        res.redirect('/register')
     ));
 });
+
+routes.post('/calcularFrete', async (req, res) => {
+    const {itens, CEP} = req.body;
+    const melhorEnvio = new melhorenvioDAO();
+    const bearerMelhorEnvio = '';
+    let produtos = '';
+    //Verifica se o CEP existe
+    if (CEP != '' && CEP != undefined){   
+        const apiRes = await fetch('https://viacep.com.br/ws/'+CEP+'/json/',{
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+            }
+        });
+
+        if(apiRes.ok){
+
+                //let produtos = "";
+                itens.forEach(i => {
+                    produtos += "id:" + i.id + ", width: "+ i.width + ", height: " + i.height + ", length: " + i.depth +", weight: " + i.weight + ", insurance_value: "+ i.price+", quantity: " + i.qtd
+                });  
+                //bearerMelhorEnvio = melhorEnvio.buscaToken();
+                const calculoFretes = await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/shipment/calculate',{
+                    method: 'POST',
+                    headers: 
+                    {
+                        "Accept":"application/json",
+                        "Content-Type": "application/json",
+                        "Authorization": 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI0NDE4IiwianRpIjoiZWQ3ZTgwYzg2OTI2MGFiMzBlNzMwNmQxMWZiMDBiZTllZGYwN2M0OGY3OTFkZTM3Y2MyZDViNjc0ZTkxNjc0NTE2ZGMzOGVkMDUxNzNlNWEiLCJpYXQiOjE3MTMxMzU5MjIuNDU3MjczLCJuYmYiOjE3MTMxMzU5MjIuNDU3Mjc2LCJleHAiOjE3MTU3Mjc5MjIuMzc4ODEzLCJzdWIiOiI5YmI3MmY5MC0xNmJlLTQ0ZTMtYmYxNi0wZWRjNjNkMWY5NzkiLCJzY29wZXMiOlsiY2FydC1yZWFkIiwiY2FydC13cml0ZSIsImNvbXBhbmllcy1yZWFkIiwiY29tcGFuaWVzLXdyaXRlIiwiY291cG9ucy1yZWFkIiwiY291cG9ucy13cml0ZSIsIm5vdGlmaWNhdGlvbnMtcmVhZCIsIm9yZGVycy1yZWFkIiwicHJvZHVjdHMtcmVhZCIsInByb2R1Y3RzLXdyaXRlIiwicHVyY2hhc2VzLXJlYWQiLCJzaGlwcGluZy1jYWxjdWxhdGUiLCJzaGlwcGluZy1jYW5jZWwiLCJzaGlwcGluZy1jaGVja291dCIsInNoaXBwaW5nLWNvbXBhbmllcyIsInNoaXBwaW5nLWdlbmVyYXRlIiwic2hpcHBpbmctcHJldmlldyIsInNoaXBwaW5nLXByaW50Iiwic2hpcHBpbmctc2hhcmUiLCJzaGlwcGluZy10cmFja2luZyIsImVjb21tZXJjZS1zaGlwcGluZyIsInRyYW5zYWN0aW9ucy1yZWFkIiwidXNlcnMtcmVhZCIsInVzZXJzLXdyaXRlIl19.oWppMRQWaNjym-hyP_CCT7VDqbYqPh-5EWasPdzScHdhpn5EaBit6wtpetGV84zQvD0joRE3GDPTmrB8C0tQtsyC9TwqJeiH13Sl2vr-_dyy8Bl_0S0gdM61OygpjkkH4rY7GQb9323B2B3h8WRf_mnLtFSmz3r_DloreFXCIO1vWCtoDgOmYrF51JT-Amhx8q0HvQ8Pxb33666DVvXNsUn663ZwGVIwSUTNoe9e66J6vkrgseq5bnD8dlvCGqc2ROtk9BTWtnt6vVT_q3yVY_zWyiru3g3NthJ-2DRH2gpTg2Bh9KaZ4U2VzI5eCWETTH62KVtDuOk_ZPkjJIVIzulLK6HOK8FQtnEDO7_aDJ1h5gGgF3G-e5jg3EREzATzQ5EZQ8vtjxcQRN1AyHWKdTuKH0VNXFDSQxJlm8tJARO217u_15e-_M5qOuJaYOabdDDxU_h-HmAdPr4mZGejILwKQVr2VwZ9sOo7ZbYffV5iX3dIVg8W8YLy1eXfW2vr3KcBEubPbByAuuzxCXPkkhmMx6byFkstHsA6rdN9eRKZkME8BkkZ6wb-8l1kL3E6Yoxth6EOeHsjSp61hrJA2vEiAKOiwmPsK7YukWvdv4OebN7pw4z-7MfX7ssIELlitRrhTWhy29dnarwbwzudJpPoE9Y-FtYdVftq6DIegP0',
+                        "User-Agent": "Aplicação (email para contato técnico)",
+                    },
+                    body:
+                    JSON.stringify(
+                        {
+                           "from": 
+                            {
+                                "postal_code": "03533200"
+                            },
+                            "to": 
+                            {
+                                "postal_code": CEP
+                            },
+                            "products": 
+                            [{ 
+                                produtos
+                        }],
+                        })
+                });
+                if(calculoFretes.ok){
+                    let data = await calculoFretes.json();
+                    console.log(data);
+                    let fretes = "";
+                    data.forEach(dat => {
+                         fretes += "<div><input type=\"radio\" class=\"normal\" name=\"normal\" value=\""+dat.price+"\"><label for=\"normal\">Entrega feita por: " + dat.name+ "<br><strong>R$ "+dat.price+"</strong> " + dat.name+ "</label></div>"
+                    })
+                    document.getElementById("freteMelhorEnvio").innerHTML = fretes;    
+                    }else{
+                        res.status(500).send('MelhorEnvio falhou na busca dos fretes')
+                    }
+
+        }else{
+            req.flash('error', 'Por favor digite um CEP valido');
+            res.redirect('/carrinho');
+        }
+    }else{
+        req.flash('error', 'Por favor digite um CEP valido');
+        res.redirect('/carrinho');
+    }   
+})
 
 routes.get('/login', (req, res) => {
     const errorMessage = req.flash('error');

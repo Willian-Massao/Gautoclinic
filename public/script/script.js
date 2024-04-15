@@ -95,6 +95,10 @@ function addLittleCar(){
             name: document.getElementById("name-info").innerText,
             price: document.getElementById("price-info").innerText.replace("R$ ",""),
             img: document.getElementById("image-principal").src,
+            height: document.getElementById('height-info').dataset.value,
+            width: document.getElementById('width-info').dataset.value,
+            depth: document.getElementById('depth-info').dataset.value,
+            weight: document.getElementById('weight-info').dataset.value,
             qtd: 1
         });
     }else{

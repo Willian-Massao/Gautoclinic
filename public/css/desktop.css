@@ -1032,3 +1032,16 @@ input[type=number] {
    appearance: textfield;
 
 }
+#calcularFrete{
+    background-color: #bdbdbd;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border-radius: 5px;
+    padding: 15px;
+    margin-top: 1%;
+}
+#calcularFrete:hover {
+    background-color: #223966;
+}
