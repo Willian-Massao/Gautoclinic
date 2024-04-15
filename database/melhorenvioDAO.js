@@ -67,8 +67,8 @@ module.exports  = class melhorEnvioTokens{
     async buscaToken(){
         const conn = await pool.getConnection();
         try{
-            const sql = "select access_token from melhorenviotokens where indicador_ativo = 1;";
-            let [row] = await conn.query(sql);
+            const sql = "select access_token from melhorEnvioTokens where indicador_ativo = 1;";
+            const [row] = await conn.query(sql);
             return row[0];
         }catch(err){
             console.log(err);
