@@ -12,10 +12,9 @@
                     <p>Carrinho de compras</p>
                 </div>
                 <div id="summary">
-                    <h1>ORDER</h1>
+                    <h1>Pedido</h1>
                     <div class="summary-box">
                         <div class="summary-box-itens" id="box-itens">
-
                         </div>
                         <hr>
                         <div class="summary-box-info">
@@ -26,11 +25,12 @@
                             <label for="normal">Digite seu CEP</label>
                             <input type="number" name="CEP" onkeydown="return event.keyCode !== 69" class="input">
                         </div>
-                        <button class="summary-box-button" onclick="sendItens()">Pagamento</button>
+                        <input type="submit" id="calcularFrete" onclick="sendItens()" class="btn" value="Calcule seu Frete">
                     </div>
                 </div>
             </div>
         </div>
+        <!-- <button class="summary-box-button" onclick="sendItens()">Pagamento</button> -->
         <script>
             let itens = JSON.parse(localStorage.getItem("item"));
 
@@ -138,59 +138,17 @@
                 total()
             }
             function sendItens(){
+                console.log(document.getElementsByName("CEP")[0].value)
                 axios({
                     method: "post",
-                    url: "/payment",
+                    url: "/user/calcularFrete",
                     data: {
-                        itens: itens
+                        itens: itens,
+                        CEP: document.getElementsByName("CEP")[0].value
                     },
                 }).then((res) => {
-                    window.location.href = '/payment/' + res.data.url;
+                    window.location.href = '/user/calcularFrete/' + res.data.url;
                 })
-            }
-            async function CalculeFrete() 
-            {
-                itens = JSON.parse(localStorage.getItem("item"));
-                let produtos = "";
-                let melhorEnvioDAO = new melhorenvioDAO()
-                itens.forEach(i => {
-                    produtos += "\"id\":" + i.id + ", width: "+ i.width + ", height: " + i.height + ", length: " + i.length +", weight: " + i.weight + ", insurance_value: "+ i.value+", quantity: " + i.qtd
-                });    
-                const fetch = await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/shipment/calculate',
-                {
-                    method: 'POST',
-                    headers: 
-                    {
-                        "Content-Type": "routeslication/json",
-                        "Authorization": melhorEnvioDAO.buscaToken(),
-                    },
-                    body:
-                    JSON.stringify(
-                        {
-                           "from": 
-                            {
-                                "postal_code": "03533200"
-                            },
-                            "to": 
-                            {
-                                "postal_code": document.getElementById("CEP").innerHTML
-                            },
-                            "products": 
-                            [{ 
-                                produtos
-                        }],
-                        })
-                });
-                if(fetch.ok){
-                    let data = await fetch.json();
-                    let fretes = "";
-                    data.forEach(dat => {
-                         retes += "<div><input type=\"radio\" class=\"normal\" name=\"normal\" value=\""+dat.price+"\"><label for=\"normal\">Entrega feita por: " + dat.name+ "<br><strong>R$ "+dat.price+"</strong> " + dat.name+ "</label></div>"
-                    })
-                    document.getElementById("freteMelhorEnvio").innerHTML = fretes;    
-                    }else{
-                        res.status(500).send('MelhorEnvio falhou na busca dos fretes')
-                    }
             }
         </script>
     </main>
