@@ -24,6 +24,7 @@ const imageDAO = require("./database/imageDAO.js");
 const adminDAO = require("./database/adminDAO.js");
 const passwordForgotDAO = require("./database/passwordFogotDAO.js");
 const envioDAO = require("./database/melhorenvioDAO.js");
+const refoundDAO = require("./database/refoundDAO.js");
 const routes = require('./routes/profile.routes.js');
 
 // porta do servidor
@@ -38,10 +39,12 @@ const images = new imageDAO();
 const admins = new adminDAO();
 const passwordForgot = new passwordForgotDAO();
 const envio = new envioDAO();
+const refound = new refoundDAO();
 
 itens.create();
 users.create();
 transaction.create();
+refound.create();
 comments.create();
 images.create();
 admins.create();

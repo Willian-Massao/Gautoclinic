@@ -5,21 +5,26 @@ module.exports  = class itens{
     async create(){
         const conn = await pool.getConnection();
         try{
-            const sql = `CREATE TABLE if not exists transaction (
-                id varchar(36) NOT NULL,
-                idUser int NOT NULL,
-                check_ref varchar(32) NOT NULL,
-                price float NOT NULL,
-                currency varchar(3) NOT NULL,
-                pay2mail varchar(255) NOT NULL,
-                status varchar(45) NOT NULL,
-                date datetime NOT NULL,
-                PRIMARY KEY (id),
-                KEY \`is user transaction_idx\` (idUser),
-                CONSTRAINT \`is user transaction\` FOREIGN KEY (idUser) REFERENCES users (id)
-              )`;
+            const sql = `CREATE TABLE if not exists refund (
+                idrefund INT NOT NULL,
+                idUser INT NOT NULL,
+                uuid_check_ref VARCHAR(32) NOT NULL,
+                status VARCHAR(45) NOT NULL DEFAULT 'PENDING',
+                PRIMARY KEY (idrefund),
+                INDEX \`is user transaction_idx\` (idUser ASC) INVISIBLE,
+                INDEX \`check_ref uuid\` (uuid_check_ref ASC) INVISIBLE,
+                CONSTRAINT \`is user transaction_idx\`
+                  FOREIGN KEY (idUser)
+                  REFERENCES gauto.users (id)
+                  ON DELETE NO ACTION
+                  ON UPDATE NO ACTION,
+                CONSTRAINT \`check_ref uuid\`
+                  FOREIGN KEY (uuid_check_ref)
+                  REFERENCES gauto.transaction (id)
+                  ON DELETE NO ACTION
+                  ON UPDATE NO ACTION)`;
             await conn.query(sql);
-            console.log("Tabela transaction criada com sucesso!");
+            console.log("Tabela refund criada com sucesso!");
         }catch(err){
             console.log(err);
             throw err;
@@ -31,13 +36,13 @@ module.exports  = class itens{
     // crud
 
     // create
-    async insert(transaction){
+    async insert(refund){
         const conn = await pool.getConnection();
         try{
-            NN(transaction);
-            const sql = "insert into transaction (id, idUser, check_ref, price, currency, pay2mail, status, date) values (?,?,?,?,?,?,?,?)"
-            await conn.query(sql, [transaction.id, transaction.idUser, transaction.check_ref, transaction.price, transaction.currency, transaction.pay2mail, transaction.status, transaction.date])
-            console.log("transaction inserido com sucesso!");
+            NN(refund);
+            const sql = "insert into refund (idUser, uuid_check_ref, status) values (?,?,?)"
+            await conn.query(sql, [refund.idUser, refund.uuid_check_ref, refund.status])
+            console.log("refund inserido com sucesso!");
         }catch(err){
             console.log(err);
         }finally{
@@ -49,7 +54,7 @@ module.exports  = class itens{
     async findId(id){
         const conn = await pool.getConnection();
         try {
-            const sql = `SELECT * FROM transaction WHERE check_ref = ?`;
+            const sql = `SELECT * FROM refund WHERE uuid_check_ref = ?`;
             const [rows] = await conn.query(sql, [id]);
             return rows;
         }catch(err){
@@ -62,7 +67,7 @@ module.exports  = class itens{
     async findUser(id){
         const conn = await pool.getConnection();
         try {
-            const sql = `SELECT * FROM transaction WHERE idUser = ?`;
+            const sql = `SELECT * FROM refund WHERE idUser = ?`;
             const [rows] = await conn.query(sql, [id]);
             return rows;
         }catch(err){
@@ -72,11 +77,11 @@ module.exports  = class itens{
         }
     }
 
-    async like(trans){
+    async like(refund){
         const conn = await pool.getConnection();
         try {
-            const sql = `SELECT * FROM transaction WHERE check_ref LIKE ? and idUser = ?`;
-            const [rows] = await conn.query(sql, [`${trans.check_ref}%`, trans.idUser]);
+            const sql = `SELECT * FROM refund WHERE uuid_check_ref LIKE ? and idUser = ?`;
+            const [rows] = await conn.query(sql, [`${refund.check_ref}%`, refund.idUser]);
             return rows;
         }catch(err){
             console.log(err);
@@ -87,12 +92,12 @@ module.exports  = class itens{
 
 
     // update
-    async update(transaction){
+    async update(refund){
         const conn = await pool.getConnection();
         try {
-            NN(transaction);
-            const sql = `UPDATE transaction SET status = ? WHERE id = ?`;
-            await conn.query(sql, [transaction.status, transaction.id]);
+            NN(refund);
+            const sql = `UPDATE refund SET status = ? WHERE idrefund = ?`;
+            await conn.query(sql, [refund.status, refund.id]);
         }catch(err){
             console.log(err);
             throw err;
@@ -104,7 +109,7 @@ module.exports  = class itens{
     async select(){
         const conn = await pool.getConnection();
         try {
-            const sql = `SELECT * FROM transaction`;
+            const sql = `SELECT * FROM refund`;
             const [row] = await conn.query(sql);
             return row;
         }catch(err){
@@ -117,7 +122,7 @@ module.exports  = class itens{
     async describe(){
         const conn = await pool.getConnection();
         try {
-            const sql = `DESCRIBE transaction`;
+            const sql = `DESCRIBE refund`;
             const [row] = await conn.query(sql);
             return row;
         }catch(err){

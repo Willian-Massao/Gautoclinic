@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include ("partials/head.ejs") %>
+</head>
+<body>
+    <%- include ("partials/alert.ejs") %>
+    <%- include ("partials/navbar.ejs") %>
+    <%- include ("partials/header.ejs") %>
+    <main>
+        <div class="profile-container">
+            <div class="navlist">
+                <ul>
+                    <li><a href="/profile/account">Minha conta</a></li>
+                    <li><a href="/profile/orders">Meus pedidos</a></li>
+                    <li><a href="/profile/edit">Editar conta</a></li>
+                    <% if(user.hasAdmin){ %>
+                        <li><a href="/admin/users">Administrador</a></li>
+                    <% } %>
+                </ul>
+            </div>
+            <div class="account-info">
+                <h1>Minha conta</h1>
+                <div class="info-contaner">
+
+                    <h2>Meu pedido</h2>
+                    <p><%= orders[0].date.toLocaleDateString() %> | Pedido n° <%= orders[0].check_ref.slice(0,10) %></p>
+                    <div class="account-container single">
+                        <div class="information">
+                            <div>
+                                <label for="end">Endereço de envio</label>
+                                <p><%= user.city %>, <%= user.cep %></p>
+                            </div>
+                            <div>
+                                <label for="status">Status do pedido</label>
+                                <p><%= orders[0].status %></p>
+                            </div>
+                            <div>
+                                <label for="total">Total do pedido</label>
+                                <p>R$ <%= orders[0].price %></p>
+                            </div>
+                        </div>
+                        <div>
+                            <div>
+                                <label for="">Destinatario</label>
+                                <p><%= user.name %> <%= user.lastname %></p>
+                                <p><%= user.tel %></p>
+                                <p><%= user.cpf %></p>
+                            </div>
+                        </div>
+                        <div class="button-container">
+                            <a class="button" href="">Cancelar Pedido</a>
+                            <a class="button" href="/profile/comments/<%= orders[0].check_ref.slice(0,10) %>">Deixar Avaliação</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </main>
+        <%- include ("partials/footer.ejs") %>
+    </body>
+    </html>

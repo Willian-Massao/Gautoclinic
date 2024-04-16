@@ -1061,3 +1061,68 @@ input[type=number] {
    appearance: textfield;
 
 }
+.account-container.table{
+    width: 90%;
+}
+.account-container table{
+    width: 100%;
+    border-spacing: 0;
+    border-collapse: separate;
+}
+.account-container table tr{
+    height: 50px;
+}
+.account-container table tr:first-child{
+    background-color: black;
+    color: white;
+    border-radius: 5px 5px 0 0 ;
+}
+.account-container table th, .account-container table td{
+    display: none;
+}
+.account-container table th.mob-only{
+    display: table-cell;
+    padding: 10px;
+    padding-left: 30px;
+    padding-right: 30px;
+} 
+.account-container table td.mob-only{
+    display: table-cell;
+    text-align: center;
+}.account-container table td:hover{
+    background-color: #f4f4f2;
+}
+.account-container.single{
+    width: 90%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: start;
+    flex-direction: column;
+}
+.single>div.information{
+    display: flex;
+    align-items: start;
+    flex-direction: column;
+}
+.single>div.information div{
+    margin: 10px;
+    margin-top: 0px;
+}
+.single .button-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.single .button{
+    background-color: #ffffff;
+    color: #000000;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border-radius: 5px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 10px 0px rgba(0,0,0,0.15);
+    padding: 15px;
+    margin: 5px;
+}
