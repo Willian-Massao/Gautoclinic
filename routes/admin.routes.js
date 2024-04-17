@@ -6,6 +6,7 @@ const imageDAO = require('../database/imageDAO.js');
 const itemDAO = require('../database/itemDAO.js');
 const adminDAO = require('../database/adminDAO.js');
 const envioDAO = require('../database/melhorenvioDAO.js');
+const refundDAO = require('../database/refoundDAO.js');
 
 const Envio = require('../controllers/EnvioController.js');
 
@@ -50,6 +51,17 @@ routes.get('/admins', helper.ensureAdmin, (req, res) => {
     admins.select().then( item =>{
         admins.describe().then( index =>{
             res.render('admin', {data: item, indexes: index, table: 'admins', error: errorMessage});
+        }).catch(err => res.status(500).send('Something broke!'));
+    }).catch(err => res.status(500).send('Something broke!'));
+});
+
+routes.get('/refund', helper.ensureAdmin, (req, res) => {
+    const errorMessage = req.flash('error');
+    const refund = new refundDAO();
+
+    refund.select().then( item =>{
+        refund.describe().then( index =>{
+            res.render('admin', {data: item, indexes: index, table: 'refund', error: errorMessage});
         }).catch(err => res.status(500).send('Something broke!'));
     }).catch(err => res.status(500).send('Something broke!'));
 });

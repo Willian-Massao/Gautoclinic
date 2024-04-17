@@ -97,14 +97,6 @@
                                 <p class="comment-user">Por <%= data.name %></p>
                         <% }) %>
                     </div>
-                    <div class="comment-form">
-                        <% if(user){ %>
-                            <form action="/comment/add/<%= item.id %>" method="post">
-                                <textarea name="comment" id="comment" cols="30" rows="2"></textarea>
-                                <input type="submit" value="Enviar">
-                            </form>
-                        <% } %>
-                    </div>
                 </div>
             </div>
         </div>

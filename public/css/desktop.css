@@ -14,6 +14,9 @@ body{
     height:100%;
     position: relative;
 }
+input{
+    font-family: "Inter", sans-serif;
+}
 .disable{
     display: none;
 }
@@ -910,7 +913,7 @@ header.admin li:hover{
     margin-bottom: 10px;
 }
 
-input[type="submit"] {
+#frete-form input[type="submit"] {
     background-color: #315292;
     color: #fff;
     border: none;
@@ -921,7 +924,7 @@ input[type="submit"] {
     border-radius: 3px;
 }
 
-input[type="submit"]:hover {
+#frete-form input[type="submit"]:hover {
     background-color: #223966;
 }
 
@@ -1108,4 +1111,90 @@ input[type=number] {
     box-shadow: 0 0 10px 0px rgba(0,0,0,0.15);
     padding: 15px;
     margin: 5px;
+    font-size: small;
+}
+.single .button:hover{
+    background-color: #f4f4f2;
+}
+.comment-container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+}
+.comment-container h1 {
+    margin-bottom: 20px;
+    text-align: center;
+    color: #315292;
+}
+
+.comment-container form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.comment-container label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+button.star-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.star-img {
+    width: 30px;
+    height: 30px;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+}
+
+.star-img:hover,
+.star-img.active {
+    opacity: 1;
+}
+
+.comment-container textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: vertical;
+    width: calc(100% - 20px);
+    resize: none;
+}
+
+.comment-container input[type="number"],
+.comment-container input[type="submit"] {
+    display: block;
+    margin-top: 10px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #315292;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.comment-container input[type="submit"]:hover {
+    background-color: #223966;
+}
+
+.comment-container input[type="number"] {
+    display: none;
 }

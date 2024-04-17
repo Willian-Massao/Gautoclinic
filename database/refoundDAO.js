@@ -6,7 +6,7 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try{
             const sql = `CREATE TABLE if not exists refund (
-                idrefund INT NOT NULL,
+                idrefund varchar(36) NOT NULL,
                 idUser INT NOT NULL,
                 uuid_check_ref VARCHAR(32) NOT NULL,
                 status VARCHAR(45) NOT NULL DEFAULT 'PENDING',
@@ -20,7 +20,7 @@ module.exports  = class itens{
                   ON UPDATE NO ACTION,
                 CONSTRAINT \`check_ref uuid\`
                   FOREIGN KEY (uuid_check_ref)
-                  REFERENCES gauto.transaction (id)
+                  REFERENCES gauto.transaction (check_ref)
                   ON DELETE NO ACTION
                   ON UPDATE NO ACTION)`;
             await conn.query(sql);
@@ -40,11 +40,12 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try{
             NN(refund);
-            const sql = "insert into refund (idUser, uuid_check_ref, status) values (?,?,?)"
-            await conn.query(sql, [refund.idUser, refund.uuid_check_ref, refund.status])
+            const sql = "insert into refund (idrefund ,idUser, uuid_check_ref, status) values (?,?,?,?)"
+            await conn.query(sql, [refund.idrefund, refund.idUser, refund.uuid_check_ref, refund.status])
             console.log("refund inserido com sucesso!");
         }catch(err){
             console.log(err);
+            throw err;
         }finally{
             conn.release();
         }
@@ -59,6 +60,7 @@ module.exports  = class itens{
             return rows;
         }catch(err){
             console.log(err);
+            throw err;
         }finally{
             conn.release();
         }
@@ -72,6 +74,7 @@ module.exports  = class itens{
             return rows;
         }catch(err){
             console.log(err);
+            throw err;
         }finally{
             conn.release();
         }
@@ -80,11 +83,12 @@ module.exports  = class itens{
     async like(refund){
         const conn = await pool.getConnection();
         try {
-            const sql = `SELECT * FROM refund WHERE uuid_check_ref LIKE ? and idUser = ?`;
-            const [rows] = await conn.query(sql, [`${refund.check_ref}%`, refund.idUser]);
+            const sql = `SELECT * FROM refund WHERE uuid_check_ref LIKE ?`;
+            const [rows] = await conn.query(sql, [`${refund.check_ref}%`]);
             return rows;
         }catch(err){
             console.log(err);
+            throw err;
         }finally{
             conn.release();
         }
@@ -114,7 +118,7 @@ module.exports  = class itens{
             return row;
         }catch(err){
             console.log(err);
-            conn.release();
+            throw err;
         }finally{
             conn.release();
         }
@@ -127,6 +131,7 @@ module.exports  = class itens{
             return row;
         }catch(err){
             console.log(err);
+            throw err;
         }finally{
             conn.release();
         }

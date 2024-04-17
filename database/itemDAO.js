@@ -210,23 +210,52 @@ function compac(result){
     result.forEach((element) => {
         temp.forEach((newRows) => {
             if(element.img2product == newRows.id){
-                if(newRows.images.length == 0 || newRows.images[newRows.images.length - 1].id != element.idImage){
+                if(newRows.images.length == 0){
                     newRows.images.push({
                         id: element.idImage,
                         image: element.image
                     });
+                }else{
+                    let isIn = false;
+                    newRows.images.forEach((e)=>{
+                        if(e.id == element.idImage){
+                            isIn = true;
+                        }
+                    })
+                    if(!isIn){
+                        newRows.images.push({
+                            id: element.idImage,
+                            image: element.image
+                        });
+                    }
                 }
             }
+
         
             if(element.comment2product == newRows.id){
-                if(newRows.comments.length == 0 || newRows.comments[newRows.comments.length - 1].id != element.idComment){
+                if(newRows.comments.length == 0){
                     newRows.comments.push({
                         id: element.idComment,
                         rate: element.rate,
-                        name: element.name,
+                        name: element.Conwer,
                         comment: element.comment
                     });
-                } 
+                }else{
+                    let isIn = false;
+                    newRows.comments.forEach((e)=>{
+                        if(e.id == element.idComment){
+                            isIn = true;
+                        }
+                    })
+                    if(!isIn){
+                        newRows.comments.push({
+                            id: element.idComment,
+                            rate: element.rate,
+                            name: element.Conwer,
+                            comment: element.comment
+                        });
+                    }
+                }
             }
         });
     });

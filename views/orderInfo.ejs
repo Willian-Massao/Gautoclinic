@@ -49,14 +49,17 @@
                             </div>
                         </div>
                         <div class="button-container">
-                            <a class="button" href="">Cancelar Pedido</a>
-                            <a class="button" href="/profile/comments/<%= orders[0].check_ref.slice(0,10) %>">Deixar Avaliação</a>
+                            <% if(orders[0].status == "Aprovado" || orders[0].status == "Entregue"){ %>
+                                <input class="button"   type="submit" value="Cancelar Pedido" form="myform" >
+                                <a class="button" href="/profile/comments/<%= orders[0].check_ref.slice(0,10) %>">Deixar Avaliação</a>
+                            <% } %>
                         </div>
                     </div>
                 </div>
             </div>
             </div>
         </main>
+        <form action="/profile/refund" method="post" style="display: none;" id="myform"><input type="text" name="check_ref" id="" value="<%= orders[0].check_ref.slice(0,10) %>"></form>
         <%- include ("partials/footer.ejs") %>
     </body>
     </html>

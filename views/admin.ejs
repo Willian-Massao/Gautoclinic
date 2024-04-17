@@ -25,20 +25,27 @@
                                 <td> <%= e[key] %> </td>
                             <% } %>
                         <% }) %>
-                        <td><form action="/database/delete" method="POST"><input type="text" name="idContatos" value="<%= e.id %>" class="disable" readonly><button><i class="fi fi-rr-trash-xmark"></i></button></form></td>
+                        <% if(table != "refund"){ %>
+                            <td><form action="/database/delete" method="POST"><input type="text" name="idContatos" value="<%= e.id %>" class="disable" readonly><button><i class="fi fi-rr-trash-xmark"></i></button></form></td>
+                        <% }else{ %>
+                            <td><form action="/make/refund" method="POST"><input type="text" name="check_ref" value="<%= e.check_ref %>" class="disable" readonly><button><i class="fi fi-rr-trash-xmark"></i></button></form></td>
+                        <% } %>
                     </tr>
                 <% }) %>
-                <tr>
-                    <% indexes.forEach((e)=>{ %>
-                        <% if(e.Field == "image"){ %>
-                            <td>
-                                <input id="image-admin" type="file" name="<%= e.Field %>" form="myform">
-                            </td>
-                        <% }else{ %>
-                            <td> <input type="text" name="<%= e.Field %>" form="myform"> </td>
-                        <% } %>
-                    <% }) %>
-                    <td><input type="submit" value="Adicionar" form="myform"></td>
+                <tr><% if(table != "refund"){ %>
+                        <% indexes.forEach((e)=>{ %>
+                            <% if(e.Field == "image"){ %>
+                                <td>
+                                    <input id="image-admin" type="file" name="<%= e.Field %>" form="myform">
+                                </td>
+                            <% }else{ %>
+                                <td> 
+                                    <input type="text" name="<%= e.Field %>" form="myform">
+                                </td>
+                            <% } %>
+                        <% }) %>
+                        <td><input type="submit" value="Adicionar" form="myform"></td>
+                    <% } %>
                 </tr>
         </table>
         <div class="mobile-table">
@@ -55,12 +62,17 @@
                         <% indexes.forEach((headers)=>{ %>
                                 <p><%= itens[headers.Field] %></p>
                         <% }) %>
+                        <% if(table != "refund"){ %>
                             <form action="/database/delete" method="POST"><input type="text" name="idContatos" value="<%= itens.id %>" class="disable" readonly><button><i class="fi fi-rr-trash-xmark"></i></button></form>
+                        <% }else{ %>
+                            <form action="/make/refund" method="POST"><input type="text" name="check_ref" value="<%= itens.check_ref %>" class="disable" readonly><button><i class="fi fi-rr-trash-xmark"></i></button></form>
+                        <% } %>
                         </div>
                     <% }) %>
                 </div>
             </div>
         </div>
+        <% if(table != "refund"){ %>
         <div class="mobile-table">
             <div class="header">
                 <% indexes.forEach((headers)=>{ %>
@@ -83,6 +95,7 @@
                 </div>
             </div>
         </div>
+        <% } %>
         <form action="/database/add/<%= table %>" method="post" id="myform"></form>
         <script>
             if(document.URL.split('/')[document.URL.split('/').length -1] == 'images'){

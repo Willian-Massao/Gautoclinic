@@ -15,7 +15,9 @@ module.exports  = class itens{
                 status varchar(45) NOT NULL,
                 date datetime NOT NULL,
                 PRIMARY KEY (id),
+                PRIMARY KEY (check_ref),
                 KEY \`is user transaction_idx\` (idUser),
+                KEY \`check_ref uuid\` (check_ref),
                 CONSTRAINT \`is user transaction\` FOREIGN KEY (idUser) REFERENCES users (id)
               )`;
             await conn.query(sql);

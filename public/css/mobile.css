@@ -1125,4 +1125,8 @@ input[type=number] {
     box-shadow: 0 0 10px 0px rgba(0,0,0,0.15);
     padding: 15px;
     margin: 5px;
+    font-size: small;
+}
+.single .button:hover{
+    background-color: #f4f4f2;
 }

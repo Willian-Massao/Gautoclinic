@@ -83,25 +83,6 @@ app.post('/carrinho' ,async  (req, res) => {
     res.send(itemList);
 });
 
-app.post('/comment/add/:id', async(req, res) => {
-    const comments = new commentDAO();
-    const users = new userDAO();
-
-    let rate = 5;
-    let id = req.params.id;
-    let comment = req.body.comment;
-
-    if(comment != ""){
-        users.findId(req.user.id).then( user =>{
-            comments.insert({idProduct: id, idUser: user.id, name: user.name, comment, rate}).then(
-                res.redirect(`/item/${id}`)
-            ).catch(err => res.status(500).send('Something broke!'));
-        }).catch(err => res.status(500).send('Something broke!'));
-    }else{
-        res.redirect(`/item/${id}`);
-    }
-});
-
 app.post('/payment', async(req, res) => {
     const transaction = new transactionDAO();
     const itens = new itemDAO();
@@ -159,6 +140,28 @@ app.post('/payment', async(req, res) => {
 
 });
 
+app.post('/make/refund', async(req, res) => {
+    const { check_ref } = req.body;
+    const refund = new refoundDAO();
+
+    refund.like({check_ref: check_ref}).then( async itens =>{
+        console.log('https://api.sumup.com/v0.1/me/refund/' + itens[0].idrefund);
+        let fetchres = await fetch('https://api.sumup.com/v0.1/me/refund/' + itens[0].idrefund,{
+            method: 'POST',
+            headers: {
+                "Authorization": "Bearer " + process.env.SUMUP_KEY,
+            }
+        });
+        console.log(await fetchres.json());
+        if(fetchres.ok){
+            res.redirect('/admin/refund');
+        }else{
+            req.flash('error', 'erro ao fazer o reembolso');
+            res.redirect('/admin/refund');
+        }
+    });
+});
+
 // Rotas get
 
 app.get('/', (req, res) =>{
@@ -211,6 +214,7 @@ app.get('/payment/:id', (req, res)=>{
     const errorMessage = req.flash('error');
     const transaction = new transactionDAO();
     transaction.findId(req.params.id).then( data =>{
+        console.log(data);
         res.render('payment', {data: data, user: req.user, error: errorMessage});
     }).catch(err => res.status(500).send('Something broke!'));
 });
