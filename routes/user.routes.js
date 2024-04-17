@@ -1,5 +1,6 @@
 const routes = require('express').Router();
 const helper = require('../helpers/helper');
+require('dotenv/config');
 
 const User = require('../controllers/UserController.js');
 
@@ -9,6 +10,7 @@ const bcrypt = require('bcryptjs');
 
 const userDAO = require('../database/UserDAO.js');
 const melhorenvioDAO = require('../database/melhorenvioDAO.js')
+const freteDAO = require('../database/freteDAO.js')
 
 passport.use(new LocalStrategy({
     usernameField: 'email', // nome do campo de email no formulário de login
@@ -170,7 +172,11 @@ routes.post('/register', async (req, res) => {
 routes.post('/calcularFrete', async (req, res) => {
     const {itens, CEP} = req.body;
     const melhorEnvio = new melhorenvioDAO();
-    const bearerMelhorEnvio = await melhorEnvio.buscaToken();;
+    const fretesDAO = new freteDAO();
+    let bearerMelhorEnvio = 'Bearer ';
+    melhorEnvio.buscaToken()
+    .then(bearer => {  bearerMelhorEnvio += bearer.access_token});
+
     let produtos = '';
     //Verifica se o CEP existe
     if (CEP != '' && CEP != undefined){   
@@ -192,7 +198,7 @@ routes.post('/calcularFrete', async (req, res) => {
                 {
                     "Accept":"application/json",
                     "Content-Type": "application/json",
-                    "Authorization": 'Bearer '+ bearerMelhorEnvio,
+                    "Authorization": bearerMelhorEnvio,
                     "User-Agent": "Aplicação (email para contato técnico)",
                 },
                 body:
@@ -200,7 +206,7 @@ routes.post('/calcularFrete', async (req, res) => {
                     {
                        "from": 
                         {
-                            "postal_code": "03533200"
+                            "postal_code": process.env.CEP_ENVIO
                         },
                         "to": 
                         {
@@ -211,15 +217,10 @@ routes.post('/calcularFrete', async (req, res) => {
                         }],
                     })
             });
-            console.log(await calculoFretes.json());
             if(calculoFretes.ok){
-                let data = await calculoFretes.json();
-                console.log(data);
-                let fretes = "";
-                data.forEach(dat => {
-                     fretes += "<div><input type=\"radio\" class=\"normal\" name=\"normal\" value=\""+dat.price+"\"><label for=\"normal\">Entrega feita por: " + dat.name+ "<br><strong>R$ "+dat.price+"</strong> " + dat.name+ "</label></div>"
-                })
-                document.getElementById("freteMelhorEnvio").innerHTML = fretes;    
+                let jsonfretes = await calculoFretes.json();
+                fretesDAO.InsertorUpdate([req.user.id, jsonfretes])
+                res.status(200).send('Sucesso');  
             }else{
                 res.status(500).send('MelhorEnvio falhou na busca dos fretes')
             }
@@ -232,6 +233,17 @@ routes.post('/calcularFrete', async (req, res) => {
         res.redirect('/carrinho');
     }   
 })
+
+routes.get('/fretes', helper.ensureAuthenticated, (req, res) => {
+    const fretesDAO = new freteDAO();
+    const errorMessage = req.flash('error');
+    let freteJson;
+    fretesDAO.findId(req.user.id).then( freteTable => {
+        freteJson = freteTable.fretes;
+        console.log(freteTable)
+        res.render('fretes', { user: req.user,fretes: freteJson, error: errorMessage});
+    });     
+});
 
 routes.get('/login', (req, res) => {
     const errorMessage = req.flash('error');

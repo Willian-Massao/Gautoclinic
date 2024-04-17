@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include ("partials/head.ejs") %>
+</head>
+<body>
+    <%- include ("partials/alert.ejs") %>
+    <%- include ("partials/navbar.ejs") %>
+    <%- include ("partials/header.ejs") %>
+    <main>
+        <div class="profile-container">
+            <div class="account-info">
+                <form action="/profile/edit" method="post">
+                    <div class="account-container table">
+                        <table>
+                            <tr>
+                                <th class="mob-only">Companhia</th>
+                                <th class="mob-only">Tempo de Entrega</th>
+                                <th>Preço</th>
+                            </tr>
+                                <% fretes.forEach((frete)=>{ %>
+                                <tr>
+                                    <td>R$ <%= frete.price %></td>
+                                </tr>
+                                <% }) %>
+                        </table>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+    <%- include ("partials/footer.ejs") %>
+</body>
+</html>
