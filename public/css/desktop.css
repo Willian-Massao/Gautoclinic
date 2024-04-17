@@ -373,7 +373,9 @@ main .item-container{
     justify-content: center;
     align-items: start;
     flex-direction: row;
-    width: 1100px;
+    max-width: 1500px;
+    width: 100%;
+    min-width: 1100px;
     margin-top: 100px;
 }
 .item-images{
@@ -381,6 +383,8 @@ main .item-container{
     justify-content: center;
     align-items: center;
     flex-direction: row;
+    position: sticky;
+    top: 0;
 }
 .item-images .image-list{
     width: calc(500px/3);
@@ -402,7 +406,7 @@ main .item-container{
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
-.desc-container{
+.item .desc-container{
     display: flex;
     justify-content: space-evenly;
     align-items: center;
@@ -412,11 +416,11 @@ main .item-container{
     min-width: 430px;
     padding-right: 10px;
 }
-.desc-container p{
+.item .desc-container p{
     margin: 0;
     padding: 0;
 }
-.desc-container p#name-info{
+.item .desc-container p#name-info{
     width: 160px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -516,6 +520,47 @@ button.item-buy:active{
     justify-content: space-evenly;
     align-items: center;
     flex-direction: row;
+}
+.sec-container{
+    width: calc(100% - 40px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+.desc-sec{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 100%;
+    border-radius: 5px 5px 0 0;
+    overflow: hidden;
+}
+.desc-sec button{
+    width: calc(100% / 3);
+    height: 35px;
+    background-color: white;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+.desc-info{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 100%;
+}
+.sec{
+    display: none;
+    background-color: white;
+    width: calc(100% - 40px);
+    padding: 20px;
+}
+.sec.active{
+    display: unset;
 }
 .appraisal-container{
     display: flex;

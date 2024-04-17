@@ -153,6 +153,10 @@ main .itens .item:hover img{
 main .itens .item img {
     transition: 220ms ease-in-out;
 }
+.rate img{
+    width: 20px;
+    height: 20px;
+}
 main .product{
     display: flex;
     justify-content: center;
@@ -506,6 +510,47 @@ button.item-buy:active{
     justify-content: space-evenly;
     align-items: center;
     flex-direction: row;
+}
+.sec-container{
+    width: calc(100% - 40px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+.desc-sec{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 100%;
+    border-radius: 5px 5px 0 0;
+    overflow: hidden;
+}
+.desc-sec button{
+    width: calc(100% / 3);
+    height: 35px;
+    background-color: white;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+.desc-info{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 100%;
+}
+.sec{
+    display: none;
+    background-color: white;
+    width: calc(100% - 40px);
+    padding: 20px;
+}
+.sec.active{
+    display: unset;
 }
 .appraisal-container{
     display: flex;
