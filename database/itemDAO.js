@@ -18,8 +18,10 @@ module.exports  = class itens{
                 width float NOT NULL,
                 depth float NOT NULL,
                 weight float NOT NULL,
-                PRIMARY KEY (id)
-              )`;
+                uses text,
+                active text,
+                benefits text,
+                PRIMARY KEY (id))`;
             await conn.query(sql);
             console.log("Tabela itens criada com sucesso!");
         }catch(err){
@@ -32,7 +34,7 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try{
             NN(id);
-            const sql = `SELECT P.id, P.name, P.qtd, P.price, P.descount, P.description, P.mRate, P.height, P.width, P.depth, P.weight, I.id as idImage,  I.id as idImage, I.idItem as img2product, I.image, C.id as idComment, C.idItem as comment2product, C.rate, C.name as Conwer, C.comment from gauto.itens P left join gauto.images I on I.idItem = P.id left join gauto.comments C on C.idItem = P.id where P.id = ?`;
+            const sql = `SELECT P.id, P.name, P.qtd, P.price, P.descount, P.description, P.uses, P.active, P.benefits, P.mRate, P.height, P.width, P.depth, P.weight, I.id as idImage,  I.id as idImage, I.idItem as img2product, I.image, C.id as idComment, C.idItem as comment2product, C.rate, C.name as Conwer, C.comment from gauto.itens P left join gauto.images I on I.idItem = P.id left join gauto.comments C on C.idItem = P.id where P.id = ?`;
             const [rows] = await conn.query(sql, [id]);
             return compac(rows)[0];
         }catch(err){
@@ -195,6 +197,9 @@ function compac(result){
                 price: element.price,
                 descount: element.descount,
                 description: element.description,
+                benefits: element.benefits,
+                uses: element.uses,
+                active: element.active,
                 mRate: element.mRate,
                 height: element.height,
                 width: element.width,

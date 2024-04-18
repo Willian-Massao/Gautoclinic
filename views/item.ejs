@@ -62,8 +62,7 @@
                 <% } %>
                 <div class="item-benefit">
                     <h1>Beneficios</h1>
-                    <p>Este serum possui uma acao incrivel de primer, pois fecha os poros e prepara a pele para uma proxima intervencao. Alem disso promove o efeito hidratacao profunda, ele e composto por: acido hialuronico, niacinamida e acido retinol.  
-                    </p>
+                    <p><%= item.benefits %></p>
                 </div>
                 <div class="sec-container">
                     <div class="desc-sec">
@@ -73,22 +72,19 @@
                     </div>
                     <div class="desc-info">
                         <div class="sec-desc sec active">
-                            <p>Acido hiluronico: O Ácido Hialurônico para o rosto ajuda a manter a sustentação e a hidratação da pele, evitando a flacidez, as linhas e sinais de expressão, preenchendo e mantendo a pele hidratada, viçosa e revitalizada. 
-                                Niacinamida: A niacinamida tem muitos benefícios para a pele, incluindo a redução da produção de óleo, o que pode ajudar a prevenir a acne, a diminuição da aparência de poros dilatados, a melhora da textura da pele, a redução de manchas escuras e a prevenção de danos causados pelos raios UV 
-                                Acido retinol: O Retinol atua na renovação celular, diminui manchas, estimula a produção de colágeno, além de agir na uniformização de textura e tom da pele, trazer luminosidade, aumentar a firmeza da pele e reduzir poros. Suas propriedades no combate à acne e ao envelhecimento precoce também são evidentes.
-                            </p>
+                            <p><%= item.description %></p>
                             <!--<%= item.description %>-->
                         </div>
                         <div class="sec-ativos sec">
                             <ul>
-                                <li>acido hialuronico</li>
-                                <li>retinol</li>
-                                <li>niacinamida</li>
+                                <% item.active.split(',').forEach((e)=>{ %>
+                                    <li><%= e %></li>
+                                <% }) %>
                             </ul>
                             <!--<%= item.ativos %>-->
                         </div>
                         <div class="sec-user sec">
-                            <p>depois de ter utiizado o mousse de limpeza da linha skin care by gautoclinic, aplique ta regiao T o primer e serum e espalhe em movimentos de lifting. Massageie ate ficar um toque seco.</p>
+                            <p><%= item.uses %></p>
                             <!--<%= item.uses %>-->
                         </div>
                     </div>
