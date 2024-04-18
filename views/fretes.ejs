@@ -22,7 +22,7 @@
                             <td><div class="frete-img"><img src="<%=frete.company.picture %>"></div></td>
                             <td> <%= frete.company.name  %></td>
                             <td class="radio-<%= frete.id %>"><%= frete.currency + frete.price.replace(".",",") %></td>
-                            <td> De <%= frete.delivery_range.min +" a " + frete.delivery_range.max %> Dias úteis</td>
+                            <td><%= frete.delivery_range.min +" a " + frete.delivery_range.max %> Dias úteis</td>
                         </tr>
                         <% }) %>
                 </table>
@@ -75,6 +75,8 @@
     }
 
     function total(){
+        let itens = JSON.parse(localStorage.getItem("item"));
+        let radio = document.getElementsByClassName("radio-button");
         let total = 0;
         let subtotal = 0; 
         let carrinho = 0
@@ -83,7 +85,8 @@
         for(let i = 0; i < radio.length; i++){
             if(radio[i].checked){
                 let tempradio = radio[i].classList[1].split("-")[1]
-                frete = parseFloat(document.getElementsByClassName("radio"+tempradio)[1].innerHTML.replace(",", ".").replace("R$", ""));
+                console.log(document.getElementsByClassName("radio-"+tempradio))
+                frete = parseFloat(document.getElementsByClassName("radio-"+tempradio)[1].innerHTML.replace(",", ".").replace("R$", ""));
                 console.log(frete)
             }
         }
@@ -108,6 +111,7 @@
         document.getElementById("total").innerHTML = `R$${total.toFixed(2)}`;
     }
     function render(){
+        let itens = JSON.parse(localStorage.getItem("item"));
         let total = 0;
         for(let i = 0; i < itens.length; i++){
             if(i == itens.length -1){

@@ -729,7 +729,7 @@ button.item-buy:active{
     margin-top: 15px;
     padding: 15px;
     border: 0;
-    background-color: var(--secodary-color);
+    background-color: black;
     border-radius: 5px;
     color: rgb(255, 255, 255);
     transition: 50ms ease-in-out;
@@ -1014,6 +1014,7 @@ header.admin li:hover{
     justify-content: space-evenly;
     height: 450px;
     flex-wrap: wrap;
+    margin-top: 150px;
 }
 .frete #summary{
     display: flex;
@@ -1095,6 +1096,9 @@ header.admin li:hover{
 .frete-img{
     max-width: 100%;
     height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .frete-img img{
     flex-shrink:  0;
