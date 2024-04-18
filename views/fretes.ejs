@@ -63,7 +63,11 @@
             },
         }).then((res) => {
             console.log(res);
-            window.location.href = '/payment/' + res.data.url;
+            if(res.data.url != undefined){
+                window.location.href = '/payment/' + res.data.url;
+            }else{
+                location.reload()
+            }
         })
     }
 
@@ -108,10 +112,13 @@
 
         //document.getElementById("subtotal").innerHTML = `Subtotal (${carrinho} produtos): <strong>R$${subtotal.toFixed(2)}</strong>`;
         //document.getElementById("frete").innerHTML = `R$${frete.toFixed(2)}`;
+        document.getElementById("frete-total").innerHTML = `R$${frete.toFixed(2)}`;
         document.getElementById("total").innerHTML = `R$${total.toFixed(2)}`;
     }
     function render(){
         let itens = JSON.parse(localStorage.getItem("item"));
+        let radio = document.getElementsByClassName("radio-button");
+        radio[0].checked = true;
         let total = 0;
         for(let i = 0; i < itens.length; i++){
             if(i == itens.length -1){
@@ -123,6 +130,12 @@
                             <p class="box-itens-qtd" id="item-${i.id}">(${i.qtd})</p>  
                         </div>
                         <p id="item-total">R$${i.price}</p>
+                    </div>
+                    <div class="summary-box-info">
+                        <div>
+                            <p class="box-itens-name">frete</p>  
+                        </div>
+                        <p id="frete-total">R$${i.price}</p>
                     </div>
                     `
                 });

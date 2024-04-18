@@ -2,9 +2,9 @@
 <html lang="en">
     <%- include ("partials/head.ejs") %>
 <body onload="">
+    <%- include ("partials/alert.ejs") %>
     <%- include ("partials/navbar.ejs") %>
     <%- include ("partials/header.ejs") %>
-    <%- include ("partials/alert.ejs") %>
     <main>
         <div class="product-container">
             <div id="itens-container">
@@ -147,7 +147,11 @@
                         CEP: document.getElementsByName("CEP")[0].value
                     },
                 }).then((res) => {
-                    window.location.href = '/fretes';
+                    if(res.data.err == undefined){
+                        window.location.href = '/fretes';
+                    }else{
+                        location.reload()
+                    }
                 })
             }
         </script>

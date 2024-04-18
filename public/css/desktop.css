@@ -1,11 +1,14 @@
 :root{
-    --secodary-color: #bdbdbd;
+    --secodary-color: #d6d6d6
 }
 h1,h2,p,i,a{
     color: black;
 }
-footer h1,footer h2,footer p{
-    color: white;
+footer h1,footer h2,footer p,footer i{
+    color: black;
+}
+button:active, input[type="submit"]:active, input[type="button"]:active{
+    transform: scale(0.95);
 }
 body{
     margin: 0;
@@ -51,7 +54,7 @@ header .icons, header .icons a, header .icons button{
     padding-left: 15px;
     padding-right: 15px;
     background-color: rgba(0, 0, 0, 0.0);
-    color: var(--secodary-color);
+    color: black;
     border: 0;
     border-radius: 5px;
 }
@@ -80,6 +83,7 @@ header .search-bar{
     width: 450px;
     border-radius: 50px;
     overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.20);
 }
 header .search-bar input{
     height: 100%;
@@ -214,8 +218,9 @@ main .product div.buy button{
     border: 0;
     border-radius: 5px;
     background-color: var(--secodary-color);
-    color: rgb(255, 255, 255);
+    color: black;
     transition: 50ms ease-in-out;
+    border: 1px solid rgba(0, 0, 0, 0.20);
 }
 main .product div.buy button:active{
     scale: 0.95;
@@ -232,7 +237,7 @@ footer {
     align-items: center;
     flex-direction: row-reverse;
     background-color: var(--secodary-color);
-    color: white;
+    color: black;
     width: 100%;
     height: 350px;
 }
@@ -253,6 +258,7 @@ footer .newsletters form{
     flex-direction: row;
     border-radius: 5px;
     overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.20);
 }
 footer .newsletters input, footer .newsletters button{
     height: 50px;
@@ -272,7 +278,7 @@ footer .newsletters p{
     font-size: x-large;
 }
 footer .insta i{
-    color: white;
+    color: black;
     font-size: xx-large;
     margin-top: 9px;
     margin-right: 8px;
@@ -297,7 +303,7 @@ footer .social{
     flex-direction: row;
 }
 footer .social a{
-    color: white;
+    color: black;
 }
 footer .insta>a{
     display: flex;
@@ -351,7 +357,7 @@ nav ul li, nav ul form{
     color: var(--secodary-color);
 }
 nav ul li a{
-    color: var(--secodary-color);
+    color: black;
 }
 nav ul input{
     width: 100%;
@@ -492,8 +498,9 @@ button.item-buy{
     border: 0;
     border-radius: 5px;
     background-color: var(--secodary-color);
-    color: rgb(255, 255, 255);
+    color: black;
     transition: 50ms ease-in-out;
+    border: 1px solid rgba(0, 0, 0, 0.20);
 }
 button.item-buy:active{
     scale: 0.95;
@@ -558,9 +565,13 @@ button.item-buy:active{
     background-color: white;
     width: calc(100% - 40px);
     padding: 20px;
+    text-align: justify;
 }
 .sec.active{
     display: unset;
+}
+.item-benefit p{
+    text-align: justify;
 }
 .appraisal-container{
     display: flex;
@@ -1084,7 +1095,7 @@ header.admin li:hover{
     border: 0;
     border-radius: 5px;
     background-color: var(--secodary-color);
-    color: rgb(255, 255, 255);
+    color: black;
     transition: 50ms ease-in-out;
 }
 .account-container {
@@ -1123,16 +1134,13 @@ input[type=number] {
 }
 #calcularFrete{
     background-color: #bdbdbd;
-    color: #fff;
+    color: black;
     border: none;
     cursor: pointer;
     transition: background-color 0.3s ease;
     border-radius: 5px;
     padding: 15px;
     margin-top: 1%;
-}
-#calcularFrete:hover {
-    background-color: #223966;
 }
 .account-container.table{
     width: 90%;

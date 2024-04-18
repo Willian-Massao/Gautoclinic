@@ -1,11 +1,11 @@
 :root{
-    --secodary-color: #bdbdbd;
+    --secodary-color: #d6d6d6;
 }
 h1,h2,p,i,a{
     color: black;
 }
 footer h1,footer h2,footer p{
-    color: white;
+    color: black;
 }
 body{
     margin: 0;
@@ -78,6 +78,7 @@ header .search-bar{
     width: 450px;
     border-radius: 50px;
     overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.20);
 }
 header .search-bar input{
     height: 100%;
@@ -211,8 +212,9 @@ main .product div.buy button{
     border: 0;
     border-radius: 5px;
     background-color: var(--secodary-color);
-    color: rgb(255, 255, 255);
+    color: black;
     transition: 50ms ease-in-out;
+    border: 1px solid rgba(0, 0, 0, 0.20);
 }
 main .product div.buy button:active{
     scale: 0.95;
@@ -230,7 +232,7 @@ footer {
     flex-direction: column;
     flex-wrap: wrap;
     background-color: var(--secodary-color);
-    color: white;
+    color: black;
     width: 100%;
     height: 550px;
 }
@@ -251,6 +253,7 @@ footer .newsletters form{
     flex-direction: row;
     border-radius: 5px;
     overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.20);
 }
 footer .newsletters input, footer .newsletters button{
     height: 50px;
@@ -270,7 +273,7 @@ footer .newsletters p{
     font-size: x-large;
 }
 footer .insta i{
-    color: white;
+    color: black;
     font-size: xx-large;
     margin-top: 9px;
     margin-right: 8px;
@@ -298,7 +301,7 @@ footer .social{
     flex-direction: row;
 }
 footer .social a{
-    color: white;
+    color: black;
 }
 footer .insta>a{
     display: flex;
@@ -352,7 +355,7 @@ nav ul li, nav ul form{
     color: var(--secodary-color);
 }
 nav ul li a{
-    color: var(--secodary-color);
+    color: black;
 }
 nav ul input{
     width: 100%;
@@ -488,8 +491,9 @@ button.item-buy{
     border: 0;
     border-radius: 5px;
     background-color: var(--secodary-color);
-    color: rgb(255, 255, 255);
+    color: black;
     transition: 50ms ease-in-out;
+    border: 1px solid rgba(0, 0, 0, 0.20);
 }
 .image-sidebar:hover{
     filter: brightness(90%);
@@ -968,7 +972,7 @@ header.admin li:hover{
     display: flex;
     justify-content: center;
     align-items: center;
-    color: var(--secodary-color);
+    color: black;
 }
 .info-contaner{
     display: flex;
@@ -1029,7 +1033,7 @@ header.admin li:hover{
     border: 0;
     border-radius: 5px;
     background-color: var(--secodary-color);
-    color: rgb(255, 255, 255);
+    color: black;
     transition: 50ms ease-in-out;
 }
 .account-container {
@@ -1092,7 +1096,7 @@ header.admin li:hover{
     margin-bottom: 10px;
 }
 
-input[type="submit"] {
+#frete-form input[type="submit"] {
     background-color: #315292;
     color: #fff;
     border: none;
@@ -1103,7 +1107,7 @@ input[type="submit"] {
     border-radius: 3px;
 }
 
-input[type="submit"]:hover {
+#frete-form input[type="submit"]:hover {
     background-color: #223966;
 }
 input[type=number]::-webkit-inner-spin-button { 
@@ -1218,7 +1222,8 @@ input[type=number] {
     flex-direction: column;
     justify-content: start;
     align-items: start;
-    min-width: 430px;
+    min-width: 400px;
+    width: calc(100% - 40px);
 }
 .account-container.frete table th, .account-container.frete table td{
     display: table-cell;
@@ -1227,4 +1232,14 @@ input[type=number] {
 
 .account-container.frete table{
     font-size: small;
+}
+#calcularFrete{
+    background-color: #bdbdbd;
+    color: black;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border-radius: 5px;
+    padding: 15px;
+    margin-top: 1%;
 }

@@ -104,23 +104,29 @@ app.post('/payment', async(req, res) => {
     let status = '';
     let date = '';
 
-    frete.findId(req.user.id).then( data => {
-        data = data.fretes;
-        cacheItens.forEach(item => {
-            databaseRes.forEach(res => {
-                if(res.id == item.id){
-                    price += res.price * item.qtd;
+    if(CacheFrete != undefined && CacheFrete.length > 0){
+        frete.findId(req.user.id).then( data => {
+            data = data.fretes;
+            cacheItens.forEach(item => {
+                databaseRes.forEach(res => {
+                    if(res.id == item.id){
+                        price += res.price * item.qtd;
+                    }
+                });
+            });
+            data.forEach(element => {
+                if(element.id == parseInt(CacheFrete[0].id)){
+                    price += parseFloat(element.price);
                 }
             });
+        }).then(()=>{
+            sumupReq({id, idUser, check_ref, price, currency, pay2mail, status, date}, req, res);
         });
-        data.forEach(element => {
-            if(element.id == parseInt(CacheFrete[0].id)){
-                price += parseFloat(element.price);
-            }
-        });
-    }).then(()=>{
-        sumupReq({id, idUser, check_ref, price, currency, pay2mail, status, date}, req, res);
-    });
+    }else{
+        req.flash('error', 'Por favor selecione um frete');
+        res.json({err: 'Por favor selecione um frete'});
+    }
+
     
 });
 
@@ -239,19 +245,19 @@ app.post('/calcularFrete', async (req, res) => {
                     });
                 }else{
                     req.flash('error', 'Não existem opções de frete para este CEP');
-                    res.redirect('/carrinho');
+                    res.json({err: 'Por favor digite um CEP válido'});;
                 }
             }else{
                 req.flash('error', 'MelhorEnvio falhou na busca dos fretes');
-                res.redirect('/carrinho');
+                res.json({err: 'Por favor digite um CEP válido'});
             }
         }else{
             req.flash('error', 'Por favor digite um CEP válido');
-            res.redirect('/carrinho');
+            res.json({err: 'Por favor digite um CEP válido'});
         }
     }else{
         req.flash('error', 'Por favor digite um CEP válido');
-        res.redirect('/carrinho');
+        res.json({err: 'Por favor digite um CEP válido'});
     }   
 })
 
