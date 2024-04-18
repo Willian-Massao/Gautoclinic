@@ -14,6 +14,7 @@ module.exports  = class itens{
                 pay2mail varchar(255) NOT NULL,
                 status varchar(45) NOT NULL,
                 date datetime NOT NULL,
+                shipping json DEFAULT NULL,
                 PRIMARY KEY (id),
                 PRIMARY KEY (check_ref),
                 KEY \`is user transaction_idx\` (idUser),
