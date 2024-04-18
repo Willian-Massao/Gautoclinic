@@ -1,4 +1,4 @@
-const UserDAO = require('../database/UserDAO.js');
+const UserDAO = require('../database/userDAO.js');
 
 class User{
     constructor(user){

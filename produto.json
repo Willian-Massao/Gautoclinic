@@ -1,0 +1,14 @@
+[
+    {
+        "id": 1,
+        "name": "Primer e Sérum facial",
+        "price": "123",
+        "qtd": 3,
+        "dimensions": {
+            "width": 1,
+            "height": 1,
+            "length": 1,
+            "weight": 1
+        }
+    }
+]

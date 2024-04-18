@@ -1,5 +1,6 @@
 const transactionDAO = require('./database/transactionDAO.js');
 const melhorenvioDAO = require('./database/melhorenvioDAO.js')
+const userDAO = require('./database/userDAO.js')
 
 require('dotenv/config');
 const transactions = new transactionDAO();
@@ -103,4 +104,4 @@ const transactions = new transactionDAO();
     });
 }
 
-setInterval(refreshTransactions, 600000); // 10 minutos
+setInterval(refreshTransactions, 1000); // 10 minutos

@@ -8,6 +8,7 @@ module.exports  = class itens{
             const sql = `CREATE TABLE if not exists fretes (
                 idUser INT NOT NULL AUTO_INCREMENT,
                 fretes JSON NOT NULL,
+                info JSON NOT NULL,
                 PRIMARY KEY (idUser),
                 CONSTRAINT IDUSERFRETES
                   FOREIGN KEY (idUser)
@@ -31,8 +32,9 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try{
             NN(fretes);
-            const sql = "insert into fretes (idUser, fretes) values (?,?) ON DUPLICATE KEY UPDATE fretes = ?"
-            await conn.query(sql, [fretes[0], JSON.stringify(fretes[1]), JSON.stringify(fretes[1])])
+            console.log(fretes[2]);
+            const sql = "insert into fretes (idUser, fretes, info) values (?,?,?) ON DUPLICATE KEY UPDATE fretes = ?"
+            await conn.query(sql, [fretes[0], JSON.stringify(fretes[1]), JSON.stringify(fretes[2]), JSON.stringify(fretes[1])])
             console.log("fretes inserido com sucesso!");
         }catch(err){
             console.log(err);

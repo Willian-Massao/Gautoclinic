@@ -23,9 +23,9 @@
                         </div>
                         <div class="summary-box-cep">
                             <label for="normal">Digite seu CEP</label>
-                            <input type="number" name="CEP" onkeydown="return event.keyCode !== 69" class="input">
+                            <input type="number" name="CEP" onkeydown="return event.keyCode !== 69" class="input" value="<%= user.cep %>">
                         </div>
-                        <input type="submit" id="calcularFrete" onclick="sendItens()" class="btn" value="Calcule seu Frete">
+                        <input type="submit" id="calcularFrete" onclick="sendItens()" class="btn" value="Calcule seu Frete" value="<%= user.cep %>">
                     </div>
                 </div>
             </div>

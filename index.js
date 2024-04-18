@@ -16,7 +16,7 @@ const routerUser = require('./routes/user.routes.js');
 const helper = require('./helpers/helper.js');
 
 // database
-const userDAO = require("./database/UserDAO.js");
+const userDAO = require("./database/userDAO.js");
 const itemDAO = require("./database/itemDAO.js");
 const transactionDAO = require("./database/transactionDAO.js");
 const commentDAO = require("./database/commentDAO.js");
@@ -94,6 +94,8 @@ app.post('/payment', async(req, res) => {
     let databaseRes = await itens.select();
     const CacheFrete = req.body.frete;
     const cacheItens = req.body.itens;
+
+    let itemList = [];
     
     let id;
     let idUser;
@@ -111,6 +113,18 @@ app.post('/payment', async(req, res) => {
                 databaseRes.forEach(res => {
                     if(res.id == item.id){
                         price += res.price * item.qtd;
+                        itemList.push({
+                            id: res.id,
+                            name: res.name,
+                            price: res.price,
+                            qtd: item.qtd,
+                            dimensions:{
+                                width: res.width,
+                                height: res.height,
+                                depth: res.depth,
+                                weight: res.weight
+                            }
+                        });
                     }
                 });
             });
@@ -120,7 +134,7 @@ app.post('/payment', async(req, res) => {
                 }
             });
         }).then(()=>{
-            sumupReq({id, idUser, check_ref, price, currency, pay2mail, status, date}, req, res);
+            sumupReq({id, idUser, check_ref, price, currency, pay2mail, status, date, shipping: JSON.stringify(itemList)}, req, res);
         });
     }else{
         req.flash('error', 'Por favor selecione um frete');
@@ -168,14 +182,12 @@ app.post('/make/refund', async(req, res) => {
     const refund = new refoundDAO();
 
     refund.like({check_ref: check_ref}).then( async itens =>{
-        console.log('https://api.sumup.com/v0.1/me/refund/' + itens[0].idrefund);
         let fetchres = await fetch('https://api.sumup.com/v0.1/me/refund/' + itens[0].idrefund,{
             method: 'POST',
             headers: {
                 "Authorization": "Bearer " + process.env.SUMUP_KEY,
             }
         });
-        console.log(await fetchres.json());
         if(fetchres.ok){
             res.redirect('/admin/refund');
         }else{
@@ -234,13 +246,15 @@ app.post('/calcularFrete', async (req, res) => {
                         }],
                     })
             });
-            console.log(calculoFretes);
             if(calculoFretes.ok){
                 let jsonfretes = await calculoFretes.json();
-                
                 jsonfretes = removerPela("error", undefined, jsonfretes);
                 if (jsonfretes.length >0){
-                    fretesDAO.InsertorUpdate([req.user.id, jsonfretes]).then(()=>{
+                    //let jsoninfo = [{
+                    //        from: process.env.CEP_ENVIO,
+                    //        to: CEP
+                    //    }];
+                    fretesDAO.InsertorUpdate([req.user.id, jsonfretes, [{from: process.env.CEP_ENVIO,to: CEP}] ]).then(()=>{
                         res.status(200).send('Sucesso');  
                     });
                 }else{
@@ -320,7 +334,6 @@ app.get('/payment/:id', (req, res)=>{
     const errorMessage = req.flash('error');
     const transaction = new transactionDAO();
     transaction.findId(req.params.id).then( data =>{
-        console.log(data);
         res.render('payment', {data: data, user: req.user, error: errorMessage});
     }).catch(err => res.status(500).send('Something broke!'));
 });

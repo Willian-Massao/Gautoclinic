@@ -131,14 +131,15 @@
                         </div>
                         <p id="item-total">R$${i.price}</p>
                     </div>
+                    `
+                });
+                document.getElementById("box-itens").innerHTML += `
                     <div class="summary-box-info">
                         <div>
                             <p class="box-itens-name">frete</p>  
                         </div>
                         <p id="frete-total">R$${i.price}</p>
-                    </div>
-                    `
-                });
+                    </div>`
             }
         }
     }
