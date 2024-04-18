@@ -56,9 +56,9 @@
                     <p>6x R$ <%= ((item.price)/6).toFixed(2) %> sem juros</p>
                 </div>
                 <% if(item.qtd != 0){ %>
-                    <button class="item-buy" onclick="addLittleCar()">COMPRE</button>
+                    <button class="item-buy" onclick="addLittleCar()">Adicionar ao carrinho</button>
                 <% }else{ %>
-                    <button class="item-buy" disabled>COMPRE</button>
+                    <button class="item-buy" disabled>Adicionar ao carrinho</button>
                 <% } %>
                 <div class="item-benefit">
                     <h1>Beneficios</h1>
