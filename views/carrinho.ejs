@@ -141,13 +141,13 @@
                 console.log(document.getElementsByName("CEP")[0].value)
                 axios({
                     method: "post",
-                    url: "/user/calcularFrete",
+                    url: "/calcularFrete",
                     data: {
                         itens: itens,
                         CEP: document.getElementsByName("CEP")[0].value
                     },
                 }).then((res) => {
-                    window.location.href = '/user/fretes/';
+                    window.location.href = '/fretes';
                 })
             }
         </script>

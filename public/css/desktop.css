@@ -1010,6 +1010,23 @@ header.admin li:hover{
     justify-content: center;
     align-items: center;
 }
+.profile-container.frete{
+    justify-content: space-evenly;
+    height: 450px;
+    flex-wrap: wrap;
+}
+.frete #summary{
+    display: flex;
+    flex-direction: column;
+    width: 20%;
+    min-width: 250px;
+    align-items: end;
+}.frete #summary h1{
+    width: 100%;
+}
+.frete #summary .summary-box{
+    width: 100%;
+}
 .info-contaner{
     display: flex;
     justify-content: center;
@@ -1074,6 +1091,22 @@ header.admin li:hover{
     justify-content: center;
     align-items: center;
     flex-direction: row;
+}
+.frete-img{
+    max-width: 100%;
+    height: 50px;
+}
+.frete-img img{
+    flex-shrink:  0;
+    -webkit-flex-shrink: 0;
+    max-width:  80%;
+    max-height:  80%;
+}
+.account-container.frete{
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    min-width: 590px;
 }
 input[type=number]::-webkit-inner-spin-button { 
     -webkit-appearance: none;

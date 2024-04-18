@@ -13,8 +13,7 @@ module.exports  = class itens{
                   FOREIGN KEY (idUser)
                   REFERENCES users (id)
                   ON DELETE NO ACTION
-                  ON UPDATE NO ACTION);
-              )`;
+                  ON UPDATE NO ACTION);`;
             await conn.query(sql);
             console.log("Tabela transaction criada com sucesso!");
         }catch(err){
@@ -51,6 +50,7 @@ module.exports  = class itens{
             return rows[0];
         }catch(err){
             console.log(err);
+            throw err;
         }finally{
             conn.release();
         }

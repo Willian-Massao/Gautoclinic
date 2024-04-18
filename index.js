@@ -25,6 +25,8 @@ const adminDAO = require("./database/adminDAO.js");
 const passwordForgotDAO = require("./database/passwordFogotDAO.js");
 const envioDAO = require("./database/melhorenvioDAO.js");
 const refoundDAO = require("./database/refoundDAO.js");
+const freteDAO = require("./database/freteDAO.js");
+const melhorEnvioDAO = require("./database/melhorenvioDAO.js");
 const routes = require('./routes/profile.routes.js');
 
 // porta do servidor
@@ -40,9 +42,10 @@ const admins = new adminDAO();
 const passwordForgot = new passwordForgotDAO();
 const envio = new envioDAO();
 const refound = new refoundDAO();
+const frete = new freteDAO();
 
-itens.create();
 users.create();
+itens.create();
 transaction.create();
 refound.create();
 comments.create();
@@ -50,6 +53,7 @@ images.create();
 admins.create();
 passwordForgot.create();
 envio.create();
+frete.create();
 
 // Configuração do express
 app.set('view engine', 'ejs');
@@ -85,10 +89,12 @@ app.post('/carrinho' ,async  (req, res) => {
 
 app.post('/payment', async(req, res) => {
     const transaction = new transactionDAO();
+    const frete = new freteDAO();
     const itens = new itemDAO();
     let databaseRes = await itens.select();
+    const CacheFrete = req.body.frete;
     const cacheItens = req.body.itens;
-
+    
     let id;
     let idUser;
     let check_ref = uuid.create().toString();
@@ -98,47 +104,58 @@ app.post('/payment', async(req, res) => {
     let status = '';
     let date = '';
 
-    cacheItens.forEach(item => {
-        databaseRes.forEach(res => {
-            if(res.id == item.id){
-                price += res.price * item.qtd;
+    frete.findId(req.user.id).then( data => {
+        data = data.fretes;
+        cacheItens.forEach(item => {
+            databaseRes.forEach(res => {
+                if(res.id == item.id){
+                    price += res.price * item.qtd;
+                }
+            });
+        });
+        data.forEach(element => {
+            if(element.id == parseInt(CacheFrete[0].id)){
+                price += parseFloat(element.price);
             }
         });
+    }).then(()=>{
+        sumupReq({id, idUser, check_ref, price, currency, pay2mail, status, date}, req, res);
     });
+    
+});
 
+async function sumupReq(trans, req, res){
     const apiRes = await fetch('https://api.sumup.com/v0.1/checkouts',{
         method: 'POST',
         headers: {
             "Authorization": "Bearer " + process.env.SUMUP_KEY,
             "Content-Type": "application/json",
         }, body:JSON.stringify({
-            "checkout_reference": check_ref,
-            "amount": price,
-            "currency": currency,
-            "pay_to_email": pay2mail,
+            "checkout_reference": trans.check_ref,
+            "amount": trans.price,
+            "currency": trans.currency,
+            "pay_to_email": trans.pay2mail,
         })
     });
-    
     if(apiRes.ok){
         let data = await apiRes.json();
 
-        id = data.id;
-        idUser = req.user.id;
-        check_ref = data.checkout_reference;
-        status = data.status;
-        date = data.date;
-        price = data.amount;
+        trans.id = data.id;
+        trans.idUser = req.user.id;
+        trans.check_ref = data.checkout_reference;
+        trans.status = data.status;
+        trans.date = data.date;
+        trans.price = data.amount;
 
-        transaction.insert({id, idUser, check_ref, price, currency, pay2mail, status, date}).then(()=>{
-            res.json({ url: check_ref})
+        transaction.insert(trans).then(()=>{
+            res.json({ url: trans.check_ref})
         }).catch(err => {
                 res.status(500).send('Something broke!')
         });
     }else{
         res.status(500).send('sumup unauthorized')
     }
-
-});
+}
 
 app.post('/make/refund', async(req, res) => {
     const { check_ref } = req.body;
@@ -161,6 +178,89 @@ app.post('/make/refund', async(req, res) => {
         }
     });
 });
+
+app.post('/calcularFrete', async (req, res) => {
+    const {itens, CEP} = req.body;
+    const melhorEnvio = new envioDAO();
+    const fretesDAO = new freteDAO();
+    let bearerMelhorEnvio = 'Bearer ';
+    melhorEnvio.buscaToken()
+    .then(bearer => {  bearerMelhorEnvio += bearer.access_token});
+
+    let produtos = '';
+    //Verifica se o CEP foi digitado
+    if (CEP != '' && CEP != undefined){   
+        //Verifica se o CEP existe
+        const apiRes = await fetch('https://viacep.com.br/ws/'+CEP+'/json/',{
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+            }
+        });
+
+        if(apiRes.ok){
+            //let produtos = "";
+            itens.forEach(i => {
+                produtos += "id:" + i.id + ", width: "+ i.width + ", height: " + i.height + ", length: " + i.depth +", weight: " + i.weight + ", insurance_value: "+ i.price+", quantity: " + i.qtd
+            });  
+            const calculoFretes = await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/shipment/calculate',{
+                method: 'POST',
+                headers: 
+                {
+                    "Accept":"application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": bearerMelhorEnvio,
+                    "User-Agent": "Aplicação (email para contato técnico)",
+                },
+                body:
+                JSON.stringify(
+                    {
+                       "from": 
+                        {
+                            "postal_code": process.env.CEP_ENVIO
+                        },
+                        "to": 
+                        {
+                            "postal_code": CEP
+                        },
+                        "products": [{ 
+                            produtos
+                        }],
+                    })
+            });
+            console.log(calculoFretes);
+            if(calculoFretes.ok){
+                let jsonfretes = await calculoFretes.json();
+                
+                jsonfretes = removerPela("error", undefined, jsonfretes);
+                if (jsonfretes.length >0){
+                    fretesDAO.InsertorUpdate([req.user.id, jsonfretes]).then(()=>{
+                        res.status(200).send('Sucesso');  
+                    });
+                }else{
+                    req.flash('error', 'Não existem opções de frete para este CEP');
+                    res.redirect('/carrinho');
+                }
+            }else{
+                req.flash('error', 'MelhorEnvio falhou na busca dos fretes');
+                res.redirect('/carrinho');
+            }
+        }else{
+            req.flash('error', 'Por favor digite um CEP válido');
+            res.redirect('/carrinho');
+        }
+    }else{
+        req.flash('error', 'Por favor digite um CEP válido');
+        res.redirect('/carrinho');
+    }   
+})
+
+function removerPela(chave, valor, json){
+    json = json.filter(function(jsonObject) {
+        return jsonObject[chave] === valor;
+    });
+    return json
+}
 
 // Rotas get
 
@@ -226,6 +326,16 @@ app.get('/search', (req, res) =>{
     itens.search(req.query.e).then( data =>{
         res.render('search', {itens: data, user: req.user, error: errorMessage});
     }).catch(err => res.status(500).send('Something broke!'));
+});
+
+routes.get('/fretes', helper.ensureAuthenticated, (req, res) => {
+    const fretesDAO = new freteDAO();
+    const errorMessage = req.flash('error');
+    let freteJson;
+    fretesDAO.findId(req.user.id).then( freteTable => {
+        freteJson = freteTable.fretes;
+        res.render('fretes', { user: req.user,fretes: freteJson, error: errorMessage});
+    });     
 });
 
 app.use('/database/', routerDatabase)
