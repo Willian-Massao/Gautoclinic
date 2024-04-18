@@ -14,21 +14,40 @@
                     <div class="account-container table">
                         <table>
                             <tr>
-                                <th class="mob-only">Companhia</th>
-                                <th class="mob-only">Tempo de Entrega</th>
+                                <th colspan="3" class="mob-only">Companhia</th>
                                 <th>Preço</th>
+                                <th class="mob-only">Tempo de Entrega</th>
                             </tr>
                                 <% fretes.forEach((frete)=>{ %>
                                 <tr>
-                                    <td>R$ <%= frete.price %></td>
+                                    <td><input type="radio"></td>
+                                    <td> <img src="<%=frete.company.picture %>"></td>
+                                    <td> <%= frete.company.name  %></td>
+                                    <td><%= frete.currency + frete.price.replace(".",",") %></td>
+                                    <td> De <%= frete.delivery_range.min +" a " + frete.delivery_range.max %> Dias úteis</td>
                                 </tr>
                                 <% }) %>
                         </table>
+                         <button class="summary-box-button" onclick="sendItens()">Pagamento</button>
                     </div>
                 </form>
             </div>
         </div>
     </main>
+    <script>
+    function sendItens(){
+        let itens = JSON.parse(localStorage.getItem("item"));
+        axios({
+            method: "post",
+            url: "/payments",
+            data: {
+                itens: itens,
+            },
+        }).then((res) => {
+            window.location.href = '/user/payments/' + res.url;
+        })
+    }
+</script>
     <%- include ("partials/footer.ejs") %>
 </body>
 </html>
