@@ -10,7 +10,8 @@ const bcrypt = require('bcryptjs');
 
 const userDAO = require('../database/UserDAO.js');
 const melhorenvioDAO = require('../database/melhorenvioDAO.js')
-const freteDAO = require('../database/freteDAO.js')
+const freteDAO = require('../database/freteDAO.js');
+const { json } = require('body-parser');
 
 passport.use(new LocalStrategy({
     usernameField: 'email', // nome do campo de email no formulário de login
@@ -178,8 +179,9 @@ routes.post('/calcularFrete', async (req, res) => {
     .then(bearer => {  bearerMelhorEnvio += bearer.access_token});
 
     let produtos = '';
-    //Verifica se o CEP existe
+    //Verifica se o CEP foi digitado
     if (CEP != '' && CEP != undefined){   
+        //Verifica se o CEP existe
         const apiRes = await fetch('https://viacep.com.br/ws/'+CEP+'/json/',{
             method: 'GET',
             headers: {
@@ -219,28 +221,40 @@ routes.post('/calcularFrete', async (req, res) => {
             });
             if(calculoFretes.ok){
                 let jsonfretes = await calculoFretes.json();
-                fretesDAO.InsertorUpdate([req.user.id, jsonfretes])
-                res.status(200).send('Sucesso');  
+                
+                jsonfretes = removerPela("error", undefined, jsonfretes);
+                if (jsonfretes.length >0){
+                    fretesDAO.InsertorUpdate([req.user.id, jsonfretes])
+                    res.status(200).send('Sucesso');  
+                }else{
+                    req.flash('error', 'Não existem opções de frete para este CEP');
+                    res.redirect('/carrinho');
+                }
             }else{
                 res.status(500).send('MelhorEnvio falhou na busca dos fretes')
             }
         }else{
-            req.flash('error', 'Por favor digite um CEP valido');
+            req.flash('error', 'Por favor digite um CEP válido');
             res.redirect('/carrinho');
         }
     }else{
-        req.flash('error', 'Por favor digite um CEP valido');
+        req.flash('error', 'Por favor digite um CEP válido');
         res.redirect('/carrinho');
     }   
 })
 
+function removerPela(chave, valor, json){
+    json = json.filter(function(jsonObject) {
+        return jsonObject[chave] === valor;
+    });
+    return json
+}
 routes.get('/fretes', helper.ensureAuthenticated, (req, res) => {
     const fretesDAO = new freteDAO();
     const errorMessage = req.flash('error');
     let freteJson;
     fretesDAO.findId(req.user.id).then( freteTable => {
         freteJson = freteTable.fretes;
-        console.log(freteTable)
         res.render('fretes', { user: req.user,fretes: freteJson, error: errorMessage});
     });     
 });
