@@ -26,7 +26,7 @@ const passwordForgotDAO = require("./database/passwordFogotDAO.js");
 const envioDAO = require("./database/melhorenvioDAO.js");
 const refoundDAO = require("./database/refoundDAO.js");
 const freteDAO = require("./database/freteDAO.js");
-const melhorEnvioDAO = require("./database/melhorenvioDAO.js");
+const ownershopDAO = require("./database/ownershopDAO.js")
 const routes = require('./routes/profile.routes.js');
 
 // porta do servidor
@@ -43,6 +43,7 @@ const passwordForgot = new passwordForgotDAO();
 const envio = new envioDAO();
 const refound = new refoundDAO();
 const frete = new freteDAO();
+const ownershop = new ownershopDAO();
 
 users.create();
 itens.create();
@@ -54,6 +55,7 @@ admins.create();
 passwordForgot.create();
 envio.create();
 frete.create();
+ownershop.create();
 
 // Configuração do express
 app.set('view engine', 'ejs');
@@ -88,7 +90,6 @@ app.post('/carrinho' ,async  (req, res) => {
 });
 
 app.post('/payment', async(req, res) => {
-    const transaction = new transactionDAO();
     const frete = new freteDAO();
     const itens = new itemDAO();
     let databaseRes = await itens.select();
@@ -198,7 +199,7 @@ app.post('/make/refund', async(req, res) => {
 });
 
 app.post('/calcularFrete', async (req, res) => {
-    const {itens, CEP} = req.body;
+    const {itens, CEP, numero, complemento} = req.body;
     const melhorEnvio = new envioDAO();
     const fretesDAO = new freteDAO();
     let bearerMelhorEnvio = 'Bearer ';
@@ -254,7 +255,10 @@ app.post('/calcularFrete', async (req, res) => {
                     //        from: process.env.CEP_ENVIO,
                     //        to: CEP
                     //    }];
-                    fretesDAO.InsertorUpdate([req.user.id, jsonfretes, [{from: process.env.CEP_ENVIO,to: CEP}] ]).then(()=>{
+                    if (complemento === undefined){
+                        complemento = null;
+                    }
+                    fretesDAO.InsertorUpdate([req.user.id, jsonfretes, [{"from": process.env.CEP_ENVIO, "to": [{"CEP": CEP, "numero": numero, "complemento": complemento, "adress": apiRes.logradouro, "district": apiRes.bairro, "city": apiRes.localidade, "state_abbr": apiRes.uf, "country_id": "BR" }]}] ]).then(()=>{
                         res.status(200).send('Sucesso');  
                     });
                 }else{

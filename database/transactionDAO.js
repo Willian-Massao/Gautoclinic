@@ -129,6 +129,19 @@ module.exports  = class itens{
             conn.release();
         }
     }
+    async buscaUsuarioTransaction(){
+        const conn = await pool.getConnection();
+        try {
+            const sql = `SELECT * FROM transaction`;
+            const [row] = await conn.query(sql);
+            return row;
+        }catch(err){
+            console.log(err);
+            conn.release();
+        }finally{
+            conn.release();
+        }
+    }
 }
 
 function NN(thing){

@@ -24,6 +24,8 @@
                         <div class="summary-box-cep">
                             <label for="normal">Digite seu CEP</label>
                             <input type="number" name="CEP" onkeydown="return event.keyCode !== 69" class="input" value="<%= user.cep %>">
+                            <input type="number" name="numero" onkeydown="return event.keyCode !== 69" class="input" value="<%= user.cep %>">
+                            <input type="number" name="complemento" onkeydown="return event.keyCode !== 69" class="input" value="<%= user.cep %>">
                         </div>
                         <input type="submit" id="calcularFrete" onclick="sendItens()" class="btn" value="Calcule seu Frete" value="<%= user.cep %>">
                     </div>
@@ -138,13 +140,14 @@
                 total()
             }
             function sendItens(){
-                console.log(document.getElementsByName("CEP")[0].value)
                 axios({
                     method: "post",
                     url: "/calcularFrete",
                     data: {
                         itens: itens,
-                        CEP: document.getElementsByName("CEP")[0].value
+                        CEP: document.getElementsByName("CEP")[0].value,
+                        numero: document.getElementByName("numero")[0].value,
+                        complemento: document.getElementByName("complemento")[0].value
                     },
                 }).then((res) => {
                     if(res.data.err == undefined){

@@ -1,6 +1,7 @@
 const transactionDAO = require('./database/transactionDAO.js');
 const melhorenvioDAO = require('./database/melhorenvioDAO.js')
 const userDAO = require('./database/userDAO.js')
+const ownershopDAO = require("./database/ownershopDAO.js")
 
 require('dotenv/config');
 const transactions = new transactionDAO();
@@ -23,6 +24,8 @@ const transactions = new transactionDAO();
                 if(temp.status != 'PENDING'){
                     transactions.update(temp).then( async() =>{
                         const melhorEnvio = new melhorenvioDAO();
+                        const ownershop = new ownershopDAO();
+
                         let bearerMelhorEnvio = 'Bearer ';
                         melhorEnvio.buscaToken().then(bearer => {  bearerMelhorEnvio += bearer.access_token});
 
@@ -62,7 +65,7 @@ const transactions = new transactionDAO();
                                     "email": "string",
                                     "document": "string",//CPF
                                     "company_document": "string", //CNPJ
-                                    "state_register": "string",// Inscricao estadual Perguntar ao Gauto
+                                    // "state_register": "string",// Inscricao estadual Perguntar ao Gauto
                                     "address": "string",//Logradouro Destinatario
                                     "complement": "string",// Complemento
                                     "number": "string",//Numero

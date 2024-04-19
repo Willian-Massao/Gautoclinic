@@ -1,22 +1,26 @@
 const pool  = require("./database");
 
-module.exports  = class itens{
+module.exports  = class ownershop{
     // criar tabela
     async create(){
         const conn = await pool.getConnection();
         try{
-            const sql = `CREATE TABLE if not exists fretes (
-                idUser INT NOT NULL AUTO_INCREMENT,
-                fretes JSON NOT NULL,
-                info JSON NOT NULL,
-                PRIMARY KEY (idUser),
-                CONSTRAINT IDUSERFRETES
-                  FOREIGN KEY (idUser)
-                  REFERENCES users (id)
+            const sql = `CREATE TABLE if not exists ownershop (
+                IdUser INT NOT NULL,
+                stateRegister VARCHAR(45) NOT NULL,
+                district VARCHAR(45) NOT NULL,
+                city VARCHAR(45) NOT NULL,
+                countryId VARCHAR(45) NOT NULL,
+                postalCode VARCHAR(45) NOT NULL,
+                stateAbbr VARCHAR(45) NOT NULL,
+                PRIMARY KEY (IdUser),
+                CONSTRAINT idDeUsuario
+                  FOREIGN KEY (IdUser)
+                  REFERENCES gauto.users (id)
                   ON DELETE NO ACTION
                   ON UPDATE NO ACTION);`;
             await conn.query(sql);
-            console.log("Tabela frete criada com sucesso!");
+            console.log("Tabela ownershop criada com sucesso!");
         }catch(err){
             console.log(err);
             throw err;
@@ -28,15 +32,16 @@ module.exports  = class itens{
     // crud
 
     // create
-    async InsertorUpdate(fretes){
+    async InsertorUpdate(owner){
         const conn = await pool.getConnection();
         try{
-            NN(fretes);
-            const sql = "insert into fretes (idUser, fretes, info) values (?,?,?) ON DUPLICATE KEY UPDATE fretes = ?, info = ? "
-            await conn.query(sql, [fretes[0], JSON.stringify(fretes[1]), JSON.stringify(fretes[2]), JSON.stringify(fretes[1]), JSON.stringify(fretes[2])])
-            console.log("fretes inserido com sucesso!");
+            NN(owner);
+            const sql = "insert into ownershop (IdUser, stateRegister, district, city, countryId, postalCode, stateAbbr) values (?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE stateRegister = ?, district =?, city = ?, countryId =?, postalCode = ?, stateAbbr = ? "
+            await conn.query(sql, [owner.id, owner.stateRegister, owner.district, owner.city, owner.countryId, owner.postalCode, owner.stateAbbr, owner.stateRegister, owner.district, owner.city, owner.countryId, owner.postalCode, owner.stateAbbr])
+            console.log("ownershop inserido/updatado com sucesso!");
         }catch(err){
             console.log(err);
+            throw err;
         }finally{
             conn.release();
         }
@@ -46,7 +51,7 @@ module.exports  = class itens{
     async findId(id){
         const conn = await pool.getConnection();
         try {
-            const sql = `SELECT * FROM fretes WHERE idUser = ?`;
+            const sql = `SELECT * FROM ownershop WHERE IdUser = ?`;
             const [rows] = await conn.query(sql, [id]);
             return rows[0];
         }catch(err){
@@ -57,21 +62,6 @@ module.exports  = class itens{
         }
     }
 
-
-    // update
-    async delete(id){
-        const conn = await pool.getConnection();
-        try {
-            NN(id);
-            const sql = `DELETE fretes WHERE idUser = ?`;
-            await conn.query(sql, [id]);
-        }catch(err){
-            console.log(err);
-            throw err;
-        }finally{
-            conn.release();
-        }
-    }
 
     async describe(){
         const conn = await pool.getConnection();
