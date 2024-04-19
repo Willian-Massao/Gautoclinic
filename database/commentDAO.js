@@ -6,13 +6,13 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try{
             const sql = `CREATE TABLE if not exists comments (
-                id int NOT NULL AUTO_INCREMENT,
                 idUser int NOT NULL,
                 comment varchar(255) NOT NULL,
                 rate float NOT NULL,
                 name varchar(45) NOT NULL,
                 idItem int NOT NULL,
-                PRIMARY KEY (id),
+                PRIMARY KEY (idUser),
+                PRIMARY KEY (idItem),
                 KEY name_idx (name),
                 KEY \`id item_idx\` (idItem),
                 KEY idUser (idUser),
@@ -37,8 +37,8 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try{
             NN(comments);
-            const sql = "insert into comments (idUser, idItem, name, rate, comment) values (?,?,?,?,?)"
-            await conn.query(sql, [comments.idUser, comments.idProduct, comments.name, comments.rate, comments.comment])
+            const sql = "insert into comments (idUser, idItem, name, rate, comment) values (?,?,?,?,?) on duplicate key update comment = ?, rate = ?"
+            await conn.query(sql, [comments.idUser, comments.idProduct, comments.name, comments.rate, comments.comment, comments.comment, comments.rate])
             console.log("comments inserido com sucesso!");
         }catch(err){
             console.log(err);

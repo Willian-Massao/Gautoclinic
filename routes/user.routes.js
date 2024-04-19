@@ -54,7 +54,7 @@ passport.deserializeUser(function(user, done) {
 });
 
 
-routes.post('/login', passport.authenticate('local', { successRedirect: '/', failureRedirect: '/login', failureFlash: true  }));
+routes.post('/login', passport.authenticate('local', { successRedirect: '/', failureRedirect: '/user/login', failureFlash: true  }));
 
 routes.post('/logout', function(req, res, next){
     req.logout(function(err) {

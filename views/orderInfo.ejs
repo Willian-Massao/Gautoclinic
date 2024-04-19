@@ -40,42 +40,54 @@
                                 <p>R$ <%= orders[0].price %></p>
                             </div>
                         </div>
-                        <div>
-                            <div>
-                                <label for="">Destinatario</label>
-                                <p><%= user.name %> <%= user.lastname %></p>
-                                <p><%= user.tel %></p>
-                                <p><%= user.cpf %></p>
-                            </div>
+                        <div class="destinatario">
+                            <label for="">Destinatario</label>
+                            <p><%= user.name %> <%= user.lastname %></p>
+                            <p><%= user.tel %></p>
+                            <p><%= user.cpf %></p>
                         </div>
                         <div class="button-container">
                             <% if(orders[0].status == "Aprovado" || orders[0].status == "Entregue"){ %>
                                 <input class="button"   type="submit" value="Cancelar Pedido" form="myform" >
-                                <a class="button" href="/profile/comments/<%= orders[0].check_ref.slice(0,10) %>">Deixar Avaliação</a>
                             <% } %>
                         </div>
-                        <div class="itens-intrans">
-                            <table>
-                                <tr>
-                                    <th>Produto</th>
-                                    <th>Quantidade</th>
-                                    <th>Preço</th>
-                                </tr>
-                                <% var sum %>
-                                <% orders[0].shipping.forEach((e)=>{ %>
+                        <% if(orders[0].shipping){ %>
+                            <div class="account-container table">
+                                <table>
                                     <tr>
-                                        <td><%= e.name %></td>
-                                        <td><%= e.qtd %></td>
-                                        <td><%= e.price %></td>
+                                        <% if(orders[0].status == "Aprovado" || orders[0].status == "Entregue"){ %>
+                                            <th class="mob-only">comentario</th>
+                                        <% } %>
+                                        <th class="mob-only">Produto</th>
+                                        <% if(orders[0].status == "Aprovado" || orders[0].status == "Entregue"){ %>
+                                            <th>Quantidade</th>
+                                            <% }else{ %>
+                                            <th class="mob-only">Quantidade</th>
+                                        <% } %>
+                                        <th class="mob-only">Preço</th>
                                     </tr>
-                                    <% sum += e.price * e.qtd %>
-                                <% }) %>
-                                    <tr>
-                                        <td>Total</td>
-                                        <td colspan="2"><%= sum %></td>
-                                </tr>
-                            </table>
-                        </div>
+                                    <% orders[0].shipping.forEach((e)=>{ %>
+                                        <tr>
+                                            <% if(orders[0].status == "Aprovado" || orders[0].status == "Entregue"){ %>
+                                            <td class="mob-only"><a class="button" href="/profile/comments/<%= orders[0].check_ref.slice(0,10) %>/<%= e.id %>">Avaliação</a></td>
+                                            <% } %>
+                                            <td class="mob-only"><%= e.name %></td>
+                                            <% if(orders[0].status == "Aprovado" || orders[0].status == "Entregue"){ %>
+                                                <td><%= e.qtd %>x</td>
+                                                <% }else{ %>
+                                                <td class="mob-only"><%= e.qtd %>x</td>
+                                            <% } %>
+                                            <td class="mob-only">R$ <%= e.price.toFixed(2) %></td>
+                                        </tr>
+                                    <% }) %>
+                                        <tr>
+                                            <td class="total mob-only desktop" colspan="3">Total</td>
+                                            <td class="total mob-only mobile" colspan="2">Total</td>
+                                            <td class="total mob-only">R$ <%= orders[0].price.toFixed(2) %></td>
+                                        </tr>
+                                </table>
+                            </div>
+                        <% } %>
                     </div>
                 </div>
             </div>

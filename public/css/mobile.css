@@ -953,7 +953,7 @@ header.admin li:hover{
     min-width: 360px;
     display: flex;
     justify-content: center;
-    align-items: start;
+    align-items: center;
     flex-direction: column;
 }
 .profile-container ul {
@@ -985,9 +985,27 @@ header.admin li:hover{
     margin-bottom: 15px;
 }
 .info-contaner h2{
-    width: 95%;
-    text-align: start;
+    width: 90%;
+    text-align: center;
     border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+    margin-bottom: 0;
+}
+.info-contaner>p{
+    margin-bottom: 30px;
+}
+.information > div > p{
+margin-top: 5px;
+}
+.information > div > div > p{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+.account-info .destinatario p{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+.account-info .destinatario p:first-child{
+    margin-top: 30px;
 }
 .account-info form h2{
     width: 95%;
@@ -1012,7 +1030,7 @@ header.admin li:hover{
     margin: 15px;
 }
 .account-info form{
-    width: 100%;
+    width: calc(100% - 20px);
     display: flex;
     justify-content: start;
     align-items: center;
@@ -1020,6 +1038,7 @@ header.admin li:hover{
     flex-wrap: wrap;
     border: 1px solid rgba(0, 0, 0, 0.15);
     margin-bottom: 15px;
+    padding: 10px;
 }
 .account-info .input-container input[type="text"]{
     width: calc(100% - 20px);
@@ -1120,7 +1139,13 @@ input[type=number] {
 
 }
 .account-container.table{
-    width: 90%;
+    width: 100%;
+}
+.account-container.table table{
+    font-size: small;
+}
+.account-container.table table .total{
+    border-top: 1px solid rgba(0, 0, 0, 0.15);
 }
 .account-container table{
     width: 100%;
@@ -1147,7 +1172,14 @@ input[type=number] {
 .account-container table td.mob-only{
     display: table-cell;
     text-align: center;
-}.account-container table td:hover{
+}
+.account-container table td.mobile{
+    display: table-cell;
+}
+.account-container table td.desktop{
+    display: none;
+}
+.account-container table td:hover{
     background-color: #f4f4f2;
 }
 .account-container.single{
@@ -1165,6 +1197,7 @@ input[type=number] {
 .single>div.information div{
     margin: 10px;
     margin-top: 0px;
+    margin-left: 0;
 }
 .single .button-container{
     display: flex;
@@ -1174,7 +1207,7 @@ input[type=number] {
 }
 .single .button{
     background-color: #ffffff;
-    color: var(--secodary-color);
+    color: #000000;
     border: none;
     cursor: pointer;
     transition: background-color 0.3s ease;
@@ -1184,6 +1217,11 @@ input[type=number] {
     padding: 15px;
     margin: 5px;
     font-size: small;
+    width: 147px;
+}
+.single a.button {
+    width: calc(145px - 30px);
+    text-align: center;
 }
 .single .button:hover{
     background-color: #f4f4f2;
@@ -1242,4 +1280,91 @@ input[type=number] {
     border-radius: 5px;
     padding: 15px;
     margin-top: 1%;
+}
+.account-container.single{
+    display: flex;
+    justify-content: center;
+    align-items: start;
+}
+.comment-container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+}
+.comment-container h1 {
+    margin-bottom: 20px;
+    text-align: center;
+    color: #315292;
+}
+
+.comment-container form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.comment-container label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+button.star-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.star-img {
+    width: 30px;
+    height: 30px;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+}
+
+.star-img:hover,
+.star-img.active {
+    opacity: 1;
+}
+
+.comment-container textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: vertical;
+    width: calc(100% - 20px);
+    resize: none;
+}
+
+.comment-container input[type="number"],
+.comment-container input[type="submit"] {
+    display: block;
+    margin-top: 10px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #315292;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.comment-container input[type="submit"]:hover {
+    background-color: #223966;
+}
+
+.comment-container input[type="number"] {
+    display: none;
 }

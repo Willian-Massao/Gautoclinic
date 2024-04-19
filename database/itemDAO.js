@@ -34,7 +34,7 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try{
             NN(id);
-            const sql = `SELECT P.id, P.name, P.qtd, P.price, P.descount, P.description, P.uses, P.active, P.benefits, P.mRate, P.height, P.width, P.depth, P.weight, I.id as idImage,  I.id as idImage, I.idItem as img2product, I.image, C.id as idComment, C.idItem as comment2product, C.rate, C.name as Conwer, C.comment from gauto.itens P left join gauto.images I on I.idItem = P.id left join gauto.comments C on C.idItem = P.id where P.id = ?`;
+            const sql = `SELECT P.id, P.name, P.qtd, P.price, P.descount, P.description, P.uses, P.active, P.benefits, P.mRate, P.height, P.width, P.depth, P.weight, I.id as idImage,  I.id as idImage, I.idItem as img2product, I.image, C.idUser as idComment, C.idItem as comment2product, C.rate, C.name as Conwer, C.comment from gauto.itens P left join gauto.images I on I.idItem = P.id left join gauto.comments C on C.idItem = P.id where P.id = ?`;
             const [rows] = await conn.query(sql, [id]);
             return compac(rows)[0];
         }catch(err){
@@ -81,7 +81,7 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try{
             NN(type);
-            const sql = `SELECT P.id, P.name, P.qtd, P.price, P.descount, P.description, P.mRate, P.height, P.width, P.depth, P.weight, I.id as idImage, I.idItem as img2product, I.image, C.id as idComment, C.idItem as comment2product, C.rate, C.name as Cowner, C.comment from itens P left join images I on I.idItem = P.id left join comments C on C.idItem = P.id where P.type = ?`;
+            const sql = `SELECT P.id, P.name, P.qtd, P.price, P.descount, P.description, P.mRate, P.height, P.width, P.depth, P.weight, I.id as idImage, I.idItem as img2product, I.image, C.idUser as idComment, C.idItem as comment2product, C.rate, C.name as Cowner, C.comment from itens P left join images I on I.idItem = P.id left join comments C on C.idItem = P.id where P.type = ?`;
             const [rows] = await conn.query(sql, [type]);
             return compac(rows);
         }catch(err){

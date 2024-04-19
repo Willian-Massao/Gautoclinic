@@ -10,7 +10,7 @@
     <main>
         <div class="comment-container">
             <h1>Deixe sua avaliação</h1>
-            <form action="/comments/add/<%= data.itemId %>" method="POST">
+            <form action="/comments/add/<%= data.check_ref %>/<%= data.idItem %>" method="POST">
                 <div class="form-group">
                     <label for="rate">Avaliação</label>
                     <div>
