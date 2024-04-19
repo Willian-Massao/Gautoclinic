@@ -142,6 +142,28 @@ module.exports  = class itens{
             conn.release();
         }
     }
+
+    async buscaUsuarioFreteTransaction(check_ref){
+        const conn = await pool.getConnection();
+        try {
+            const sql = 
+            `SELECT 
+            (us.name+us.lastname) as 'nome_completo', us.tel, us.email, us.cpf, fret.info, trans.shipping 
+            FROM transaction trans
+            inner join users us
+            on us.id = trans.idUser
+            inner join fretes fret
+            on fret.idUser = trans.idUser
+            where trans.check_ref = ?`;
+            const [row] = await conn.query(sql, [check_ref]);
+            return row;
+        }catch(err){
+            console.log(err);
+        }finally{
+            conn.release();
+        }
+
+    }
 }
 
 function NN(thing){

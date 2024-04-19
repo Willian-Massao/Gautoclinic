@@ -203,7 +203,7 @@ app.post('/calcularFrete', async (req, res) => {
     const melhorEnvio = new envioDAO();
     const fretesDAO = new freteDAO();
     let bearerMelhorEnvio = 'Bearer ';
-    melhorEnvio.buscaToken()
+    await melhorEnvio.buscaToken()
     .then(bearer => {  bearerMelhorEnvio += bearer.access_token});
 
     let produtos = '';

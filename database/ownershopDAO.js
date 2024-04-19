@@ -6,19 +6,23 @@ module.exports  = class ownershop{
         const conn = await pool.getConnection();
         try{
             const sql = `CREATE TABLE if not exists ownershop (
-                IdUser INT NOT NULL,
-                stateRegister VARCHAR(45) NOT NULL,
-                district VARCHAR(45) NOT NULL,
-                city VARCHAR(45) NOT NULL,
-                countryId VARCHAR(45) NOT NULL,
-                postalCode VARCHAR(45) NOT NULL,
-                stateAbbr VARCHAR(45) NOT NULL,
-                PRIMARY KEY (IdUser),
-                CONSTRAINT idDeUsuario
-                  FOREIGN KEY (IdUser)
-                  REFERENCES gauto.users (id)
-                  ON DELETE NO ACTION
-                  ON UPDATE NO ACTION);`;
+                Id int NOT NULL AUTO_INCREMENT,
+                stateRegister varchar(45) NOT NULL,
+                district varchar(45) NOT NULL,
+                city varchar(100) NOT NULL,
+                countryId varchar(5) NOT NULL,
+                postalCode varchar(10) NOT NULL,
+                stateAbbr varchar(100) NOT NULL,
+                name varchar(45) NOT NULL,
+                lastname varchar(100) NOT NULL,
+                phone varchar(15) NOT NULL,
+                email varchar(255) NOT NULL,
+                companydocument varchar(20) NOT NULL,
+                adress varchar(255) NOT NULL,
+                complement varchar(20) NOT NULL,
+                number int NOT NULL,
+                PRIMARY KEY (Id)
+            )`;
             await conn.query(sql);
             console.log("Tabela ownershop criada com sucesso!");
         }catch(err){
@@ -48,11 +52,12 @@ module.exports  = class ownershop{
     }
 
     // read
-    async findId(id){
+    async buscaOwner(){
         const conn = await pool.getConnection();
         try {
-            const sql = `SELECT * FROM ownershop WHERE IdUser = ?`;
-            const [rows] = await conn.query(sql, [id]);
+                const sql = `SELECT stateRegister, district, city, countryId, postalCode, stateAbbr, name+' '+lastname as 'nome_completo',
+                phone, email, companydocument, adress, complement, number FROM ownershop;`;
+            const [rows] = await conn.query(sql);
             return rows[0];
         }catch(err){
             console.log(err);
