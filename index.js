@@ -95,7 +95,7 @@ app.post('/payment', async(req, res) => {
     const CacheFrete = req.body.frete;
     const cacheItens = req.body.itens;
 
-    let itemList = [];
+    let shipping = [];
     
     let id;
     let idUser;
@@ -113,7 +113,7 @@ app.post('/payment', async(req, res) => {
                 databaseRes.forEach(res => {
                     if(res.id == item.id){
                         price += res.price * item.qtd;
-                        itemList.push({
+                        shipping.push({
                             id: res.id,
                             name: res.name,
                             price: res.price,
@@ -134,7 +134,7 @@ app.post('/payment', async(req, res) => {
                 }
             });
         }).then(()=>{
-            sumupReq({id, idUser, check_ref, price, currency, pay2mail, status, date, shipping: JSON.stringify(itemList)}, req, res);
+            sumupReq({id, idUser, check_ref, price, currency, pay2mail, status, date, shipping}, req, res);
         });
     }else{
         req.flash('error', 'Por favor selecione um frete');
@@ -250,11 +250,11 @@ app.post('/calcularFrete', async (req, res) => {
                 let jsonfretes = await calculoFretes.json();
                 jsonfretes = removerPela("error", undefined, jsonfretes);
                 if (jsonfretes.length >0){
-                    //let jsoninfo = [{
-                    //        from: process.env.CEP_ENVIO,
-                    //        to: CEP
-                    //    }];
-                    fretesDAO.InsertorUpdate([req.user.id, jsonfretes, [{from: process.env.CEP_ENVIO,to: CEP}] ]).then(()=>{
+                    let jsoninfo = {
+                            from: process.env.CEP_ENVIO,
+                            to: CEP
+                        };
+                    fretesDAO.InsertorUpdate({idUser: req.user.id,fretes: jsonfretes,info: jsoninfo}).then(()=>{
                         res.status(200).send('Sucesso');  
                     });
                 }else{
