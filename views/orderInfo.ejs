@@ -54,6 +54,28 @@
                                 <a class="button" href="/profile/comments/<%= orders[0].check_ref.slice(0,10) %>">Deixar Avaliação</a>
                             <% } %>
                         </div>
+                        <div class="itens-intrans">
+                            <table>
+                                <tr>
+                                    <th>Produto</th>
+                                    <th>Quantidade</th>
+                                    <th>Preço</th>
+                                </tr>
+                                <% var sum %>
+                                <% orders[0].shipping.forEach((e)=>{ %>
+                                    <tr>
+                                        <td><%= e.name %></td>
+                                        <td><%= e.qtd %></td>
+                                        <td><%= e.price %></td>
+                                    </tr>
+                                    <% sum += e.price * e.qtd %>
+                                <% }) %>
+                                    <tr>
+                                        <td>Total</td>
+                                        <td colspan="2"><%= sum %></td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
