@@ -19,32 +19,57 @@ routes.get('/request', helper.ensureAuthenticated, (req, res) => {
     res.render('profile', { user: req.user, error: errorMessage});
 });
 
-routes.get('/comments/:check_ref', helper.ensureAuthenticated, (req, res) => {
+routes.get('/comments/:check_ref/:idItem', helper.ensureAuthenticated, (req, res) => {
     const errorMessage = req.flash('error');
-    const data = {
-        itemId: 1
-    }
+    const transaction = new transactionDAO();
+    const { check_ref, idItem } = req.params;
+    let isEqual = false;
 
-    res.render('comment', { data: data, user: req.user, error: errorMessage});
+    transaction.like({check_ref: check_ref, idUser: req.user.id}).then( itens => {
+        itens[0].shipping.forEach(item => {
+            if(item.id == idItem){
+                isEqual = true;
+            }
+        });
+    }).finally(() => {
+        if(isEqual){
+            data = {
+                idItem: idItem,
+                check_ref: check_ref
+            }
+            res.render('comment', { data: data, user: req.user, error: errorMessage});
+        }else{
+            req.flash('error', 'Produto não encontrado!');
+            res.redirect('/orders');
+        }
+    });
 });
 
-routes.post('/comments/add/:id', async(req, res) => {
+routes.post('/comments/add/:check_ref/:idItem', async(req, res) => {
+    const errorMessage = req.flash('error');
+    const transaction = new transactionDAO();
     const comments = new commentDAO();
-    const users = new userDAO();
+    const { check_ref, idItem } = req.params;
+    const { comment, rate } = req.body;
+    let isEqual = false;
 
-    let rate = req.body.rate;
-    let id = req.params.id;
-    let comment = req.body.comment;
-
-    if(comment != ""){
-        users.findId(req.user.id).then( user =>{
-            comments.insert({idProduct: id, idUser: user.id, name: user.name, comment, rate}).then(
+    transaction.like({check_ref: check_ref, idUser: req.user.id}).then( itens => {
+        itens[0].shipping.forEach(item => {
+            console.log(item.id == idItem);
+            if(item.id == idItem){
+                isEqual = true;
+            }
+        });
+    }).finally(() => {
+        if(isEqual){
+            comments.insert({idProduct: idItem, idUser: req.user.id, name: req.user.name, comment, rate}).then(() => {
                 res.redirect(`/orders`)
-            ).catch(err => res.status(500).send('Something broke!'));
-        }).catch(err => res.status(500).send('Something broke!'));
-    }else{
-        res.redirect(`/orders`);
-    }
+            });
+        }else{
+            req.flash('error', 'Produto não encontrado!');
+            res.redirect('/orders');
+        }
+    });
 });
 
 routes.get('/orders', helper.ensureAuthenticated, (req, res) => {
@@ -69,6 +94,7 @@ routes.get('/orders/:check_ref', helper.ensureAuthenticated, (req, res) => {
     const errorMessage = req.flash('error');
     const trans = new transactionDAO();
     const check_ref = req.params.check_ref;
+    const idItem = req.params.idItem;
     const ptTable = {
         'PENDING': 'Pendente',
         'PAID': 'Aprovado',

@@ -745,6 +745,12 @@ button.item-buy:active{
     color: rgb(255, 255, 255);
     transition: 50ms ease-in-out;
 }
+.account-container table td.mobile{
+    display: none;
+}
+.account-container table td.desktop{
+    display: table-cell;
+}
 .mobile-table{
     display: none;
 }
@@ -1021,6 +1027,9 @@ header.admin li:hover{
     justify-content: center;
     align-items: center;
 }
+.profile-container a{
+    min-width: 115px;
+}
 .profile-container.frete{
     justify-content: space-evenly;
     height: 450px;
@@ -1168,12 +1177,16 @@ input[type=number] {
 }.account-container table td:hover{
     background-color: #f4f4f2;
 }
+.account-container table .total{
+    border-top: 1px solid rgba(0, 0, 0, 0.15);
+}
 .account-container.single{
     width: 90%;
     display: flex;
     justify-content: space-evenly;
     align-items: start;
     flex-direction: row;
+    flex-wrap: wrap;
 }
 .single>div.information{
     display: flex;
@@ -1202,6 +1215,11 @@ input[type=number] {
     padding: 15px;
     margin: 5px;
     font-size: small;
+    width: 147px;
+}
+.single a.button {
+    width: calc(145px - 30px);
+    text-align: center;
 }
 .single .button:hover{
     background-color: #f4f4f2;
