@@ -57,8 +57,8 @@ const transactions = new transactionDAO();
                                             },
                                             body:JSON.stringify
                                             ({
-                                                "service": 0,//Id transportadora
-                                                "agency": 0,//Nao necessario
+                                                "service": tableUsuario.shipping.id,//Id transportadora
+                                                // "agency": 0,//Nao necessario
                                                 "from": 
                                                 {
                                                     "name": tableOwner.nome_completo,

@@ -21,8 +21,8 @@
                             <td><input type="radio" name="radio" class="radio-button radio-<%= frete.id %>" onchange="addfrete()"></td>
                             <td><div class="frete-img"><img src="<%=frete.company.picture %>"></div></td>
                             <td> <%= frete.company.name  %></td>
-                            <td class="radio-<%= frete.id %>"><%= frete.currency + frete.price.replace(".",",") %></td>
-                            <td><%= frete.delivery_range.min +" a " + frete.delivery_range.max %> Dias úteis</td>
+                            <td class="radio-<%= frete.id %>"><%= frete.currency + frete.custom_price.replace(".",",") %></td>
+                            <td><%= frete.custom_delivery_range.min +" a " + frete.custom_delivery_range.max %> Dias úteis</td>
                         </tr>
                         <% }) %>
                 </table>
