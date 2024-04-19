@@ -7,6 +7,7 @@ const itemDAO = require('../database/itemDAO.js');
 const adminDAO = require('../database/adminDAO.js');
 const envioDAO = require('../database/melhorenvioDAO.js');
 const refundDAO = require('../database/refoundDAO.js');
+const commentDAO = require('../database/commentDAO.js');
 
 const Envio = require('../controllers/EnvioController.js');
 
@@ -18,7 +19,26 @@ routes.get('/users', helper.ensureAdmin, (req, res) => {
 
     users.select().then( item =>{
         users.describe().then( index =>{
+            index.forEach((element, i) => {
+                console.log(element.Field , element.Field === 'password' || element.Field === 'salt');
+                if(element.Field === 'password'){
+                    index.splice(i, 2);
+                }
+            });
+            console.log(index);
+            console.log("depois de remover");
             res.render('admin', {data: item, indexes: index, table: 'users', error: errorMessage});
+        }).catch(err => res.status(500).send('Something broke!'));
+    }).catch(err => res.status(500).send('Something broke!'));
+});
+//comments
+routes.get('/comments', helper.ensureAdmin, (req, res) => {
+    const errorMessage = req.flash('error');
+    const comments = new commentDAO();
+
+    comments.select().then( item =>{
+        comments.describe().then( index =>{
+            res.render('admin', {data: item, indexes: index, table: 'comments', error: errorMessage});
         }).catch(err => res.status(500).send('Something broke!'));
     }).catch(err => res.status(500).send('Something broke!'));
 });
@@ -61,6 +81,7 @@ routes.get('/refund', helper.ensureAdmin, (req, res) => {
 
     refund.select().then( item =>{
         refund.describe().then( index =>{
+            console.log(item);
             res.render('admin', {data: item, indexes: index, table: 'refund', error: errorMessage});
         }).catch(err => res.status(500).send('Something broke!'));
     }).catch(err => res.status(500).send('Something broke!'));

@@ -110,7 +110,7 @@ module.exports  = class itens{
     async select(){
         const conn = await pool.getConnection();
         try {
-            const sql = `SELECT * FROM users`;
+            const sql = `SELECT id, name, email, lastname, tel, cpf, cep, city, district, adress, number FROM users`;
             const [row] = await conn.query(sql);
             return row;
         }catch(err){

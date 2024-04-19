@@ -14,7 +14,6 @@ module.exports  = class itens{
                 CONSTRAINT IDUSERFRETES
                   FOREIGN KEY (idUser)
                   REFERENCES users (id)
-                  ON DELETE NO ACTION
                   ON UPDATE NO ACTION);`;
             await conn.query(sql);
             console.log("Tabela frete criada com sucesso!");
@@ -34,7 +33,7 @@ module.exports  = class itens{
         try{
             NN(fretes);
             console.log(fretes);
-            const sql = "insert into fretes (idUser, fretes, info) values (?,?,?) ON DUPLICATE KEY UPDATE fretes = ?, infor = ?"
+            const sql = "insert into fretes (idUser, fretes, info) values (?,?,?) ON DUPLICATE KEY UPDATE fretes = ?, info = ?"
             await conn.query(sql, [fretes.idUser, JSON.stringify(fretes.fretes), JSON.stringify(fretes.info), JSON.stringify(fretes.fretes), JSON.stringify(fretes.info)]);
             console.log("fretes inserido com sucesso!");
         }catch(err){

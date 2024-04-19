@@ -39,7 +39,7 @@ module.exports  = class itens{
         try{
             NN(transaction);
             const sql = "insert into transaction (id, idUser, check_ref, price, currency, pay2mail, status, date, shipping) values (?,?,?,?,?,?,?,?,?)"
-            await conn.query(sql, [transaction.id, transaction.idUser, transaction.check_ref, transaction.price, transaction.currency, transaction.pay2mail, transaction.status, transaction.date, transaction.shipping ])
+            await conn.query(sql, [transaction.id, transaction.idUser, transaction.check_ref, transaction.price, transaction.currency, transaction.pay2mail, transaction.status, transaction.date, JSON.stringify(transaction.shipping) ])
             console.log("transaction inserido com sucesso!");
         }catch(err){
             console.log(err);

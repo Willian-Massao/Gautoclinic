@@ -22,12 +22,14 @@
                             <p id="total">R$ 0,00</p>
                         </div>
                         <div class="summary-box-cep">
-                            <label for="normal">Digite seu CEP</label>
+                            <label for="CEP">Digite seu CEP</label>
                             <input type="number" name="CEP" onkeydown="return event.keyCode !== 69" class="input" value="<%= user.cep %>">
-                            <input type="number" name="numero" onkeydown="return event.keyCode !== 69" class="input" value="<%= user.cep %>">
-                            <input type="number" name="complemento" onkeydown="return event.keyCode !== 69" class="input" value="<%= user.cep %>">
+                            <label for="numero">Numero</label>
+                            <input type="number" name="numero" onkeydown="return event.keyCode !== 69" class="input" value="<%= user.number %>">
+                            <label for="complemento">Complemento</label>
+                            <input type="number" name="complemento" onkeydown="return event.keyCode !== 69" class="input" value="">
                         </div>
-                        <input type="submit" id="calcularFrete" onclick="sendItens()" class="btn" value="Calcule seu Frete" value="<%= user.cep %>">
+                        <input type="submit" id="calcularFrete" onclick="sendItens()" class="btn" value="Calcule seu Frete" value="">
                     </div>
                 </div>
             </div>
@@ -146,8 +148,8 @@
                     data: {
                         itens: itens,
                         CEP: document.getElementsByName("CEP")[0].value,
-                        numero: document.getElementByName("numero")[0].value,
-                        complemento: document.getElementByName("complemento")[0].value
+                        numero: document.getElementsByName("numero")[0].value,
+                        complemento: document.getElementsByName("complemento")[0].value
                     },
                 }).then((res) => {
                     if(res.data.err == undefined){

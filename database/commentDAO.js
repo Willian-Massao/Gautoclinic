@@ -105,10 +105,23 @@ module.exports  = class itens{
     }
 
     // delete
-    async delete(id){
+    async deleteIdItem(id){
         const conn = await pool.getConnection();
         try {
-            const sql = `DELETE FROM comments WHERE id = ?`;
+            const sql = `DELETE FROM comments WHERE idItem = ?`;
+            const [row] = await conn.query(sql, [id]);
+            return row;
+        }catch(err){
+            console.log(err);
+        }finally{
+            conn.release();
+        }
+    }
+
+    async deleteIdUser(id){
+        const conn = await pool.getConnection();
+        try {
+            const sql = `DELETE FROM comments WHERE idUser = ?`;
             const [row] = await conn.query(sql, [id]);
             return row;
         }catch(err){

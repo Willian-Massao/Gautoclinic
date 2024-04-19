@@ -755,15 +755,12 @@ button.item-buy:active{
     display: none;
 }
 table.green-table{
-    border-collapse: collapse;
     margin-top: 20px;
     margin-bottom: 20px;
-    box-shadow: 0 0 10px 0px rgba(0,0,0,0.5);
-    border-radius: 10px 10px 0 0;
     overflow: hidden;
     width: fit-content;
-    max-width: 80%;
-    width: min-content;
+    max-width: 100%;
+    border-collapse: collapse;
 }
 .green-table tr:nth-child(2n){
     background-color: #f4f4f2;
@@ -775,7 +772,7 @@ table.green-table{
     background-color: #ffffff;
     margin: 0;
     border-bottom: 1px solid lightgray;
-    height: 50px;
+    height: 35px;
 }
 .green-table tr img{
     flex-shrink:  0;
@@ -789,6 +786,7 @@ table.green-table{
     border: none;
     padding: 10px 20px 10px 20px;
     border-radius: 3px;;
+    width: 100%;
 }
 .green-table tr button:hover{
     background-color: #cc4343;
@@ -797,12 +795,16 @@ table.green-table{
 .green-table tr button:active{
     background-color: #ff5454;
 }
+.green-table tr i{
+    color: white;
+    width: 100%;
+}
 .green-table tr:hover{
     color: #009979;
 }
 .green-table td{
-    max-width: 150px;
-    width: fit-content;
+    width: min-content;
+    max-width: 100px;
     margin: 0;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -818,9 +820,11 @@ table.green-table{
     color: white;
 }
 .green-table td, th{
-    padding-left: 15px;
-    padding-right: 15px;
-    text-align: center;
+    text-align: start;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: calc(auto - 20px);
+    border: 1px solid rgba(0, 0, 0, 0.15);
 }
 header.admin ul{
     display: flex;

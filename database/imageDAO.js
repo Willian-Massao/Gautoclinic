@@ -11,8 +11,7 @@ module.exports  = class itens{
                 image longblob NOT NULL,
                 PRIMARY KEY (id),
                 KEY \`id item imagem_idx\` (idItem),
-                CONSTRAINT \`id item imagem\` FOREIGN KEY (idItem) REFERENCES itens (id)
-              )
+                CONSTRAINT \`id item imagem\` FOREIGN KEY (idItem) REFERENCES itens (id))
               `;
             await conn.query(sql);
             console.log("Tabela images criada com sucesso!");
@@ -84,10 +83,23 @@ module.exports  = class itens{
     }
 
     // delete
-    async delete(id){
+    async deleteIdItem(id){
         const conn = await pool.getConnection();
         try {
-            const sql = `DELETE FROM images WHERE id = ?`;
+            const sql = `DELETE FROM images WHERE idItem = ?`;
+            const [row] = await conn.query(sql, [id]);
+            return row;
+        }catch(err){
+            console.log(err);
+        }finally{
+            conn.release();
+        }
+    }
+
+    async deleteIdUser(id){
+        const conn = await pool.getConnection();
+        try {
+            const sql = `DELETE FROM images WHERE idUser = ?`;
             const [row] = await conn.query(sql, [id]);
             return row;
         }catch(err){
