@@ -29,9 +29,9 @@ const transactions = new transactionDAO();
                 temp = await apiRes.json();
                 if(temp.status != 'PENDING')
                 {
-                    transactions.update(temp).then( 
-                        async() =>
-                        {
+                    // transactions.update(temp).then( 
+                    //     async() =>
+                    //     {
                         const melhorEnvio = new melhorenvioDAO();
                         const ownershop = new ownershopDAO();
 
@@ -45,7 +45,8 @@ const transactions = new transactionDAO();
                                 ( 
                                     async tableUsuario => 
                                     {
-                                        await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/cart',
+
+                                        const apiRes = await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/cart',
                                         {
                                             method: 'POST',
                                             headers: 
@@ -58,24 +59,22 @@ const transactions = new transactionDAO();
                                             body:JSON.stringify
                                             ({
                                                 "service": tableUsuario.shipping.id,//Id transportadora
-                                                // "agency": 0,//Nao necessario
                                                 "from": 
                                                 {
                                                     "name": tableOwner.nome_completo,
                                                     "phone": tableOwner.phone,
                                                     "email": tableOwner.email,
-                                                    // "document": "string",//CPF
-                                                    "company_document": tableOwner.companydocument, //CNPJ
-                                                    "state_register": tableOwner,stateRegister,// Inscricao estadual Perguntar ao Gauto
+                                                    "company_document": "89794131000100",//tableOwner.companydocument, //CNPJ
+                                                    "state_register": tableOwner.stateRegister,// Inscricao estadual Perguntar ao Gauto
                                                     "address": tableOwner.adress,//Logradouro Remetente
                                                     "complement": tableOwner.complement,// Complemento
                                                     "number": tableOwner.number,//Numero
                                                     "district": tableOwner.district,//Bairro
                                                     "city": tableOwner.city,//Cidade
                                                     "country_id": tableOwner.countryId,//Pais
-                                                    "postal_code": tableOwner.postalCode,//Cep
-                                                    "state_abbr": tableOwner.stateAbbr,//Estado
-                                                    // "note": "string"//Observacao
+                                                    "postal_code": "03532040",//tableOwner.postalCode,//Cep
+                                                    "state_abbr": "SP",//tableOwner.stateAbbr,//Estado
+                                                    "note": "observação",//Observacao
                                                 },
                                                 "to": 
                                                 {
@@ -83,18 +82,17 @@ const transactions = new transactionDAO();
                                                     "phone": tableUsuario.tel,
                                                     "email": tableUsuario.email,
                                                     "document": tableUsuario.cpf,//CPF
-                                                    // "company_document": "string", //CNPJ
-                                                    // "state_register": "string",// Inscricao estadual Perguntar ao Gauto
-                                                    "address": tableUsuario.frete.to.adress,//Logradouro Destinatario
-                                                    "complement":  tableUsuario.frete.to.complemento,// Complemento
-                                                    "number": tableUsuario.frete.to.numero,//Numero
-                                                    "district": tableUsuario.frete.to.district,//Bairro
-                                                    "city": tableUsuario.frete.to.city,//Cidade
-                                                    "country_id": tableUsuario.frete.to.country_id,//Pais
-                                                    "postal_code": tableUsuario.frete.to.CEP,//Cep
-                                                    "state_abbr": tableUsuario.frete.to.state_abbr,//Estado
-                                                    "note": "string"//Observacao
+                                                    "address": tableUsuario.info.to.adress,//Logradouro Destinatario
+                                                    "complement":  "teste",//tableUsuario.info.to.complemento,// Complemento
+                                                    "number": tableUsuario.info.to.numero,//Numero
+                                                    "district": tableUsuario.info.to.district,//Bairro
+                                                    "city": tableUsuario.info.to.city,//Cidade
+                                                    "country_id": tableUsuario.info.to.country_id,//Pais
+                                                    "postal_code": tableUsuario.info.to.CEP,//Cep
+                                                    "state_abbr": tableUsuario.info.to.state_abbr,//Estado
+                                                    "note": "observação"//Observacao
                                                 },
+
                                                 "products": 
                                                 [
                                                     {
@@ -106,32 +104,45 @@ const transactions = new transactionDAO();
                                                 "volumes": 
                                                 [
                                                     {
-                                                      "height": tableUsuario.shipping.height,//Altura
-                                                      "width": tableUsuario.shipping.width,//Largura
-                                                      "length": tableUsuario.shipping.length,//Comprimento
-                                                      "weight": tableUsuario.shipping.weight//Peso
+                                                      "height": tableUsuario.shipping.dimensions.height,//Altura
+                                                      "width": tableUsuario.shipping.dimensions.width,//Largura
+                                                      "length": tableUsuario.shipping.dimensions.depth,//Comprimento
+                                                      "weight": tableUsuario.shipping.dimensions.weight//Peso
                                                     }
                                                 ],
                                                 "plataform": "Gauto Clinic",
-                                                "tags": 
-                                                [
-                                                    {
-                                                      "tag": "string",//Transaction
-                                                      "Url": "string"//url do produto
-                                                    }
-                                                ]
+                                                "options": {
+                                                    "insurance_value": 11.78,
+                                                    "receipt": false,
+                                                    "own_hand": false,
+                                                    "reverse": false,
+                                                    "non_commercial": false,
+                                                    "invoice": {
+                                                        "key": "31190307586261000184550010000092481404848162"
+                                                    },
+                                                    "platform": "Nome da Plataforma",
+                                                    "tags": [
+                                                        {
+                                                            "tag": "Identificação do pedido na plataforma, exemplo: 1000007",
+                                                            "url": "Link direto para o pedido na plataforma, se possível, caso contrário pode ser passado o valor null"
+                                                        }
+                                                    ]
+                                                }
                                             })
 
-                                        });    
+                                        }); 
+                                        console.log(apiRes);
+                                        const resp = await apiRes.json();
+                                        console.log(resp);
                                     }
                                 )
                                 
                             }
                         ) 
-                    });
+                    // });
                 }
             }
         });
     }
-
-setInterval(refreshTransactions, 1000); // 10 minutos
+refreshTransactions();
+//setnterval(refreshTransactions, 20000); // 10 minutos

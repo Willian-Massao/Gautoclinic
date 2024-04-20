@@ -1155,6 +1155,16 @@ input[type=number] {
     padding: 15px;
     margin-top: 1%;
 }
+#checkboxComplemento{
+    display: flex ;
+    flex-direction: row;
+    width: 135px;
+    flex-wrap: nowrap;
+}
+#chkComplemento{
+    display: flex ;
+    flex-wrap: nowrap;
+}
 .account-container.table{
     width: 90%;
 }

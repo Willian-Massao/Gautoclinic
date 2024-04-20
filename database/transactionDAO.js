@@ -148,7 +148,7 @@ module.exports  = class itens{
         try {
             const sql = 
             `SELECT 
-            (us.name+us.lastname) as 'nome_completo', us.tel, us.email, us.cpf, fret.info, trans.shipping 
+            CONCAT_WS(' ', name, lastname) as 'nome_completo', us.tel, us.email, us.cpf, fret.info, trans.shipping
             FROM transaction trans
             inner join users us
             on us.id = trans.idUser
@@ -156,7 +156,7 @@ module.exports  = class itens{
             on fret.idUser = trans.idUser
             where trans.check_ref = ?`;
             const [row] = await conn.query(sql, [check_ref]);
-            return row;
+            return row[0];
         }catch(err){
             console.log(err);
         }finally{
