@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include ("partials/head.ejs") %>
+</head>
+<body>
+    <%- include ("partials/alert.ejs") %>
+    <%- include ("partials/navbar.ejs") %>
+    <%- include ("partials/header.ejs") %>
+    <main>
+        <div class="profile-container frete">
+            <div class="account-container frete">
+                <table>
+                    <tr>
+                        <th colspan="3" class="mob-only">Companhia</th>
+                        <th>Preço</th>
+                        <th class="mob-only">Tempo de Entrega</th>
+                    </tr>
+                        <% fretes.forEach((frete)=>{ %>
+                        <tr>
+                            <td><input type="radio" name="radio" class="radio-button radio-<%= frete.id %>" onchange="addfrete()"></td>
+                            <td><div class="frete-img"><img src="<%=frete.company.picture %>"></div></td>
+                            <td> <%= frete.company.name  %></td>
+                            <td class="radio-<%= frete.id %>"><%= frete.currency + frete.custom_price.replace(".",",") %></td>
+                            <td><%= frete.custom_delivery_range.min +" a " + frete.custom_delivery_range.max %> Dias úteis</td>
+                        </tr>
+                        <% }) %>
+                </table>
+            </div>
+            <div id="summary">
+                <h1>Pedido</h1>
+                <div class="summary-box">
+                    <div class="summary-box-itens" id="box-itens">
+                    </div>
+                    <hr>
+                    <div class="summary-box-info">
+                        <p>Total</p>
+                        <p id="total">R$ 0,00</p>
+                    </div>
+                </div>
+                <button class="summary-box-button" onclick="sendItens()">Pagamento</button>
+            </div>
+        </div>
+    </main>
+    <script>
+    function sendItens(){
+        let itens = JSON.parse(localStorage.getItem("item"));
+        let radio = document.getElementsByClassName("radio-button");
+        let frete = [];
+        
+        for(let i = 0; i < radio.length; i++){
+            if(radio[i].checked){
+                frete.push({id: radio[i].classList[1].split("-")[1]});
+            }
+        }
+
+        axios({
+            method: "post",
+            url: "/payment",
+            data: {
+                itens: itens,
+                frete: frete
+            },
+        }).then((res) => {
+            if(res.data.url != undefined){
+                window.location.href = '/payment/' + res.data.url;
+            }else{
+                location.reload()
+            }
+        })
+    }
+
+    render();
+    total(0)
+
+    function addfrete(){
+        total();
+    }
+
+    function total(){
+        let itens = JSON.parse(localStorage.getItem("item"));
+        let radio = document.getElementsByClassName("radio-button");
+        let total = 0;
+        let subtotal = 0; 
+        let carrinho = 0
+        let frete = 0;
+        
+        for(let i = 0; i < radio.length; i++){
+            if(radio[i].checked){
+                let tempradio = radio[i].classList[1].split("-")[1]
+                frete = parseFloat(document.getElementsByClassName("radio-"+tempradio)[1].innerHTML.replace(",", ".").replace("R$", ""));
+            }
+        }
+
+
+        //for(let i = 0; i < document.getElementsByClassName("normal").length; i++){
+        //    if(document.getElementsByClassName("normal")[i].checked){
+        //        frete = parseFloat(document.getElementsByClassName("normal")[i].value)
+        //    }
+        //}
+
+        itens.forEach(i => {
+            subtotal += parseFloat(i.price.replace(",", ".")) * i.qtd;
+            carrinho += parseInt(i.qtd);
+        });
+
+        //total = subtotal + frete;
+        total = subtotal + frete;
+
+        //document.getElementById("subtotal").innerHTML = `Subtotal (${carrinho} produtos): <strong>R$${subtotal.toFixed(2)}</strong>`;
+        //document.getElementById("frete").innerHTML = `R$${frete.toFixed(2)}`;
+        document.getElementById("frete-total").innerHTML = `R$${frete.toFixed(2)}`;
+        document.getElementById("total").innerHTML = `R$${total.toFixed(2)}`;
+    }
+    function render(){
+        let itens = JSON.parse(localStorage.getItem("item"));
+        let radio = document.getElementsByClassName("radio-button");
+        radio[0].checked = true;
+        let total = 0;
+        for(let i = 0; i < itens.length; i++){
+            if(i == itens.length -1){
+                itens.forEach(i => {
+                    document.getElementById("box-itens").innerHTML += `
+                    <div class="summary-box-info">
+                        <div>
+                            <p class="box-itens-name">${i.name}</p>  
+                            <p class="box-itens-qtd" id="item-${i.id}">(${i.qtd})</p>  
+                        </div>
+                        <p id="item-total">R$${i.price}</p>
+                    </div>
+                    `
+                });
+                document.getElementById("box-itens").innerHTML += `
+                    <div class="summary-box-info">
+                        <div>
+                            <p class="box-itens-name">frete</p>  
+                        </div>
+                        <p id="frete-total">R$${i.price}</p>
+                    </div>`
+            }
+        }
+    }
+</script>
+    <%- include ("partials/footer.ejs") %>
+</body>
+</html>

@@ -1,3 +1,12 @@
+:root{
+    --secodary-color: #d6d6d6;
+}
+h1,h2,p,i,a{
+    color: black;
+}
+footer h1,footer h2,footer p{
+    color: black;
+}
 body{
     margin: 0;
     padding: 0;
@@ -12,7 +21,7 @@ a{
     text-decoration: none;
 }
 header{
-    color: black;
+    color: var(--secodary-color);
     padding: 10px;
     text-align: center;
     display: flex;
@@ -33,7 +42,7 @@ header .icons, header .icons a, header .icons button{
     flex-direction: row;
     padding-left: 15px;
     padding-right: 15px;
-    color: black;
+    color: var(--secodary-color);
     background-color: rgba(0, 0, 0, 0.0);
     border: 0;
     border-radius: 5px;
@@ -69,6 +78,7 @@ header .search-bar{
     width: 450px;
     border-radius: 50px;
     overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.20);
 }
 header .search-bar input{
     height: 100%;
@@ -153,6 +163,10 @@ main .itens .item:hover img{
 main .itens .item img {
     transition: 220ms ease-in-out;
 }
+.rate img{
+    width: 20px;
+    height: 20px;
+}
 main .product{
     display: flex;
     justify-content: center;
@@ -169,7 +183,7 @@ main .product p{
     white-space: nowrap;
 }
 main a.product{
-    color: black;
+    color: var(--secodary-color);
 }
 main .product .image{
     width: 200px;
@@ -197,9 +211,10 @@ main .product div.buy button{
     padding: 10px;
     border: 0;
     border-radius: 5px;
-    background-color: #000000;
-    color: rgb(255, 255, 255);
+    background-color: var(--secodary-color);
+    color: black;
     transition: 50ms ease-in-out;
+    border: 1px solid rgba(0, 0, 0, 0.20);
 }
 main .product div.buy button:active{
     scale: 0.95;
@@ -216,8 +231,8 @@ footer {
     align-items: center;
     flex-direction: column;
     flex-wrap: wrap;
-    background-color: black;
-    color: white;
+    background-color: var(--secodary-color);
+    color: black;
     width: 100%;
     height: 550px;
 }
@@ -238,6 +253,7 @@ footer .newsletters form{
     flex-direction: row;
     border-radius: 5px;
     overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.20);
 }
 footer .newsletters input, footer .newsletters button{
     height: 50px;
@@ -257,7 +273,7 @@ footer .newsletters p{
     font-size: x-large;
 }
 footer .insta i{
-    color: white;
+    color: black;
     font-size: xx-large;
     margin-top: 9px;
     margin-right: 8px;
@@ -285,7 +301,7 @@ footer .social{
     flex-direction: row;
 }
 footer .social a{
-    color: white;
+    color: black;
 }
 footer .insta>a{
     display: flex;
@@ -331,15 +347,15 @@ nav ul{
 nav ul li, nav ul form{
     width: 100%;
     height: 50px;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid var(--secodary-color);
     list-style: none;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #000000;
+    color: var(--secodary-color);
 }
 nav ul li a{
-    color: #000000;
+    color: black;
 }
 nav ul input{
     width: 100%;
@@ -364,6 +380,42 @@ main .item-container{
     flex-wrap: wrap;
     width: 80%;
     margin-top: 100px;
+}
+.item-images{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
+.item-images .image-list{
+    display: flex;
+    justify-content: start;
+    height: calc(500px/3);
+    width: 100%;
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+}
+.image-list .mini-image{
+    width: calc(500px/3);
+    min-width: calc(500px/3);
+    height: calc(500px/3);
+    min-height: calc(500px/3);
+    scroll-snap-align: center;
+}
+main .item-images .mini-image img{
+    flex-shrink:  0;
+    -webkit-flex-shrink: 0;
+    max-width:  100%;
+    max-height:  100%;
+}
+.image-list::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.image-list {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
 .item-images{
     display: flex;
@@ -438,9 +490,10 @@ button.item-buy{
     padding: 10px;
     border: 0;
     border-radius: 5px;
-    background-color: #000000;
-    color: rgb(255, 255, 255);
+    background-color: var(--secodary-color);
+    color: black;
     transition: 50ms ease-in-out;
+    border: 1px solid rgba(0, 0, 0, 0.20);
 }
 .image-sidebar:hover{
     filter: brightness(90%);
@@ -471,13 +524,54 @@ button.item-buy:active{
     align-items: center;
     flex-direction: row;
 }
+.sec-container{
+    width: calc(100% - 40px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+.desc-sec{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 100%;
+    border-radius: 5px 5px 0 0;
+    overflow: hidden;
+}
+.desc-sec button{
+    width: calc(100% / 3);
+    height: 35px;
+    background-color: white;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+.desc-info{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 100%;
+}
+.sec{
+    display: none;
+    background-color: white;
+    width: calc(100% - 40px);
+    padding: 20px;
+}
+.sec.active{
+    display: unset;
+}
 .appraisal-container{
     display: flex;
     justify-content: center;
     align-items: start;
     flex-direction: column;
     width: calc(100% - 150px);
-    border-left: 1px solid black;
+    border-left: 1px solid var(--secodary-color);
     padding-left: 10px;
     margin-top: 15px;
     width: 100%;
@@ -509,7 +603,7 @@ button.item-buy:active{
     padding: 10px;
     border: 0;
     border-radius: 5px;
-    background-color: #000000;
+    background-color: var(--secodary-color);
     color: rgb(255, 255, 255);
     transition: 50ms ease-in-out;
     margin-bottom: 5px;
@@ -523,6 +617,41 @@ button.item-buy:active{
 .product-container{
     width: 80%;
     margin-top: 100px;
+}
+.summary-box-info{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    flex-direction: row;
+}
+.summary-box-info>div{
+    display: flex;
+    flex-direction: row;
+}
+.summary-box-cep label{
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+.summary-box-cep input{
+    width: calc(100% - 20px);
+    padding: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    margin-bottom: 5px;
+
+}
+.summary-box-cep{
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    margin-top: 10px;
+}
+.box-itens-name{
+    max-width: 130px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 #itens-container{
     display: flex;
@@ -539,7 +668,9 @@ button.item-buy:active{
 #itens-container #summary{
     width: 20%;
     min-width: 315px;
+    margin-bottom: 15px;
 }
+
 #itens-container #itens-list .item{
     height: 150px;
     min-width: 315px;
@@ -547,12 +678,17 @@ button.item-buy:active{
     justify-content: start;
     align-items: center;
     flex-direction: row;
+    box-shadow: 0 0 10px 0px rgba(0,0,0,0.5);
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 15px;
 }
 .img-container{
     width: 150px;
     height: 150px;
     overflow: hidden;
     display: flex;
+    min-width: 122px;
     justify-content: center;
     align-items: center;
 }
@@ -579,7 +715,7 @@ button.item-buy:active{
     width: 30px;
     height: 30px;
     border: 0;
-    background-color: #000000;
+    background-color: var(--secodary-color);
     color: rgb(255, 255, 255);
     transition: 50ms ease-in-out;
 }
@@ -597,7 +733,7 @@ button.item-buy:active{
     margin-top: 15px;
     padding: 15px;
     border: 0;
-    background-color: #000000;
+    background-color: black;
     border-radius: 5px;
     color: rgb(255, 255, 255);
     transition: 50ms ease-in-out;
@@ -743,7 +879,7 @@ header.admin ul{
     padding: 10px;
     border: 0;
     border-radius: 5px;
-    background-color: #000000;
+    background-color: var(--secodary-color);
     color: rgb(255, 255, 255);
     transition: 50ms ease-in-out;
 }
@@ -771,6 +907,7 @@ header.admin li:hover{
     align-items: center;
     flex-direction: column;
     width: 80%;
+
 }
 .info .who{
     text-align: center;
@@ -780,6 +917,7 @@ header.admin li:hover{
     flex-direction: column;
     width: 50%;
     min-width: 90vw;
+    text-align: justify;
 }
 .info .info-container{
     width: 100%;
@@ -792,10 +930,12 @@ header.admin li:hover{
 }
 .info-container> div{
     width: 30%;
-    min-width: 400px;
+    min-width: 90vw;
     text-align: start;
 }
-
+.info-container p{
+    text-align: justify;
+}
 .profile-container{
     width: 80%;
     display: flex;
@@ -813,7 +953,7 @@ header.admin li:hover{
     min-width: 360px;
     display: flex;
     justify-content: center;
-    align-items: start;
+    align-items: center;
     flex-direction: column;
 }
 .profile-container ul {
@@ -832,7 +972,7 @@ header.admin li:hover{
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #000000;
+    color: black;
 }
 .info-contaner{
     display: flex;
@@ -845,9 +985,27 @@ header.admin li:hover{
     margin-bottom: 15px;
 }
 .info-contaner h2{
-    width: 95%;
-    text-align: start;
+    width: 90%;
+    text-align: center;
     border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+    margin-bottom: 0;
+}
+.info-contaner>p{
+    margin-bottom: 30px;
+}
+.information > div > p{
+margin-top: 5px;
+}
+.information > div > div > p{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+.account-info .destinatario p{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+.account-info .destinatario p:first-child{
+    margin-top: 30px;
 }
 .account-info form h2{
     width: 95%;
@@ -872,7 +1030,7 @@ header.admin li:hover{
     margin: 15px;
 }
 .account-info form{
-    width: 100%;
+    width: calc(100% - 20px);
     display: flex;
     justify-content: start;
     align-items: center;
@@ -880,6 +1038,7 @@ header.admin li:hover{
     flex-wrap: wrap;
     border: 1px solid rgba(0, 0, 0, 0.15);
     margin-bottom: 15px;
+    padding: 10px;
 }
 .account-info .input-container input[type="text"]{
     width: calc(100% - 20px);
@@ -892,8 +1051,8 @@ header.admin li:hover{
     padding: 10px;
     border: 0;
     border-radius: 5px;
-    background-color: #000000;
-    color: rgb(255, 255, 255);
+    background-color: var(--secodary-color);
+    color: black;
     transition: 50ms ease-in-out;
 }
 .account-container {
@@ -956,7 +1115,7 @@ header.admin li:hover{
     margin-bottom: 10px;
 }
 
-input[type="submit"] {
+#frete-form input[type="submit"] {
     background-color: #315292;
     color: #fff;
     border: none;
@@ -967,6 +1126,245 @@ input[type="submit"] {
     border-radius: 3px;
 }
 
-input[type="submit"]:hover {
+#frete-form input[type="submit"]:hover {
     background-color: #223966;
+}
+input[type=number]::-webkit-inner-spin-button { 
+    -webkit-appearance: none;
+    
+}
+input[type=number] { 
+   -moz-appearance: textfield;
+   appearance: textfield;
+
+}
+.account-container.table{
+    width: 100%;
+}
+.account-container.table table{
+    font-size: small;
+}
+.account-container.table table .total{
+    border-top: 1px solid rgba(0, 0, 0, 0.15);
+}
+.account-container table{
+    width: 100%;
+    border-spacing: 0;
+    border-collapse: separate;
+}
+.account-container table tr{
+    height: 50px;
+}
+.account-container table tr:first-child{
+    background-color: black;
+    color: white;
+    border-radius: 5px 5px 0 0 ;
+}
+.account-container table th, .account-container table td{
+    display: none;
+}
+.account-container table th.mob-only{
+    display: table-cell;
+    padding: 10px;
+    padding-left: 30px;
+    padding-right: 30px;
+} 
+.account-container table td.mob-only{
+    display: table-cell;
+    text-align: center;
+}
+.account-container table td.mobile{
+    display: table-cell;
+}
+.account-container table td.desktop{
+    display: none;
+}
+.account-container table td:hover{
+    background-color: #f4f4f2;
+}
+.account-container.single{
+    width: 90%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: start;
+    flex-direction: column;
+}
+.single>div.information{
+    display: flex;
+    align-items: start;
+    flex-direction: column;
+}
+.single>div.information div{
+    margin: 10px;
+    margin-top: 0px;
+    margin-left: 0;
+}
+.single .button-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.single .button{
+    background-color: #ffffff;
+    color: #000000;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border-radius: 5px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 10px 0px rgba(0,0,0,0.15);
+    padding: 15px;
+    margin: 5px;
+    font-size: small;
+    width: 147px;
+}
+.single a.button {
+    width: calc(145px - 30px);
+    text-align: center;
+}
+.single .button:hover{
+    background-color: #f4f4f2;
+}
+.profile-container.frete{
+    justify-content: center;
+    height: 450px;
+    flex-direction: column;
+}
+.frete #summary{
+    display: flex;
+    flex-direction: column;
+    width: 20%;
+    min-width: 250px;
+    align-items: end;
+}.frete #summary h1{
+    width: 100%;
+}
+.frete #summary .summary-box{
+    width: 100%;
+}
+.frete-img{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 100%;
+    height: 50px;
+}
+.frete-img img{
+    flex-shrink:  0;
+    -webkit-flex-shrink: 0;
+    max-width:  80%;
+    max-height:  80%;
+}
+.account-container.frete{
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    min-width: 400px;
+    width: calc(100% - 40px);
+}
+.account-container.frete table th, .account-container.frete table td{
+    display: table-cell;
+    text-align: center;
+}
+
+.account-container.frete table{
+    font-size: small;
+}
+#calcularFrete{
+    background-color: #bdbdbd;
+    color: black;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border-radius: 5px;
+    padding: 15px;
+    margin-top: 1%;
+}
+.account-container.single{
+    display: flex;
+    justify-content: center;
+    align-items: start;
+}
+.comment-container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+}
+.comment-container h1 {
+    margin-bottom: 20px;
+    text-align: center;
+    color: #315292;
+}
+
+.comment-container form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.comment-container label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+button.star-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.star-img {
+    width: 30px;
+    height: 30px;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+}
+
+.star-img:hover,
+.star-img.active {
+    opacity: 1;
+}
+
+.comment-container textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: vertical;
+    width: calc(100% - 20px);
+    resize: none;
+}
+
+.comment-container input[type="number"],
+.comment-container input[type="submit"] {
+    display: block;
+    margin-top: 10px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #315292;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.comment-container input[type="submit"]:hover {
+    background-color: #223966;
+}
+
+.comment-container input[type="number"] {
+    display: none;
 }

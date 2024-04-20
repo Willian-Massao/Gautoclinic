@@ -1,11 +1,14 @@
 :root{
-    --secodary-color: #bdbdbd;
+    --secodary-color: #d6d6d6
 }
 h1,h2,p,i,a{
     color: black;
 }
-footer h1,footer h2,footer p{
-    color: white;
+footer h1,footer h2,footer p,footer i{
+    color: black;
+}
+button:active, input[type="submit"]:active, input[type="button"]:active{
+    transform: scale(0.95);
 }
 body{
     margin: 0;
@@ -13,6 +16,9 @@ body{
     font-family: "Inter", sans-serif;
     height:100%;
     position: relative;
+}
+input{
+    font-family: "Inter", sans-serif;
 }
 .disable{
     display: none;
@@ -47,8 +53,8 @@ header .icons, header .icons a, header .icons button{
     flex-direction: row;
     padding-left: 15px;
     padding-right: 15px;
-    color: var(--secodary-color);
-    background-color: white;
+    background-color: rgba(0, 0, 0, 0.0);
+    color: black;
     border: 0;
     border-radius: 5px;
 }
@@ -77,6 +83,7 @@ header .search-bar{
     width: 450px;
     border-radius: 50px;
     overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.20);
 }
 header .search-bar input{
     height: 100%;
@@ -141,6 +148,10 @@ main .itens .item{
     text-align: center;
     border-radius: 5px;
     margin: 10px;
+}
+.rate img{
+    width: 20px;
+    height: 20px;
 }
 main .itens .item img{
     height: 100%;
@@ -207,8 +218,9 @@ main .product div.buy button{
     border: 0;
     border-radius: 5px;
     background-color: var(--secodary-color);
-    color: rgb(255, 255, 255);
+    color: black;
     transition: 50ms ease-in-out;
+    border: 1px solid rgba(0, 0, 0, 0.20);
 }
 main .product div.buy button:active{
     scale: 0.95;
@@ -225,7 +237,7 @@ footer {
     align-items: center;
     flex-direction: row-reverse;
     background-color: var(--secodary-color);
-    color: white;
+    color: black;
     width: 100%;
     height: 350px;
 }
@@ -246,6 +258,7 @@ footer .newsletters form{
     flex-direction: row;
     border-radius: 5px;
     overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.20);
 }
 footer .newsletters input, footer .newsletters button{
     height: 50px;
@@ -265,7 +278,7 @@ footer .newsletters p{
     font-size: x-large;
 }
 footer .insta i{
-    color: white;
+    color: black;
     font-size: xx-large;
     margin-top: 9px;
     margin-right: 8px;
@@ -290,7 +303,7 @@ footer .social{
     flex-direction: row;
 }
 footer .social a{
-    color: white;
+    color: black;
 }
 footer .insta>a{
     display: flex;
@@ -344,7 +357,7 @@ nav ul li, nav ul form{
     color: var(--secodary-color);
 }
 nav ul li a{
-    color: var(--secodary-color);
+    color: black;
 }
 nav ul input{
     width: 100%;
@@ -366,7 +379,9 @@ main .item-container{
     justify-content: center;
     align-items: start;
     flex-direction: row;
-    width: 1100px;
+    max-width: 1500px;
+    width: 100%;
+    min-width: 1100px;
     margin-top: 100px;
 }
 .item-images{
@@ -374,17 +389,48 @@ main .item-container{
     justify-content: center;
     align-items: center;
     flex-direction: row;
+    position: sticky;
+    top: 0;
 }
 .item-images .image-list{
-    display: flex;
-    justify-content: start;
-    align-items: start;
-    flex-direction: column;
     width: calc(500px/3);
     height: 500px;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
 }
 .image-list .mini-image{
     width: calc(500px/3);
+    height: calc(500px/3);
+    scroll-snap-align: center;
+}
+.image-list::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.image-list {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+.item .desc-container{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-direction: row;
+    width: 100%;
+    max-width: 550px;
+    min-width: 430px;
+    padding-right: 10px;
+}
+.item .desc-container p{
+    margin: 0;
+    padding: 0;
+}
+.item .desc-container p#name-info{
+    width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 main .item-images div{
     --img-size: 500px;
@@ -452,8 +498,9 @@ button.item-buy{
     border: 0;
     border-radius: 5px;
     background-color: var(--secodary-color);
-    color: rgb(255, 255, 255);
+    color: black;
     transition: 50ms ease-in-out;
+    border: 1px solid rgba(0, 0, 0, 0.20);
 }
 button.item-buy:active{
     scale: 0.95;
@@ -480,6 +527,51 @@ button.item-buy:active{
     justify-content: space-evenly;
     align-items: center;
     flex-direction: row;
+}
+.sec-container{
+    width: calc(100% - 40px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+.desc-sec{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 100%;
+    border-radius: 5px 5px 0 0;
+    overflow: hidden;
+}
+.desc-sec button{
+    width: calc(100% / 3);
+    height: 35px;
+    background-color: white;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+.desc-info{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 100%;
+}
+.sec{
+    display: none;
+    background-color: white;
+    width: calc(100% - 40px);
+    padding: 20px;
+    text-align: justify;
+}
+.sec.active{
+    display: unset;
+}
+.item-benefit p{
+    text-align: justify;
 }
 .appraisal-container{
     display: flex;
@@ -532,19 +624,60 @@ button.item-buy:active{
     width: 80%;
     margin-top: 100px;
 }
-#itens-container{
+.summary-box-info{
+    width: 100%;
     display: flex;
     justify-content: space-between;
+    align-items: start;
+    flex-direction: row;
+}
+.summary-box-info>div{
+    display: flex;
+    flex-direction: row;
+}
+.summary-box-cep label{
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+.summary-box-cep input{
+    width: calc(100% - 20px);
+    padding: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    margin-bottom: 5px;
+
+}
+.summary-box-cep{
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    margin-top: 10px;
+}
+.box-itens-name{
+    max-width: 130px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+#itens-container{
+    display: flex;
+    justify-content: space-evenly;
     align-items: start;
     flex-direction: row;
     flex-wrap: wrap;
     width: 100%;
 }
 #itens-container #itens-list{
-    width: calc(100% - 240px);
+    width: calc(70% - 240px);
+
+}
+#itens-list{
+    min-width: 550px;
 }
 #itens-container #summary{
-    min-width: 230px;
+    min-width: 350px;
+    margin-left: 15px;
+    margin-bottom: 15px;
 }
 #itens-container #itens-list .item{
     height: 150px;
@@ -552,10 +685,15 @@ button.item-buy:active{
     justify-content: start;
     align-items: center;
     flex-direction: row;
+    box-shadow: 0 0 10px 0px rgba(0,0,0,0.5);
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 15px;
 }
 .img-container{
     width: 150px;
     height: 150px;
+    min-width: 122px;
     overflow: hidden;
     display: flex;
     justify-content: center;
@@ -602,24 +740,27 @@ button.item-buy:active{
     margin-top: 15px;
     padding: 15px;
     border: 0;
-    background-color: var(--secodary-color);
+    background-color: black;
     border-radius: 5px;
     color: rgb(255, 255, 255);
     transition: 50ms ease-in-out;
+}
+.account-container table td.mobile{
+    display: none;
+}
+.account-container table td.desktop{
+    display: table-cell;
 }
 .mobile-table{
     display: none;
 }
 table.green-table{
-    border-collapse: collapse;
     margin-top: 20px;
     margin-bottom: 20px;
-    box-shadow: 0 0 10px 0px rgba(0,0,0,0.5);
-    border-radius: 10px 10px 0 0;
     overflow: hidden;
     width: fit-content;
-    max-width: 80%;
-    width: min-content;
+    max-width: 100%;
+    border-collapse: collapse;
 }
 .green-table tr:nth-child(2n){
     background-color: #f4f4f2;
@@ -631,7 +772,7 @@ table.green-table{
     background-color: #ffffff;
     margin: 0;
     border-bottom: 1px solid lightgray;
-    height: 50px;
+    height: 35px;
 }
 .green-table tr img{
     flex-shrink:  0;
@@ -645,6 +786,7 @@ table.green-table{
     border: none;
     padding: 10px 20px 10px 20px;
     border-radius: 3px;;
+    width: 100%;
 }
 .green-table tr button:hover{
     background-color: #cc4343;
@@ -653,12 +795,16 @@ table.green-table{
 .green-table tr button:active{
     background-color: #ff5454;
 }
+.green-table tr i{
+    color: white;
+    width: 100%;
+}
 .green-table tr:hover{
     color: #009979;
 }
 .green-table td{
-    max-width: 150px;
-    width: fit-content;
+    width: min-content;
+    max-width: 100px;
     margin: 0;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -674,9 +820,11 @@ table.green-table{
     color: white;
 }
 .green-table td, th{
-    padding-left: 15px;
-    padding-right: 15px;
-    text-align: center;
+    text-align: start;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: calc(auto - 20px);
+    border: 1px solid rgba(0, 0, 0, 0.15);
 }
 header.admin ul{
     display: flex;
@@ -831,7 +979,7 @@ header.admin li:hover{
     margin-bottom: 10px;
 }
 
-input[type="submit"] {
+#frete-form input[type="submit"] {
     background-color: #315292;
     color: #fff;
     border: none;
@@ -842,7 +990,7 @@ input[type="submit"] {
     border-radius: 3px;
 }
 
-input[type="submit"]:hover {
+#frete-form input[type="submit"]:hover {
     background-color: #223966;
 }
 
@@ -882,6 +1030,27 @@ input[type="submit"]:hover {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+.profile-container a{
+    min-width: 115px;
+}
+.profile-container.frete{
+    justify-content: space-evenly;
+    height: 450px;
+    flex-wrap: wrap;
+    margin-top: 150px;
+}
+.frete #summary{
+    display: flex;
+    flex-direction: column;
+    width: 20%;
+    min-width: 250px;
+    align-items: end;
+}.frete #summary h1{
+    width: 100%;
+}
+.frete #summary .summary-box{
+    width: 100%;
 }
 .info-contaner{
     display: flex;
@@ -939,7 +1108,7 @@ input[type="submit"]:hover {
     border: 0;
     border-radius: 5px;
     background-color: var(--secodary-color);
-    color: rgb(255, 255, 255);
+    color: black;
     transition: 50ms ease-in-out;
 }
 .account-container {
@@ -947,4 +1116,207 @@ input[type="submit"]:hover {
     justify-content: center;
     align-items: center;
     flex-direction: row;
+}
+.frete-img{
+    max-width: 100%;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.frete-img img{
+    flex-shrink:  0;
+    -webkit-flex-shrink: 0;
+    max-width:  80%;
+    max-height:  80%;
+}
+.account-container.frete{
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    min-width: 590px;
+}
+input[type=number]::-webkit-inner-spin-button { 
+    -webkit-appearance: none;
+    
+}
+input[type=number] { 
+   -moz-appearance: textfield;
+   appearance: textfield;
+
+}
+#calcularFrete{
+    background-color: #bdbdbd;
+    color: black;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border-radius: 5px;
+    padding: 15px;
+    margin-top: 1%;
+}
+#checkboxComplemento{
+    display: flex ;
+    flex-direction: row;
+    width: 135px;
+    flex-wrap: nowrap;
+}
+#chkComplemento{
+    display: flex ;
+    flex-wrap: nowrap;
+}
+.account-container.table{
+    width: 90%;
+}
+.account-container table{
+    width: 100%;
+    border-spacing: 0;
+    border-collapse: separate;
+}
+.account-container table tr{
+    height: 50px;
+}
+.account-container table tr:first-child{
+    background-color: black;
+    color: white;
+    border-radius: 5px 5px 0 0 ;
+}
+.account-container table th{
+    padding: 10px;
+    padding-left: 30px;
+    padding-right: 30px;
+} 
+.account-container table td{
+    text-align: center;
+}.account-container table td:hover{
+    background-color: #f4f4f2;
+}
+.account-container table .total{
+    border-top: 1px solid rgba(0, 0, 0, 0.15);
+}
+.account-container.single{
+    width: 90%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: start;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.single>div.information{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+}
+.single>div.information div{
+    margin: 10px;
+    margin-top: 0px;
+}
+.single .button-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.single .button{
+    background-color: #ffffff;
+    color: #000000;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border-radius: 5px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 10px 0px rgba(0,0,0,0.15);
+    padding: 15px;
+    margin: 5px;
+    font-size: small;
+    width: 147px;
+}
+.single a.button {
+    width: calc(145px - 30px);
+    text-align: center;
+}
+.single .button:hover{
+    background-color: #f4f4f2;
+}
+.comment-container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+}
+.comment-container h1 {
+    margin-bottom: 20px;
+    text-align: center;
+    color: #315292;
+}
+
+.comment-container form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.comment-container label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+button.star-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.star-img {
+    width: 30px;
+    height: 30px;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+}
+
+.star-img:hover,
+.star-img.active {
+    opacity: 1;
+}
+
+.comment-container textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: vertical;
+    width: calc(100% - 20px);
+    resize: none;
+}
+
+.comment-container input[type="number"],
+.comment-container input[type="submit"] {
+    display: block;
+    margin-top: 10px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #315292;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.comment-container input[type="submit"]:hover {
+    background-color: #223966;
+}
+
+.comment-container input[type="number"] {
+    display: none;
 }

@@ -2,42 +2,43 @@
 <html lang="en">
     <%- include ("partials/head.ejs") %>
 <body onload="">
+    <%- include ("partials/alert.ejs") %>
     <%- include ("partials/navbar.ejs") %>
     <%- include ("partials/header.ejs") %>
-    <%- include ("partials/alert.ejs") %>
     <main>
         <div class="product-container">
             <div id="itens-container">
                 <div id="itens-list">
                     <p>Carrinho de compras</p>
-                    <hr>
                 </div>
                 <div id="summary">
+                    <h1>Pedido</h1>
                     <div class="summary-box">
-                        <div class="summary-box-info">
-                            <p>Frete</p>
-                            <p id="frete">R$ 0,00</p>
+                        <div class="summary-box-itens" id="box-itens">
                         </div>
+                        <hr>
                         <div class="summary-box-info">
                             <p>Total</p>
                             <p id="total">R$ 0,00</p>
                         </div>
-                        <fieldset>
-                            <legend>Frete</legend>
-                            <div>
-                                <input type="radio" class="normal" name="normal" onchange="total()" value="0" checked>
-                                <label for="normal">Entrega normal <br><strong>gratis</strong> 1 - 3 dias</label>
+                        <div class="summary-box-cep">
+                            <label for="CEP">Digite seu CEP</label>
+                            <input type="number" name="CEP" onkeydown="return event.keyCode !== 69" class="input" value="<%= user.cep %>">
+                            <label for="numero">Numero</label>
+                            <input type="number" name="numero" onkeydown="return event.keyCode !== 69" class="input" value="<%= user.number %>">
+                            <div id ="checkboxComplemento">
+                                <input type="checkbox" name="inputComplemento" onchange="possuiComplemento()" class="input" />
+                                <label for="chkComplemento" id = "chkComplemento">Possui complemento?</label>
                             </div>
-                            <div>
-                                <input type="radio" class="normal" name="normal" onchange="total()" value="5">
-                                <label for="normal">Entrega express <br><strong>R$ 5.00</strong>hoje mesmo</label>
-                            </div>
-                        </fieldset>
-                        <button class="summary-box-button" onclick="sendItens()">Pagamento</button>
+                            <label for="complemento">Complemento</label>
+                            <input type="text" name="complemento" style="background-color: lightgray;" class="input" disabled value="">
+                        </div>
+                        <input type="submit" id="calcularFrete" onclick="sendItens()" class="btn" value="Calcule seu Frete" value="">
                     </div>
                 </div>
             </div>
         </div>
+       
         <script>
             let itens = JSON.parse(localStorage.getItem("item"));
 
@@ -51,21 +52,23 @@
                 let subtotal = 0; 
                 let carrinho = 0
 
-                for(let i = 0; i < document.getElementsByClassName("normal").length; i++){
-                    if(document.getElementsByClassName("normal")[i].checked){
-                        frete = parseFloat(document.getElementsByClassName("normal")[i].value)
-                    }
-                }
+                //for(let i = 0; i < document.getElementsByClassName("normal").length; i++){
+                //    if(document.getElementsByClassName("normal")[i].checked){
+                //        frete = parseFloat(document.getElementsByClassName("normal")[i].value)
+                //    }
+                //}
 
                 itens.forEach(i => {
                     subtotal += parseFloat(i.price.replace(",", ".")) * i.qtd;
                     carrinho += parseInt(i.qtd);
+                    document.getElementById("item-"+[i.id]).innerHTML = `(${i.qtd})`;
                 });
 
-                total = subtotal + frete;
+                //total = subtotal + frete;
+                total = subtotal;
 
-                document.getElementById("subtotal").innerHTML = `Subtotal (${carrinho} produtos): <strong>R$${subtotal.toFixed(2)}</strong>`;
-                document.getElementById("frete").innerHTML = `R$${frete.toFixed(2)}`;
+                //document.getElementById("subtotal").innerHTML = `Subtotal (${carrinho} produtos): <strong>R$${subtotal.toFixed(2)}</strong>`;
+                //document.getElementById("frete").innerHTML = `R$${frete.toFixed(2)}`;
                 document.getElementById("total").innerHTML = `R$${total.toFixed(2)}`;
             }
             function render(){
@@ -77,27 +80,38 @@
                                 <img src="${itens[i].img}">
                             </div>
                             <div class="desc-container">
-                                <div>
-                                    <p id="name-info">${itens[i].name}</p>
-                                    <p id="preco-info">R$ ${itens[i].price}</p>
-                                </div>
+                                <p id="name-info">${itens[i].name}</p>
                                 <div class="qtd">
                                     <button id="left" onclick="qtdButton(0,${itens[i].id},${i})"><i class="fi fi-rr-plus"></i></button>
                                     <input type="number" value="${itens[i].qtd}" id="qtd-input-${i}">
                                     <button id="right" onclick="qtdButton(1,${itens[i].id},${i})"><i class="fi fi-rr-minus-small"></i></button>
                                 </div>
+                                <p id="preco-info">R$ ${itens[i].price}</p>
                             </div>
                         </div>
-                        <hr>
                     `;
 
                     if(i == itens.length -1){
-                        document.getElementById("itens-list").innerHTML += `
-                        <div class="summary-box-info">
-                            <p id="subtotal"></p>
-                        </div>
-                        `
+                        itens.forEach(i => {
+                            document.getElementById("box-itens").innerHTML += `
+                            <div class="summary-box-info">
+                                <div>
+                                    <p class="box-itens-name">${i.name}</p>  
+                                    <p class="box-itens-qtd" id="item-${i.id}">(${i.qtd})</p>  
+                                </div>
+                                <p id="item-total">R$${i.price}</p>
+                            </div>
+                            `
+                        });
                     }
+
+                    //if(i == itens.length -1){
+                    //    document.getElementById("itens-list").innerHTML += `
+                    //    <div class="summary-box-info">
+                    //        <p id="subtotal"></p>
+                    //    </div>
+                    //    `
+                    //}
                 }
             }
             function qtdButton(dir, id, val){
@@ -122,7 +136,8 @@
 
                 if(qtd == 0){
                     for(let i = 0; i<item.length; i++){
-                        item[i].name == document.getElementById("qtd-input-0").parentNode.parentNode.childNodes[1].childNodes[1].textContent ? item.splice(i, 1) : console.log("não encontrado");
+                        console.log(item[i].name);
+                        item[i].name == document.getElementById("qtd-input-0").parentNode.parentNode.childNodes[1].textContent ? item.splice(i, 1) : console.log("não encontrado");
                     }
                     location.reload();
                 }
@@ -131,15 +146,44 @@
                 total()
             }
             function sendItens(){
+                if(document.getElementsByName("CEP")[0].value != "" && document.getElementsByName("CEP")[0].value != undefined && document.getElementsByName("numero")[0].value != "" && document.getElementsByName("numero")[0].value != undefined)
+                {
+                    if((document.getElementsByName("inputComplemento")[0].checked && document.getElementsByName("complemento")[0].value != "" && document.getElementsByName("complemento")[0].value != undefined) || 
+                    (document.getElementsByName("inputComplemento")[0].checked === false && (document.getElementsByName("complemento")[0].value === undefined || document.getElementsByName("complemento")[0].value === "")))
+                    {
                 axios({
                     method: "post",
-                    url: "/payment",
+                    url: "/calcularFrete",
                     data: {
-                        itens: itens
+                        itens: itens,
+                        CEP: document.getElementsByName("CEP")[0].value,
+                        numero: document.getElementsByName("numero")[0].value,
+                        complemento: document.getElementsByName("complemento")[0].value
                     },
                 }).then((res) => {
-                    window.location.href = '/payment/' + res.data.url;
+                    if(res.data.err == undefined){
+                        window.location.href = '/fretes';
+                    }else{
+                        location.reload()
+                    }
                 })
+                    }else{
+                        alert("Preencha o complemento ou retire a seleção do possui complemento");
+                    }
+                }else{
+                    alert("Preencha o CEP e o número de sua residência");
+                }
+            }
+
+            function possuiComplemento(){
+                if(document.getElementsByName("inputComplemento")[0].checked){
+                    document.getElementsByName("complemento")[0].disabled = false;
+                    document.getElementsByName("complemento")[0].style.background = 'white';
+                }else{
+                    document.getElementsByName("complemento")[0].disabled = true;
+                    document.getElementsByName("complemento")[0].style.background = 'lightgray';
+                    document.getElementsByName("complemento")[0].value = "";
+                }
             }
         </script>
     </main>

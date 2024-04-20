@@ -14,8 +14,11 @@ module.exports  = class itens{
                 pay2mail varchar(255) NOT NULL,
                 status varchar(45) NOT NULL,
                 date datetime NOT NULL,
+                shipping json DEFAULT NULL,
                 PRIMARY KEY (id),
+                PRIMARY KEY (check_ref),
                 KEY \`is user transaction_idx\` (idUser),
+                KEY \`check_ref uuid\` (check_ref),
                 CONSTRAINT \`is user transaction\` FOREIGN KEY (idUser) REFERENCES users (id)
               )`;
             await conn.query(sql);
@@ -35,8 +38,8 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try{
             NN(transaction);
-            const sql = "insert into transaction (id, idUser, check_ref, price, currency, pay2mail, status, date) values (?,?,?,?,?,?,?,?)"
-            await conn.query(sql, [transaction.id, transaction.idUser, transaction.check_ref, transaction.price, transaction.currency, transaction.pay2mail, transaction.status, transaction.date])
+            const sql = "insert into transaction (id, idUser, check_ref, price, currency, pay2mail, status, date, shipping) values (?,?,?,?,?,?,?,?,?)"
+            await conn.query(sql, [transaction.id, transaction.idUser, transaction.check_ref, transaction.price, transaction.currency, transaction.pay2mail, transaction.status, transaction.date, JSON.stringify(transaction.shipping) ])
             console.log("transaction inserido com sucesso!");
         }catch(err){
             console.log(err);
@@ -51,13 +54,40 @@ module.exports  = class itens{
         try {
             const sql = `SELECT * FROM transaction WHERE check_ref = ?`;
             const [rows] = await conn.query(sql, [id]);
-            return rows[0];
+            return rows;
         }catch(err){
             console.log(err);
         }finally{
             conn.release();
         }
     }
+
+    async findUser(id){
+        const conn = await pool.getConnection();
+        try {
+            const sql = `SELECT * FROM transaction WHERE idUser = ?`;
+            const [rows] = await conn.query(sql, [id]);
+            return rows;
+        }catch(err){
+            console.log(err);
+        }finally{
+            conn.release();
+        }
+    }
+
+    async like(trans){
+        const conn = await pool.getConnection();
+        try {
+            const sql = `SELECT * FROM transaction WHERE check_ref LIKE ? and idUser = ?`;
+            const [rows] = await conn.query(sql, [`${trans.check_ref}%`, trans.idUser]);
+            return rows;
+        }catch(err){
+            console.log(err);
+        }finally{
+            conn.release();
+        }
+    }
+
 
     // update
     async update(transaction){
@@ -98,6 +128,41 @@ module.exports  = class itens{
         }finally{
             conn.release();
         }
+    }
+    async buscaUsuarioTransaction(){
+        const conn = await pool.getConnection();
+        try {
+            const sql = `SELECT * FROM transaction`;
+            const [row] = await conn.query(sql);
+            return row;
+        }catch(err){
+            console.log(err);
+            conn.release();
+        }finally{
+            conn.release();
+        }
+    }
+
+    async buscaUsuarioFreteTransaction(check_ref){
+        const conn = await pool.getConnection();
+        try {
+            const sql = 
+            `SELECT 
+            CONCAT_WS(' ', name, lastname) as 'nome_completo', us.tel, us.email, us.cpf, fret.info, trans.shipping
+            FROM transaction trans
+            inner join users us
+            on us.id = trans.idUser
+            inner join fretes fret
+            on fret.idUser = trans.idUser
+            where trans.check_ref = ?`;
+            const [row] = await conn.query(sql, [check_ref]);
+            return row[0];
+        }catch(err){
+            console.log(err);
+        }finally{
+            conn.release();
+        }
+
     }
 }
 

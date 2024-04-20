@@ -44,7 +44,6 @@ module.exports  = class melhorEnvioTokens{
         try{
             const sql = "select id, redirect_uri, client_id, client_secret from melhorEnvioTokens where refesh_token = null"
             const row = await conn.query(sql)
-            console.log("melhorEnvioTokens inserido/updatado com sucesso!");
             return row;
         }catch(err){
             console.log(err);
@@ -59,6 +58,18 @@ module.exports  = class melhorEnvioTokens{
             const sql = `DESCRIBE melhorEnvioTokens;`;
             const [row] = await conn.query(sql);
             return row;
+        }catch(err){
+            console.log(err);
+        }finally{
+            conn.release();
+        }
+    }
+    async buscaToken(){
+        const conn = await pool.getConnection();
+        try{
+            const sql = "select access_token from melhorEnvioTokens where indicador_ativo = 1;";
+            const [row] = await conn.query(sql);
+            return row[0];
         }catch(err){
             console.log(err);
         }finally{

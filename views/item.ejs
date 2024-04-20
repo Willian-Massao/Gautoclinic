@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <%- include ("partials/head.ejs") %>
-    <title>Document</title>
 </head>
 <body>
     <%- include ("partials/navbar.ejs") %>
@@ -32,48 +31,76 @@
                     <div class="rate">
                         <% for(let i = 0; i < 5; i++){ %>
                             <% if(i+1 > item.mRate){ %>
-                                <i class="fi fi-rr-star"></i>
+                                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMzgiIGhlaWdodD0iMzUiPjxkZWZzPjxwYXRoIGlkPSJhIiBkPSJNMTkgMGwtNS44NyAxMS41MkwwIDEzLjM3bDkuNSA4Ljk3TDcuMjYgMzUgMTkgMjkuMDIgMzAuNzUgMzVsLTIuMjQtMTIuNjYgOS41LTguOTctMTMuMTMtMS44NXoiLz48L2RlZnM+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48dXNlIGZpbGw9IiNGRkYiIHhsaW5rOmhyZWY9IiNhIi8+PHBhdGggc3Ryb2tlPSIjQTI2QTAwIiBzdHJva2Utb3BhY2l0eT0iLjc1IiBkPSJNMTkgMS4xbC01LjU0IDEwLjg4TDEuMSAxMy43Mmw4Ljk0IDguNDRMNy45MiAzNC4xIDE5IDI4LjQ2bDExLjA4IDUuNjQtMi4xMS0xMS45NCA4Ljk0LTguNDQtMTIuMzYtMS43NEwxOSAxLjF6Ii8+PC9nPjwvc3ZnPg==" alt="">
                             <% }else{ %>
-                                <i class="fi fi-sr-star"></i>
+                                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMzgiIGhlaWdodD0iMzUiPjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0iYSIgeDE9IjUwJSIgeDI9IjUwJSIgeTE9IjI3LjY1JSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNGRkNFMDAiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNGRkE3MDAiLz48L2xpbmVhckdyYWRpZW50PjxwYXRoIGlkPSJiIiBkPSJNMTkgMGwtNS44NyAxMS41MkwwIDEzLjM3bDkuNSA4Ljk3TDcuMjYgMzUgMTkgMjkuMDIgMzAuNzUgMzVsLTIuMjQtMTIuNjYgOS41LTguOTctMTMuMTMtMS44NXoiLz48L2RlZnM+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48dXNlIGZpbGw9InVybCgjYSkiIHhsaW5rOmhyZWY9IiNiIi8+PHBhdGggc3Ryb2tlPSIjQTI2QTAwIiBzdHJva2Utb3BhY2l0eT0iLjc1IiBkPSJNMTkgMS4xbC01LjU0IDEwLjg4TDEuMSAxMy43Mmw4Ljk0IDguNDRMNy45MiAzNC4xIDE5IDI4LjQ2bDExLjA4IDUuNjQtMi4xMS0xMS45NCA4Ljk0LTguNDQtMTIuMzYtMS43NEwxOSAxLjF6Ii8+PC9nPjwvc3ZnPg==" alt="">
                             <% } %>
                         <% } %>
                     </div>
                     <div class="item-stock">
                         <% if(item.qtd != 0){ %>
                             <i class="fi fi-rr-check-circle instock"></i>
-                            <p class="instock">em stock</p>
+                            <p class="instock">em estoque</p>
                         <% }else{ %>
                             <i class="fi fi-rr-cross-circle outstock"></i>
-                            <p class="outstock">sem stock</p>
+                            <p class="outstock">sem estoque</p>
                         <% } %>
                     </div>
                 </div>
+                <div id="height-info" data-value= "<%= item.height %>"></div>
+                <div id="width-info" data-value= "<%= item.width %>"></div>
+                <div id="depth-info" data-value= "<%= item.depth %>"></div>
+                <div id="weight-info" data-value= "<%= item.weight %>"></div>
                 <div class="item-price">
                     <h1 id="price-info">R$ <%= item.price.toFixed(2) %></h1>
                     <p>6x R$ <%= ((item.price)/6).toFixed(2) %> sem juros</p>
                 </div>
                 <% if(item.qtd != 0){ %>
-                    <button class="item-buy">COMPRE</button>
-                    <button class="item-buy" onclick="addLittleCar()">+ CARRINHO</button>
+                    <button class="item-buy" onclick="addLittleCar()">Adicionar ao carrinho</button>
                 <% }else{ %>
-                    <button class="item-buy" disabled>COMPRE</button>
-                    <button class="item-buy" disabled>+ CARRINHO</button>
+                    <button class="item-buy" disabled>Adicionar ao carrinho</button>
                 <% } %>
+                <div class="item-benefit">
+                    <h1>Beneficios</h1>
+                    <p><%= item.benefits %></p>
+                </div>
+                <div class="sec-container">
+                    <div class="desc-sec">
+                        <button class="sec-button" onclick="select(0)" style="border-bottom: 1px solid black;">Descrição</button>
+                        <button class="sec-button" onclick="select(1)">Ativos</button>
+                        <button class="sec-button" onclick="select(2)">Como Usar</button>
+                    </div>
+                    <div class="desc-info">
+                        <div class="sec-desc sec active">
+                            <p><%= item.description %></p>
+                            <!--<%= item.description %>-->
+                        </div>
+                        <div class="sec-ativos sec">
+                            <ul>
+                                <% item.active.split(',').forEach((e)=>{ %>
+                                    <li><%= e %></li>
+                                <% }) %>
+                            </ul>
+                            <!--<%= item.ativos %>-->
+                        </div>
+                        <div class="sec-user sec">
+                            <p><%= item.uses %></p>
+                            <!--<%= item.uses %>-->
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="item-section">
-            <div class="item-description">
-                <p><%= item.description %></p>
-            </div>
             <div class="item-rating">
                 <div class="avg">
                     <p><%= item.mRate.toFixed(1) %></p>
                     <div class="rate">
                         <% for(let i = 0; i < 5; i++){ %>
                             <% if(i+1 > item.mRate){ %>
-                                <i class="fi fi-rr-star"></i>
+                                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMzgiIGhlaWdodD0iMzUiPjxkZWZzPjxwYXRoIGlkPSJhIiBkPSJNMTkgMGwtNS44NyAxMS41MkwwIDEzLjM3bDkuNSA4Ljk3TDcuMjYgMzUgMTkgMjkuMDIgMzAuNzUgMzVsLTIuMjQtMTIuNjYgOS41LTguOTctMTMuMTMtMS44NXoiLz48L2RlZnM+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48dXNlIGZpbGw9IiNGRkYiIHhsaW5rOmhyZWY9IiNhIi8+PHBhdGggc3Ryb2tlPSIjQTI2QTAwIiBzdHJva2Utb3BhY2l0eT0iLjc1IiBkPSJNMTkgMS4xbC01LjU0IDEwLjg4TDEuMSAxMy43Mmw4Ljk0IDguNDRMNy45MiAzNC4xIDE5IDI4LjQ2bDExLjA4IDUuNjQtMi4xMS0xMS45NCA4Ljk0LTguNDQtMTIuMzYtMS43NEwxOSAxLjF6Ii8+PC9nPjwvc3ZnPg==" alt="">
                             <% }else{ %>
-                                <i class="fi fi-sr-star"></i>
+                                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMzgiIGhlaWdodD0iMzUiPjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0iYSIgeDE9IjUwJSIgeDI9IjUwJSIgeTE9IjI3LjY1JSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNGRkNFMDAiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNGRkE3MDAiLz48L2xpbmVhckdyYWRpZW50PjxwYXRoIGlkPSJiIiBkPSJNMTkgMGwtNS44NyAxMS41MkwwIDEzLjM3bDkuNSA4Ljk3TDcuMjYgMzUgMTkgMjkuMDIgMzAuNzUgMzVsLTIuMjQtMTIuNjYgOS41LTguOTctMTMuMTMtMS44NXoiLz48L2RlZnM+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48dXNlIGZpbGw9InVybCgjYSkiIHhsaW5rOmhyZWY9IiNiIi8+PHBhdGggc3Ryb2tlPSIjQTI2QTAwIiBzdHJva2Utb3BhY2l0eT0iLjc1IiBkPSJNMTkgMS4xbC01LjU0IDEwLjg4TDEuMSAxMy43Mmw4Ljk0IDguNDRMNy45MiAzNC4xIDE5IDI4LjQ2bDExLjA4IDUuNjQtMi4xMS0xMS45NCA4Ljk0LTguNDQtMTIuMzYtMS43NEwxOSAxLjF6Ii8+PC9nPjwvc3ZnPg==" alt="">
                             <% } %>
                         <% } %>
                     </div>
@@ -84,23 +111,15 @@
                             <div class="rate">
                                 <% for(let i = 0; i < 5; i++){ %>
                                     <% if(i+1 > data.rate){ %>
-                                        <i class="fi fi-rr-star"></i>
+                                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMzgiIGhlaWdodD0iMzUiPjxkZWZzPjxwYXRoIGlkPSJhIiBkPSJNMTkgMGwtNS44NyAxMS41MkwwIDEzLjM3bDkuNSA4Ljk3TDcuMjYgMzUgMTkgMjkuMDIgMzAuNzUgMzVsLTIuMjQtMTIuNjYgOS41LTguOTctMTMuMTMtMS44NXoiLz48L2RlZnM+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48dXNlIGZpbGw9IiNGRkYiIHhsaW5rOmhyZWY9IiNhIi8+PHBhdGggc3Ryb2tlPSIjQTI2QTAwIiBzdHJva2Utb3BhY2l0eT0iLjc1IiBkPSJNMTkgMS4xbC01LjU0IDEwLjg4TDEuMSAxMy43Mmw4Ljk0IDguNDRMNy45MiAzNC4xIDE5IDI4LjQ2bDExLjA4IDUuNjQtMi4xMS0xMS45NCA4Ljk0LTguNDQtMTIuMzYtMS43NEwxOSAxLjF6Ii8+PC9nPjwvc3ZnPg==" alt="">
                                     <% }else{ %>
-                                        <i class="fi fi-sr-star"></i>
+                                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMzgiIGhlaWdodD0iMzUiPjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0iYSIgeDE9IjUwJSIgeDI9IjUwJSIgeTE9IjI3LjY1JSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNGRkNFMDAiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNGRkE3MDAiLz48L2xpbmVhckdyYWRpZW50PjxwYXRoIGlkPSJiIiBkPSJNMTkgMGwtNS44NyAxMS41MkwwIDEzLjM3bDkuNSA4Ljk3TDcuMjYgMzUgMTkgMjkuMDIgMzAuNzUgMzVsLTIuMjQtMTIuNjYgOS41LTguOTctMTMuMTMtMS44NXoiLz48L2RlZnM+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48dXNlIGZpbGw9InVybCgjYSkiIHhsaW5rOmhyZWY9IiNiIi8+PHBhdGggc3Ryb2tlPSIjQTI2QTAwIiBzdHJva2Utb3BhY2l0eT0iLjc1IiBkPSJNMTkgMS4xbC01LjU0IDEwLjg4TDEuMSAxMy43Mmw4Ljk0IDguNDRMNy45MiAzNC4xIDE5IDI4LjQ2bDExLjA4IDUuNjQtMi4xMS0xMS45NCA4Ljk0LTguNDQtMTIuMzYtMS43NEwxOSAxLjF6Ii8+PC9nPjwvc3ZnPg==" alt="">
                                     <% } %>
                                 <% } %>
                             </div>
                                 <p class="comment"><%= data.comment %></p>
                                 <p class="comment-user">Por <%= data.name %></p>
                         <% }) %>
-                    </div>
-                    <div class="comment-form">
-                        <% if(user){ %>
-                            <form action="/comment/add/<%= item.id %>" method="post">
-                                <textarea name="comment" id="comment" cols="30" rows="2"></textarea>
-                                <input type="submit" value="Enviar">
-                            </form>
-                        <% } %>
                     </div>
                 </div>
             </div>
@@ -113,6 +132,17 @@
             console.log(img);
             let imgPrincipal = document.getElementById("image-principal");
             imgPrincipal.src = img.src;
+        }
+        function select(sec){
+            console.log(sec);
+            let div = document.getElementsByClassName("sec");
+            let secbutton = document.getElementsByClassName("sec-button");
+            for(let i = 0; i < div.length; i++){
+                div[i].style.display = "none";
+                secbutton[i].style.border = "0";
+            }
+            div[sec].style.display = "unset";
+            secbutton[sec].style.borderBottom = "1px solid black";
         }
     </script>
     <%- include ("partials/footer.ejs") %>
