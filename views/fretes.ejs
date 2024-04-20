@@ -62,7 +62,6 @@
                 frete: frete
             },
         }).then((res) => {
-            console.log(res);
             if(res.data.url != undefined){
                 window.location.href = '/payment/' + res.data.url;
             }else{
@@ -89,9 +88,7 @@
         for(let i = 0; i < radio.length; i++){
             if(radio[i].checked){
                 let tempradio = radio[i].classList[1].split("-")[1]
-                console.log(document.getElementsByClassName("radio-"+tempradio))
                 frete = parseFloat(document.getElementsByClassName("radio-"+tempradio)[1].innerHTML.replace(",", ".").replace("R$", ""));
-                console.log(frete)
             }
         }
 

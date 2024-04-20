@@ -37,13 +37,15 @@ module.exports  = class itens{
     async insert(comments){
         const conn = await pool.getConnection();
         try{
-            console.log(comments);
             NN(comments);
             const sql = "insert into comments (idUser, idItem, check_ref, name, rate, comment) values (?,?,?,?,?,?)"
             await conn.query(sql, [comments.idUser, comments.idProduct, comments.check_ref, comments.name, comments.rate, comments.comment])
             console.log("comments inserido com sucesso!");
         }catch(err){
-            console.log(err);
+            //if do mal
+            if(err.code != "ER_DUP_ENTRY"){
+                console.log(err);
+            }
             throw err;
         }finally{
             conn.release();

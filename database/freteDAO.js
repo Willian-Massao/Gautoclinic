@@ -32,7 +32,6 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try{
             NN(fretes);
-            console.log(fretes);
             const sql = "insert into fretes (idUser, fretes, info) values (?,?,?) ON DUPLICATE KEY UPDATE fretes = ?, info = ?"
             await conn.query(sql, [fretes.idUser, JSON.stringify(fretes.fretes), JSON.stringify(fretes.info), JSON.stringify(fretes.fretes), JSON.stringify(fretes.info)]);
             console.log("fretes inserido com sucesso!");

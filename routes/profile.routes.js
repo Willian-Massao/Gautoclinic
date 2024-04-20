@@ -1,7 +1,7 @@
 const routes = require('express').Router();
 const helper = require('../helpers/helper');
 
-const userDAO = require('../database/UserDAO.js');
+const userDAO = require('../database/userDAO.js');
 const transactionDAO = require('../database/transactionDAO.js');
 const refundDAO = require('../database/refoundDAO.js');
 const commentDAO = require('../database/commentDAO.js');
@@ -66,7 +66,6 @@ routes.post('/comments/add/:check_ref/:idItem', async(req, res) => {
             comments.insert({check_ref: check_ref, idProduct: idItem, idUser: req.user.id, name: req.user.name, comment, rate}).then(() => {
                 res.redirect(`/orders`)
             }).catch(err => {
-                console.log(err.code == 'ER_DUP_ENTRY');
                 if(err.code == 'ER_DUP_ENTRY'){
                     comments.update({check_ref: check_ref, idItem: idItem, idUser: req.user.id, comment, rate}).then(() => { 
                         res.redirect(`/orders`);

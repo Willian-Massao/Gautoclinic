@@ -95,8 +95,7 @@ app.post('/payment', async(req, res) => {
     let databaseRes = await itens.select();
     const CacheFrete = req.body.frete;
     const cacheItens = req.body.itens;
-
-    let shipping;
+    let shipping = [];
     
     let id;
     let idUser;
@@ -106,9 +105,14 @@ app.post('/payment', async(req, res) => {
     let pay2mail = process.env.SUMUP_EMAIL;
     let status = '';
     let date = '';
+    
 
     if(CacheFrete != undefined && CacheFrete.length > 0){
         frete.findId(req.user.id).then( data => {
+            let userShipping = parseInt(CacheFrete[0].id);
+            data.info.userShipping = userShipping;
+            frete.InsertorUpdate(data);
+            
             data = data.fretes;
             data.forEach(element => {
                 if(element.id == parseInt(CacheFrete[0].id)){
@@ -267,7 +271,8 @@ app.post('/calcularFrete', async (req, res) => {
                                 "city": cepJson.localidade, 
                                 "state_abbr": cepJson.uf, 
                                 "country_id": "BR" 
-                                }
+                                },
+                        "userShipping": ""
                         };
                     fretesDAO.InsertorUpdate({idUser: req.user.id, fretes: jsonfretes, info: jsoninfo}).then(()=>{
                         res.status(200).send('Sucesso');  

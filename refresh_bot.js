@@ -14,7 +14,6 @@ const transactions = new transactionDAO();
         res.forEach(
             async (trans) => 
             {
-            console.log(trans.check_ref)
             if(trans.status == 'PENDING')
             {
                 const apiRes = await fetch('https://api.sumup.com/v0.1/checkouts/' + trans.id,
@@ -45,7 +44,17 @@ const transactions = new transactionDAO();
                                 ( 
                                     async tableUsuario => 
                                     {
+                                        let products = [];
+                                        let volumes = [];
 
+                                        tableUsuario.shipping.forEach((e)=>{
+                                            products.push({
+                                                "name": e.name,//Nome Produto
+                                                "quantity": e.qtd,//Quantidade
+                                                "unitary_value": e.price//Valor Unitario
+                                            });
+                                            volumes.push(e.dimensions)//Volume
+                                        })
                                         const apiRes = await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/cart',
                                         {
                                             method: 'POST',
@@ -58,7 +67,11 @@ const transactions = new transactionDAO();
                                             },
                                             body:JSON.stringify
                                             ({
-                                                "service": tableUsuario.shipping.id,//Id transportadora
+                                                // tableUsuario.shipping.id é o id do item, não da transportadora
+                                                // na criação do frete adicionei um campo vazio para o id da transportadora (userShipping)
+                                                // quando o usuário seleciona a transportadora, e gera as informações para mandar pra sumup
+                                                // eu pego o id da transportadora e coloco no campo userShipping
+                                                "service": tableUsuario.info.userShipping,//Id transportadora
                                                 "from": 
                                                 {
                                                     "name": tableOwner.nome_completo,
@@ -92,24 +105,10 @@ const transactions = new transactionDAO();
                                                     "state_abbr": tableUsuario.info.to.state_abbr,//Estado
                                                     "note": "observação"//Observacao
                                                 },
-
-                                                "products": 
-                                                [
-                                                    {
-                                                      "name": tableUsuario.shipping.name,//Nome Produto
-                                                      "quantity": tableUsuario.shipping.qtd,//Quantidade
-                                                      "unitary_value": tableUsuario.shipping.price//Valor Unitario
-                                                    }
-                                                ],
-                                                "volumes": 
-                                                [
-                                                    {
-                                                      "height": tableUsuario.shipping.dimensions.height,//Altura
-                                                      "width": tableUsuario.shipping.dimensions.width,//Largura
-                                                      "length": tableUsuario.shipping.dimensions.depth,//Comprimento
-                                                      "weight": tableUsuario.shipping.dimensions.weight//Peso
-                                                    }
-                                                ],
+                                                // os produtos precisa estar no array, por que estamos passando todos os produtos que o frete calculou
+                                                // então voltei com Shipping = []
+                                                "products": products, //passei os produtos para o array na linha 47
+                                                "volumes": volumes, //tambem fiz para os volumes
                                                 "plataform": "Gauto Clinic",
                                                 "options": {
                                                     "insurance_value": 11.78,

@@ -1,14 +1,1 @@
-[
-    {
-        "id": 1,
-        "name": "Primer e Sérum facial",
-        "price": "123",
-        "qtd": 3,
-        "dimensions": {
-            "width": 1,
-            "height": 1,
-            "length": 1,
-            "weight": 1
-        }
-    }
-]
+{"to": {"CEP": "08246081", "city": "São Paulo", "adress": "Rua Estevam de Araújo Almeida", "numero": "437", "district": "Parada XV de Novembro", "country_id": "BR", "state_abbr": "SP", "complemento": null}, "from": "03532040", "userShipping": 2}
