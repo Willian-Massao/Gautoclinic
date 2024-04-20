@@ -8,7 +8,7 @@ const LocalStrategy = require('passport-local').Strategy;
 const passport = require('passport');
 const bcrypt = require('bcryptjs');
 
-const userDAO = require('../database/UserDAO.js');
+const userDAO = require('../database/userDAO.js');
 const melhorenvioDAO = require('../database/melhorenvioDAO.js')
 const freteDAO = require('../database/freteDAO.js');
 const { json } = require('body-parser');

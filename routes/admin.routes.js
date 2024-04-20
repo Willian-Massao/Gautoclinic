@@ -1,7 +1,7 @@
 const routes = require('express').Router();
 const helper = require('../helpers/helper');
 
-const userDAO = require('../database/UserDAO.js');
+const userDAO = require('../database/userDAO.js');
 const imageDAO = require('../database/imageDAO.js');
 const itemDAO = require('../database/itemDAO.js');
 const adminDAO = require('../database/adminDAO.js');

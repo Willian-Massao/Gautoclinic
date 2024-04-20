@@ -49,21 +49,32 @@ routes.post('/comments/add/:check_ref/:idItem', async(req, res) => {
     const errorMessage = req.flash('error');
     const transaction = new transactionDAO();
     const comments = new commentDAO();
-    const { check_ref, idItem } = req.params;
+    var { check_ref, idItem } = req.params;
     const { comment, rate } = req.body;
     let isEqual = false;
 
     transaction.like({check_ref: check_ref, idUser: req.user.id}).then( itens => {
         itens[0].shipping.forEach(item => {
-            console.log(item.id == idItem);
+            check_ref = itens[0].check_ref;
             if(item.id == idItem){
                 isEqual = true;
             }
         });
     }).finally(() => {
         if(isEqual){
-            comments.insert({idProduct: idItem, idUser: req.user.id, name: req.user.name, comment, rate}).then(() => {
+            console.log({check_ref: check_ref, idProduct: idItem, idUser: req.user.id, name: req.user.name, comment, rate});
+            comments.insert({check_ref: check_ref, idProduct: idItem, idUser: req.user.id, name: req.user.name, comment, rate}).then(() => {
                 res.redirect(`/orders`)
+            }).catch(err => {
+                console.log(err.code == 'ER_DUP_ENTRY');
+                if(err.code == 'ER_DUP_ENTRY'){
+                    comments.update({check_ref: check_ref, idItem: idItem, idUser: req.user.id, comment, rate}).then(() => { 
+                        res.redirect(`/orders`);
+                    })
+                }else{
+                    req.flash('error', 'Erro ao enviar comentario!');
+                    res.redirect(`/orders`)
+                }
             });
         }else{
             req.flash('error', 'Produto não encontrado!');

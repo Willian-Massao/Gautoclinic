@@ -7,19 +7,20 @@ module.exports  = class itens{
         try{
             const sql = `CREATE TABLE if not exists comments (
                 idUser int NOT NULL,
+                idItem int NOT NULL,
+                check_ref VARCHAR(32) NOT NULL,
                 comment varchar(255) NOT NULL,
                 rate float NOT NULL,
                 name varchar(45) NOT NULL,
-                idItem int NOT NULL,
-                PRIMARY KEY (idUser),
-                PRIMARY KEY (idItem),
-                KEY name_idx (name),
-                KEY \`id item_idx\` (idItem),
-                KEY idUser (idUser),
-                CONSTRAINT \`id item\` FOREIGN KEY (idItem) REFERENCES itens (id),
+                PRIMARY KEY (idUser,idItem,check_ref),
+                KEY \`idItem_idx\` (idItem),
+                KEY \`idUser_idx\` (idUser),
+                KEY \`name_idx\` (name),
+                KEY \`check_ref_idx\` (check_ref),
+                CONSTRAINT idItem FOREIGN KEY (idItem) REFERENCES itens (id),
                 CONSTRAINT idUser FOREIGN KEY (idUser) REFERENCES users (id),
-                CONSTRAINT name FOREIGN KEY (name) REFERENCES users (name)
-              )`;
+                CONSTRAINT name FOREIGN KEY (name) REFERENCES users (name),
+                CONSTRAINT check_ref FOREIGN KEY (check_ref) REFERENCES transaction (check_ref))`;
             await conn.query(sql);
             console.log("Tabela comments criada com sucesso!");
         }catch(err){
@@ -36,9 +37,10 @@ module.exports  = class itens{
     async insert(comments){
         const conn = await pool.getConnection();
         try{
+            console.log(comments);
             NN(comments);
-            const sql = "insert into comments (idUser, idItem, name, rate, comment) values (?,?,?,?,?) on duplicate key update comment = ?, rate = ?"
-            await conn.query(sql, [comments.idUser, comments.idProduct, comments.name, comments.rate, comments.comment, comments.comment, comments.rate])
+            const sql = "insert into comments (idUser, idItem, check_ref, name, rate, comment) values (?,?,?,?,?,?)"
+            await conn.query(sql, [comments.idUser, comments.idProduct, comments.check_ref, comments.name, comments.rate, comments.comment])
             console.log("comments inserido com sucesso!");
         }catch(err){
             console.log(err);
@@ -81,8 +83,9 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try {
             NN(comments);
-            const sql = `UPDATE comments SET comment = ? rate = ? WHERE id = ?`;
-            await conn.query(sql, [comments.comment, comments.rate, comments.id]);
+            const sql = `UPDATE comments SET comment = ?, rate = ? WHERE idUser = ? and idItem = ? and check_ref = ?`;
+            await conn.query(sql, [comments.comment,comments.rate,comments.idUser, comments.idItem, comments.check_ref]);
+            console.log("comments atualizado com sucesso!");
         }catch(err){
             console.log(err);
             throw err;
