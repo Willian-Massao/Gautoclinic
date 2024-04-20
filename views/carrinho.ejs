@@ -26,8 +26,12 @@
                             <input type="number" name="CEP" onkeydown="return event.keyCode !== 69" class="input" value="<%= user.cep %>">
                             <label for="numero">Numero</label>
                             <input type="number" name="numero" onkeydown="return event.keyCode !== 69" class="input" value="<%= user.number %>">
+                            <div id ="checkboxComplemento">
+                                <input type="checkbox" name="inputComplemento" onchange="possuiComplemento()" class="input" />
+                                <label for="chkComplemento" id = "chkComplemento">Possui complemento?</label>
+                            </div>
                             <label for="complemento">Complemento</label>
-                            <input type="number" name="complemento" onkeydown="return event.keyCode !== 69" class="input" value="">
+                            <input type="text" name="complemento" style="background-color: lightgray;" class="input" disabled value="">
                         </div>
                         <input type="submit" id="calcularFrete" onclick="sendItens()" class="btn" value="Calcule seu Frete" value="">
                     </div>
@@ -142,6 +146,11 @@
                 total()
             }
             function sendItens(){
+                if(document.getElementsByName("CEP")[0].value != "" && document.getElementsByName("CEP")[0].value != undefined && document.getElementsByName("numero")[0].value != "" && document.getElementsByName("numero")[0].value != undefined)
+                {
+                    if((document.getElementsByName("inputComplemento")[0].checked && document.getElementsByName("complemento")[0].value != "" && document.getElementsByName("complemento")[0].value != undefined) || 
+                    (document.getElementsByName("inputComplemento")[0].checked === false && (document.getElementsByName("complemento")[0].value === undefined || document.getElementsByName("complemento")[0].value === "")))
+                    {
                 axios({
                     method: "post",
                     url: "/calcularFrete",
@@ -158,6 +167,23 @@
                         location.reload()
                     }
                 })
+                    }else{
+                        alert("Preencha o complemento ou retire a seleção do possui complemento");
+                    }
+                }else{
+                    alert("Preencha o CEP e o número de sua residência");
+                }
+            }
+
+            function possuiComplemento(){
+                if(document.getElementsByName("inputComplemento")[0].checked){
+                    document.getElementsByName("complemento")[0].disabled = false;
+                    document.getElementsByName("complemento")[0].style.background = 'white';
+                }else{
+                    document.getElementsByName("complemento")[0].disabled = true;
+                    document.getElementsByName("complemento")[0].style.background = 'lightgray';
+                    document.getElementsByName("complemento")[0].value = "";
+                }
             }
         </script>
     </main>

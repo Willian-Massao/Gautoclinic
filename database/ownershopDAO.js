@@ -55,7 +55,7 @@ module.exports  = class ownershop{
     async buscaOwner(){
         const conn = await pool.getConnection();
         try {
-                const sql = `SELECT stateRegister, district, city, countryId, postalCode, stateAbbr, name+' '+lastname as 'nome_completo',
+                const sql = `SELECT stateRegister, district, city, countryId, postalCode, stateAbbr, CONCAT_WS(' ', name, lastname) as 'nome_completo',
                 phone, email, companydocument, adress, complement, number FROM ownershop;`;
             const [rows] = await conn.query(sql);
             return rows[0];

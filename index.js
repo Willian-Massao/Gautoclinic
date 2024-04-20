@@ -110,6 +110,12 @@ app.post('/payment', async(req, res) => {
     if(CacheFrete != undefined && CacheFrete.length > 0){
         frete.findId(req.user.id).then( data => {
             data = data.fretes;
+            data.forEach(element => {
+                if(element.id == parseInt(CacheFrete[0].id)){
+                    price += parseFloat(element.price);
+                }
+                
+            });
             cacheItens.forEach(item => {
                 databaseRes.forEach(res => {
                     if(res.id == item.id){
@@ -128,11 +134,6 @@ app.post('/payment', async(req, res) => {
                         });
                     }
                 });
-            });
-            data.forEach(element => {
-                if(element.id == parseInt(CacheFrete[0].id)){
-                    price += parseFloat(element.price);
-                }
             });
         }).then(()=>{
             sumupReq({id, idUser, check_ref, price, currency, pay2mail, status, date, shipping}, req, res);
@@ -199,7 +200,7 @@ app.post('/make/refund', async(req, res) => {
 });
 
 app.post('/calcularFrete', async (req, res) => {
-    const {itens, CEP, numero, complemento} = req.body;
+    let {itens, CEP, numero, complemento} = req.body;
     const melhorEnvio = new envioDAO();
     const fretesDAO = new freteDAO();
     let bearerMelhorEnvio = 'Bearer ';
@@ -251,19 +252,20 @@ app.post('/calcularFrete', async (req, res) => {
                 let jsonfretes = await calculoFretes.json();
                 jsonfretes = removerPela("error", undefined, jsonfretes);
                 if (jsonfretes.length >0){
-                    if (complemento === undefined){
+                    if (complemento === undefined ||complemento === ''){
                         complemento = null;
                     }
+                let cepJson = await apiRes.json();
                     let jsoninfo = {
                         "from": process.env.CEP_ENVIO, 
                         "to": [{
                                 "CEP": CEP, 
                                 "numero": numero, 
                                 "complemento": complemento, 
-                                "adress": apiRes.logradouro, 
-                                "district": apiRes.bairro, 
-                                "city": apiRes.localidade, 
-                                "state_abbr": apiRes.uf, 
+                                "adress": cepJson.logradouro, 
+                                "district": cepJson.bairro, 
+                                "city": cepJson.localidade, 
+                                "state_abbr": cepJson.uf, 
                                 "country_id": "BR" 
                                 }]
                         };
