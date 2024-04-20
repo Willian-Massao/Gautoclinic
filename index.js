@@ -96,7 +96,7 @@ app.post('/payment', async(req, res) => {
     const CacheFrete = req.body.frete;
     const cacheItens = req.body.itens;
 
-    let shipping = [];
+    let shipping;
     
     let id;
     let idUser;
@@ -258,7 +258,7 @@ app.post('/calcularFrete', async (req, res) => {
                 let cepJson = await apiRes.json();
                     let jsoninfo = {
                         "from": process.env.CEP_ENVIO, 
-                        "to": [{
+                        "to": {
                                 "CEP": CEP, 
                                 "numero": numero, 
                                 "complemento": complemento, 
@@ -267,7 +267,7 @@ app.post('/calcularFrete', async (req, res) => {
                                 "city": cepJson.localidade, 
                                 "state_abbr": cepJson.uf, 
                                 "country_id": "BR" 
-                                }]
+                                }
                         };
                     fretesDAO.InsertorUpdate({idUser: req.user.id, fretes: jsonfretes, info: jsoninfo}).then(()=>{
                         res.status(200).send('Sucesso');  
