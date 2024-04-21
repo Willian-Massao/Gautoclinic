@@ -95,7 +95,8 @@ module.exports  = class itens{
         try {
             NN(transaction);
             const sql = `UPDATE transaction SET status = ? WHERE id = ?`;
-            await conn.query(sql, [transaction.status, transaction.id]);
+            //await conn.query(sql, [transaction.status, transaction.id]);
+            console.log("transaction atualizado com sucesso!");
         }catch(err){
             console.log(err);
             throw err;

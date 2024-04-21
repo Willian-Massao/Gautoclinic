@@ -37,6 +37,11 @@ header{
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.30);
     height: 75px;
 }
+header.admin{
+    position: fixed;
+    width: 100%;
+    background-color: white;
+}
 header .align{
     width: 370px;
 }
@@ -118,6 +123,15 @@ main{
     align-items: center;
     flex-direction: column;
     min-height: 100vh;
+}
+main.table{
+    align-items: start;
+    padding-top: 75px;
+    min-height: 1px;
+}
+main.frete{
+    padding-top: 75px;
+    min-height: 1px;
 }
 main > div{
     margin-top: 15px;

@@ -3,6 +3,9 @@ const melhorenvioDAO = require('./database/melhorenvioDAO.js')
 const userDAO = require('./database/userDAO.js')
 const ownershopDAO = require("./database/ownershopDAO.js")
 
+let ownershop = new ownershopDAO();
+ownershop.create();
+
 require('dotenv/config');
 const transactions = new transactionDAO();
 
@@ -26,11 +29,13 @@ const transactions = new transactionDAO();
                     }
                 });
                 temp = await apiRes.json();
+                //if(true)
                 if(temp.status != 'PENDING')
                 {
-                    // transactions.update(temp).then( 
-                    //     async() =>
-                    //     {
+                    console.log(temp);
+                    transactions.update(temp).then( 
+                         async() =>
+                         {
                         const melhorEnvio = new melhorenvioDAO();
                         const ownershop = new ownershopDAO();
 
@@ -40,6 +45,7 @@ const transactions = new transactionDAO();
                         ( 
                             async tableOwner =>
                             {
+                                console.log(tableOwner);
                                 await transactions.buscaUsuarioFreteTransaction(trans.check_ref).then
                                 ( 
                                     async tableUsuario => 
@@ -47,14 +53,23 @@ const transactions = new transactionDAO();
                                         let products = [];
                                         let volumes = [];
 
-                                        tableUsuario.shipping.forEach((e)=>{
+                                        console.log(tableUsuario);
+
+                                        //tableUsuario.shipping.forEach((e)=>{
                                             products.push({
-                                                "name": e.name,//Nome Produto
-                                                "quantity": e.qtd,//Quantidade
-                                                "unitary_value": e.price//Valor Unitario
+                                                "name": tableUsuario.shipping[0].name,//Nome Produto
+                                                "quantity": tableUsuario.shipping[0].qtd,//Quantidade
+                                                "unitary_value": tableUsuario.shipping[0].price//Valor Unitario
                                             });
-                                            volumes.push(e.dimensions)//Volume
-                                        })
+                                            volumes.push({
+                                                "height": tableUsuario.shipping[0].dimensions.height,//Altura
+                                                "length": tableUsuario.shipping[0].dimensions.depth,//Comprimento
+                                                "width": tableUsuario.shipping[0].dimensions.width,//Largura
+                                                "weight": tableUsuario.shipping[0].dimensions.weight//Peso
+                                            })//Volume
+                                        //})
+
+                                        console.log(products, volumes);
                                         const apiRes = await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/cart',
                                         {
                                             method: 'POST',
@@ -130,7 +145,6 @@ const transactions = new transactionDAO();
                                             })
 
                                         }); 
-                                        console.log(apiRes);
                                         const resp = await apiRes.json();
                                         console.log(resp);
                                     }
@@ -138,7 +152,7 @@ const transactions = new transactionDAO();
                                 
                             }
                         ) 
-                    // });
+                    });
                 }
             }
         });

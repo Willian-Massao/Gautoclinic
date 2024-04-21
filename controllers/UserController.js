@@ -7,10 +7,5 @@ class User{
         this.hasAdmin = user.hasAdmin;
         this.id = user.id;
     }
-    get(){
-        const user = new UserDAO();
-
-        return user.findId(this.id);
-    }
 }
 module.exports = User;

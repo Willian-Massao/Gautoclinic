@@ -3,11 +3,13 @@ const multer = require('multer');
 
 const fs = require('fs').promises;
 const crypto = require('crypto').webcrypto;
+const intended = require('../controllers/IntendedURL.js');
 
 function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
       return next();
     }
+    req.session.returnTo = req.originalUrl; 
     res.redirect('/user/login');
 }
 
