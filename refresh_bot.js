@@ -33,7 +33,7 @@ const transactions = new transactionDAO();
                 if(temp.status != 'PENDING')
                 {
                     console.log(temp);
-                    transactions.update(temp).then( 
+                    transactions.update(temp).then( // isso não esta funcionando para debugar mais vezes
                          async() =>
                          {
                         const melhorEnvio = new melhorenvioDAO();
@@ -56,6 +56,8 @@ const transactions = new transactionDAO();
                                         console.log(tableUsuario);
 
                                         //tableUsuario.shipping.forEach((e)=>{
+                                            //se for sedex temos q separar cada etiqueta por produto
+                                            //ainda n fiz isso
                                             products.push({
                                                 "name": tableUsuario.shipping[0].name,//Nome Produto
                                                 "quantity": tableUsuario.shipping[0].qtd,//Quantidade
