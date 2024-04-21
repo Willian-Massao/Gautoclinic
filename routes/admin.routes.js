@@ -105,22 +105,22 @@ routes.get('/etiqueta', helper.ensureAdmin, async (req, res) => {
         let filter = [];
         let index = [];
         for (const key in temp.data[0]) {
-            if(temp.data[0][key] != null && (key != "invoice" && key != "tags" && key != "products" && key != "volumes")){
+            //if(temp.data[0][key] != null && (key != "invoice" && key != "tags" && key != "products" && key != "volumes")){
                 index.push({Field: key, Type: 'varchar(255)', Null: 'YES', Key: '', Default: null, Extra: ''});
-            }
+            //}
         }
         temp.data.forEach(element => {
             let temp = {};
             for (const key in element) {
-                if(element[key] != null){
+                //if(element[key] != null){
                     if(key == "from" || key == "to"){
                         temp[key] = element[key].postal_code;
                     }else if(key == "service"){
                         temp[key] = element[key].name;
-                    }else if(key != "invoice" && key != "tags" && key != "products" && key != "volumes"){
+                    }else{//if(key != "invoice" && key != "tags" && key != "products" && key != "volumes"){
                         temp[key] = element[key];
                     }
-                }
+                //}
             }
             filter.push(temp);
         });

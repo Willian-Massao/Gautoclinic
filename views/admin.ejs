@@ -55,7 +55,7 @@
                         <% } %>
                     </tr>
                 <% }) %>
-                <tr><% if(table != "refund"){ %>
+                <tr><% if(table != "refund" && table != 'etiqueta'){ %>
                         <% indexes.forEach((e)=>{ %>
                             <% if(e.Field == "image"){ %>
                                 <td>
@@ -118,7 +118,7 @@
                 </div>
             </div>
         </div>
-        <% if(table != "refund"){ %>
+        <% if(table != "refund" && table != 'etiqueta'){ %>
         <div class="mobile-table">
             <div class="header">
                 <% indexes.forEach((headers)=>{ %>

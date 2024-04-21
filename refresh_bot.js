@@ -36,11 +36,8 @@ const transactions = new transactionDAO();
                     transactions.update(temp).then( // isso não esta funcionando para debugar mais vezes
                          async() =>
                          {
-                        const melhorEnvio = new melhorenvioDAO();
                         const ownershop = new ownershopDAO();
 
-                        let bearerMelhorEnvio = 'Bearer ';
-                        await melhorEnvio.buscaToken().then(bearer => {  bearerMelhorEnvio += bearer.access_token});
                         await ownershop.buscaOwner().then
                         ( 
                             async tableOwner =>
@@ -52,103 +49,50 @@ const transactions = new transactionDAO();
                                     {
                                         let products = [];
                                         let volumes = [];
+                                        let itens;
+                                        let company;
 
-                                        console.log(tableUsuario);
 
-                                        //tableUsuario.shipping.forEach((e)=>{
-                                            //se for sedex temos q separar cada etiqueta por produto
-                                            //ainda n fiz isso
+                                        tableUsuario.shipping.forEach((e)=>{
                                             products.push({
-                                                "name": tableUsuario.shipping[0].name,//Nome Produto
-                                                "quantity": tableUsuario.shipping[0].qtd,//Quantidade
-                                                "unitary_value": tableUsuario.shipping[0].price//Valor Unitario
+                                                "name": e.name,//Nome Produto
+                                                "quantity": e.qtd,//Quantidade
+                                                "unitary_value": e.price//Valor Unitario
                                             });
                                             volumes.push({
-                                                "height": tableUsuario.shipping[0].dimensions.height,//Altura
-                                                "length": tableUsuario.shipping[0].dimensions.depth,//Comprimento
-                                                "width": tableUsuario.shipping[0].dimensions.width,//Largura
-                                                "weight": tableUsuario.shipping[0].dimensions.weight//Peso
+                                                "height": e.dimensions.height,//Altura
+                                                "length": e.dimensions.depth,//Comprimento
+                                                "width": e.dimensions.width,//Largura
+                                                "weight": e.dimensions.weight//Peso
                                             })//Volume
-                                        //})
+                                        })
 
-                                        console.log(products, volumes);
-                                        const apiRes = await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/cart',
-                                        {
-                                            method: 'POST',
-                                            headers: 
-                                            {
-                                                "Accept":"application/json",
-                                                "Content-Type": "application/json",
-                                                "Authorization": bearerMelhorEnvio,
-                                                "User-Agent": "Aplicação (email para contato técnico)",
-                                            },
-                                            body:JSON.stringify
-                                            ({
-                                                // tableUsuario.shipping.id é o id do item, não da transportadora
-                                                // na criação do frete adicionei um campo vazio para o id da transportadora (userShipping)
-                                                // quando o usuário seleciona a transportadora, e gera as informações para mandar pra sumup
-                                                // eu pego o id da transportadora e coloco no campo userShipping
-                                                "service": tableUsuario.info.userShipping,//Id transportadora
-                                                "from": 
-                                                {
-                                                    "name": tableOwner.nome_completo,
-                                                    "phone": tableOwner.phone,
-                                                    "email": tableOwner.email,
-                                                    "company_document": "89794131000100",//tableOwner.companydocument, //CNPJ
-                                                    "state_register": tableOwner.stateRegister,// Inscricao estadual Perguntar ao Gauto
-                                                    "address": tableOwner.adress,//Logradouro Remetente
-                                                    "complement": tableOwner.complement,// Complemento
-                                                    "number": tableOwner.number,//Numero
-                                                    "district": tableOwner.district,//Bairro
-                                                    "city": tableOwner.city,//Cidade
-                                                    "country_id": tableOwner.countryId,//Pais
-                                                    "postal_code": "03532040",//tableOwner.postalCode,//Cep
-                                                    "state_abbr": "SP",//tableOwner.stateAbbr,//Estado
-                                                    "note": "observação",//Observacao
-                                                },
-                                                "to": 
-                                                {
-                                                    "name": tableUsuario.nome_completo,
-                                                    "phone": tableUsuario.tel,
-                                                    "email": tableUsuario.email,
-                                                    "document": tableUsuario.cpf,//CPF
-                                                    "address": tableUsuario.info.to.adress,//Logradouro Destinatario
-                                                    "complement":  "teste",//tableUsuario.info.to.complemento,// Complemento
-                                                    "number": tableUsuario.info.to.numero,//Numero
-                                                    "district": tableUsuario.info.to.district,//Bairro
-                                                    "city": tableUsuario.info.to.city,//Cidade
-                                                    "country_id": tableUsuario.info.to.country_id,//Pais
-                                                    "postal_code": tableUsuario.info.to.CEP,//Cep
-                                                    "state_abbr": tableUsuario.info.to.state_abbr,//Estado
-                                                    "note": "observação"//Observacao
-                                                },
-                                                // os produtos precisa estar no array, por que estamos passando todos os produtos que o frete calculou
-                                                // então voltei com Shipping = []
-                                                "products": products, //passei os produtos para o array na linha 47
-                                                "volumes": volumes, //tambem fiz para os volumes
-                                                "plataform": "Gauto Clinic",
-                                                "options": {
-                                                    "insurance_value": 11.78,
-                                                    "receipt": false,
-                                                    "own_hand": false,
-                                                    "reverse": false,
-                                                    "non_commercial": false,
-                                                    "invoice": {
-                                                        "key": "31190307586261000184550010000092481404848162"
-                                                    },
-                                                    "platform": "Nome da Plataforma",
-                                                    "tags": [
-                                                        {
-                                                            "tag": "Identificação do pedido na plataforma, exemplo: 1000007",
-                                                            "url": "Link direto para o pedido na plataforma, se possível, caso contrário pode ser passado o valor null"
-                                                        }
-                                                    ]
+                                        itens = {
+                                            products: products,
+                                            volumes: volumes
+                                        }
+
+                                        tableUsuario.fretes.forEach((e)=>{
+                                            if(e.id == tableUsuario.info.userShipping){
+                                                company = e.name;
+                                            }
+                                        })
+                                        console.log(company);
+                                        if(company == 'SEDEX'){
+                                            for(let i = 0; i < itens.products.length; i++){
+                                                let temp = {
+                                                    products: [products[i]],
+                                                    volumes: [volumes[i]]
                                                 }
+                                                add2cart(tableUsuario, tableOwner, temp).then((res)=>{
+                                                    console.log(res);
+                                                })
+                                            }
+                                        }else{
+                                            add2cart(tableUsuario, tableOwner, itens).then((res)=>{
+                                                console.log(res);
                                             })
-
-                                        }); 
-                                        const resp = await apiRes.json();
-                                        console.log(resp);
+                                        }
                                     }
                                 )
                                 
@@ -161,3 +105,87 @@ const transactions = new transactionDAO();
     }
 refreshTransactions();
 //setnterval(refreshTransactions, 20000); // 10 minutos
+
+async function add2cart(usuario, owner, itens){
+    const melhorEnvio = new melhorenvioDAO();
+    let bearerMelhorEnvio = 'Bearer ';
+    await melhorEnvio.buscaToken().then(bearer => {  bearerMelhorEnvio += bearer.access_token});
+
+    const apiRes = await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/cart',
+    {
+        method: 'POST',
+        headers: 
+        {
+            "Accept":"application/json",
+            "Content-Type": "application/json",
+            "Authorization": bearerMelhorEnvio,
+            "User-Agent": "Aplicação (email para contato técnico)",
+        },
+        body:JSON.stringify
+        ({
+            // tableUsuario.shipping.id é o id do item, não da transportadora
+            // na criação do frete adicionei um campo vazio para o id da transportadora (userShipping)
+            // quando o usuário seleciona a transportadora, e gera as informações para mandar pra sumup
+            // eu pego o id da transportadora e coloco no campo userShipping
+            "service": usuario.info.userShipping,//Id transportadora
+            "from": 
+            {
+                "name": owner.nome_completo,
+                "phone": owner.phone,
+                "email": owner.email,
+                "company_document": "89794131000100",//owner.companydocument, //CNPJ
+                "state_register": owner.stateRegister,// Inscricao estadual Perguntar ao Gauto
+                "address": owner.adress,//Logradouro Remetente
+                "complement": owner.complement,// Complemento
+                "number": owner.number,//Numero
+                "district": owner.district,//Bairro
+                "city": owner.city,//Cidade
+                "country_id": owner.countryId,//Pais
+                "postal_code": "03532040",//owner.postalCode,//Cep
+                "state_abbr": "SP",//owner.stateAbbr,//Estado
+                "note": "observação",//Observacao
+            },
+            "to": 
+            {
+                "name": usuario.nome_completo,
+                "phone": usuario.tel,
+                "email": usuario.email,
+                "document": usuario.cpf,//CPF
+                "address": usuario.info.to.adress,//Logradouro Destinatario
+                "complement":  "teste",//usuario.info.to.complemento,// Complemento
+                "number": usuario.info.to.numero,//Numero
+                "district": usuario.info.to.district,//Bairro
+                "city": usuario.info.to.city,//Cidade
+                "country_id": usuario.info.to.country_id,//Pais
+                "postal_code": usuario.info.to.CEP,//Cep
+                "state_abbr": usuario.info.to.state_abbr,//Estado
+                "note": "observação"//Observacao
+            },
+            // os produtos precisa estar no array, por que estamos passando todos os produtos que o frete calculou
+            // então voltei com Shipping = []
+            "products": itens.products, //passei os produtos para o array na linha 47
+            "volumes": itens.volumes, //tambem fiz para os volumes
+            "plataform": "Gauto Clinic",
+            "options": {
+                "insurance_value": 11.78,
+                "receipt": false,
+                "own_hand": false,
+                "reverse": false,
+                "non_commercial": false,
+                "invoice": {
+                    "key": "31190307586261000184550010000092481404848162"
+                },
+                "platform": "Nome da Plataforma",
+                "tags": [
+                    {
+                        "tag": "Identificação do pedido na plataforma, exemplo: 1000007",
+                        "url": "Link direto para o pedido na plataforma, se possível, caso contrário pode ser passado o valor null"
+                    }
+                ]
+            }
+        })
+
+    }); 
+    const resp = await apiRes.json();
+    return resp;
+}
