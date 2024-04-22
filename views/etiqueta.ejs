@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include ("partials/head.ejs") %>
+</head>
+<body>
+    <%- include ("partials/alert.ejs") %>
+    <main class="etiqueta">
+        <div class="Banner-envio">
+            <div class="local">
+                <div class="postilhado">
+                    <p class="subline">DE</p>
+                    <hr>
+                    <p class="subline">PARA</p>
+                </div>
+                <div class="localidade">
+                    <div class="from section">
+                        <p><%= data.from.postal_code %></p>
+                        <p class="subline">Meu endereço</p>
+                        <p class="subline"><%= data.from.address %>, <%= data.from.location_number %> - <%= data.from.city %>/<%= data.from.state_abbr %></p>
+                    </div>
+                    <div class="to section">
+                        <p><%= data.to.postal_code %></p>
+                        <p class="subline"><%= data.to.address %>, <%= data.to.location_number %> - <%= data.to.city %>/<%= data.to.state_abbr %></p>
+                    </div>
+                </div>
+            </div>
+            <div class="assurance">
+                <p>R$ <%= data.insurance_value %> *</p>
+                <p class="subline">*Algumas transportadoras precisam que você informe um valor para o seguro.</p>
+            </div>
+            <div class="volume">
+                <p>DIMENSÕES</p>
+                <% data.volumes.forEach((e, index)=>{ %>
+                    <p class="subline">volume <%= index + 1 %></p>
+                    <p class="subline outline"><%= parseFloat(e.height) %> x <%= parseFloat(e.width) %> x <%= parseFloat(e.length) %> cm - <%= parseFloat(e.weight) %> kg</p>
+                <% }) %>
+            </div>
+        </div>
+        <div class="etiqueta-container">
+            <div>
+                <div class="card">
+                    <div>
+                        <p class="subline outline">TRANSPORTADORA</p>
+                        <a href="<%= data.service.company.tracking_link %>">
+                            <img src="https://sandbox.melhorenvio.com.br<%= data.service.company.picture %>" alt="">
+                        </a>
+                    </div>
+                    <div>
+                        <p class="subline outline">MODALIDADE</p>
+                        <p class="subline"><%= data.service.name %></p>
+                    </div>
+                    <div>
+                        <p class="subline outline">PREÇO</p>
+                        <p class="subline">R$ <%= data.price %></p>
+                    </div>
+                    <div>
+                        <p class="subline outline">PRAZO ESTIMADO</p>
+                        <p class="subline"><%= data.delivery_min %> - <%= data.delivery_max %> dias úteis</p>
+                    </div>
+                    <div>
+                        <p class="subline outline">POSTAGEM</p>
+                        <p class="subline">AGÊNCIA</p>
+                    </div>
+                    <div>
+                        <p class="subline outline">STATUS</p>
+                        <p class="subline"><%= data.status %></p>
+                    </div>
+                </div>
+                <% if(data.status != "pending" && data.status != "released"){ %>
+                    <% if(data.service.company.name != 'Correios'){ %>
+                    <div class="card">
+                        <div>
+                            <p class="subline outline">CODIGO</p>
+                            <P class="subline"><%= data.tracking %></P>
+                        </div>
+                        <div>
+                            <p class="subline outline">EMAIL</p>
+                            <p class="subline"><%= data.agency.email %></p>
+                        </div>
+                        <div>
+                            <p class="subline outline">RUA</p>
+                            <p class="subline"><%= data.agency.address.address %></p>
+                        </div>
+                        <div>
+                            <p class="subline outline">BAIRRO</p>
+                            <p class="subline"><%= data.agency.address.district %> </p>
+                        </div>
+                        <div>
+                            <p class="subline outline">AGÊNCIA</p>
+                            <p class="subline"><%= data.agency.name %></p>
+                        </div>
+                    </div>
+                    <% } %>
+                <% } %>
+                <% if(data.status == "pending"){ %>
+                    <div class="action">
+                        <form action="/database/delete/<%= table %>" method="POST" class="cancel">
+                            <input type="text" name="id" style="display: none;" value="<%= data.id %>">
+                            <input type="submit" value="Cancelar">
+                        </form>
+                        <form action="/admin/confirm/<%= table %>" method="POST" class="accept">
+                            <input type="text" name="id" style="display: none;" value="<%= data.id %>">
+                            <input type="submit" value="Gerar">
+                        </form>
+                    </div>
+                <% } %>
+            </div>
+            <div class="etiqueta-to">
+                <div class="dec">
+                    <p class="subline">DECLARAÇÃO DE CONTEÚDO</p>
+                    <% data.products.forEach((e, index)=>{ %>
+                        <div>
+                            <p class="subline outline">ITEM <%= index+1 %></p>
+                            <p class="subline"><%= e.name %></p>
+                            <p class="subline">R$ <%= e.unitary_value %></p>
+                            <p class="subline">x<%= e.quantity %></p>
+                        </div>
+                    <% }) %>
+                </div>
+                <div class="from section">
+                    <h1 >Remetente:</h1>
+                    <% for(let key in data.from){ %>
+                    <div class="item">
+                        <input type="text" name="<%= key %>" value="<%= data.from[key] %>" readonly>
+                        <label for="<%= key %>"class="subline"><%= key %>*</label>
+                    </div>
+                    <% } %>
+                </div>
+                <div class="to section">
+                    <h1>Destinatario:</h1>
+                    <% for(let key in data.to){ %>
+                        <div class="item">
+                            <input type="text" name="<%= key %>" value="<%= data.to[key] %>" readonly>
+                            <label for="<%= key %>" class="subline"><%= key %>*</label>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
