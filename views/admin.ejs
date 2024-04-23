@@ -107,6 +107,9 @@
                     <p><%= headers.Field %></p>
                 <% }) %>
                 <p>Acões</p>
+                <% if(table == "etiqueta" || table == "paying"){ %>
+                    <p>Ver</p>    
+                <% } %>
             </div>
             <div class="content">
                 <div class="window">
@@ -134,6 +137,33 @@
                                         <i class="fi fi-rr-trash-xmark"></i>
                                     </button>
                                 </form>
+                            </td>
+                        <% }else if(table == "etiqueta" || table == "paying"){ %>
+                            <% if( table == "paying" && itens['authorization_code'] != null){ %>
+                                <td>
+                                    <form action="/admin/print/<%= table %>" method="POST">
+                                        <input type="text" name="id" value="<%= itens.id %>" class="disable" readonly>
+                                        <button style="background-color: #32ac47;"><i class="fi fi-rr-print"></i></i></button>
+                                    </form>
+                                </td>
+                            <% }else if( table == "paying" && itens['paid_at'] != null){ %>
+                                <td>
+                                    <form action="/admin/generate/<%= table %>" method="POST">
+                                        <input type="text" name="id" value="<%= itens.id %>" class="disable" readonly>
+                                        <button style="background-color: #662eed;"><i class="fi fi-rr-magic-wand"></i></button>
+                                    </form>
+                                </td>
+                            <% }else{ %>
+                                <td>
+                                    <form action="/database/delete/<%= table %>" method="POST">
+                                        <input type="text" name="id" value="<%= itens.id %>" class="disable" readonly>
+                                        <button><i class="fi fi-rr-trash-xmark"></i></button>
+                                    </form>
+                                </td>
+                            <% } %>
+                            <td>
+                                <input type="text" name="id" value="<%= itens.id %>" class="disable" readonly>
+                                <a style="background-color: #24a0ed;" href="/admin/<%= table %>/<%= itens.id %>"><i class="fi fi-rr-search"></i></i></i></a>
                             </td>
                         <% }else{ %>
                             <td>
