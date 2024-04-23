@@ -65,7 +65,7 @@ module.exports  = class itens{
     async findUser(id){
         const conn = await pool.getConnection();
         try {
-            const sql = `SELECT * FROM transaction WHERE idUser = ?`;
+            const sql = `SELECT * FROM transaction WHERE idUser = ? ORDER BY status ASC, DATE DESC`;
             const [rows] = await conn.query(sql, [id]);
             return rows;
         }catch(err){
@@ -95,7 +95,8 @@ module.exports  = class itens{
         try {
             NN(transaction);
             const sql = `UPDATE transaction SET status = ? WHERE id = ?`;
-            await conn.query(sql, [transaction.status, transaction.id]);
+            //await conn.query(sql, [transaction.status, transaction.id]);
+            console.log("transaction atualizado com sucesso!");
         }catch(err){
             console.log(err);
             throw err;
@@ -107,7 +108,7 @@ module.exports  = class itens{
     async select(){
         const conn = await pool.getConnection();
         try {
-            const sql = `SELECT * FROM transaction`;
+            const sql = `SELECT * FROM transaction ORDER BY date DESC`;
             const [row] = await conn.query(sql);
             return row;
         }catch(err){
@@ -148,7 +149,7 @@ module.exports  = class itens{
         try {
             const sql = 
             `SELECT 
-            CONCAT_WS(' ', name, lastname) as 'nome_completo', us.tel, us.email, us.cpf, fret.info, trans.shipping
+            CONCAT_WS(' ', name, lastname) as 'nome_completo', us.tel, us.email, us.cpf, fret.info, fret.fretes, trans.shipping
             FROM transaction trans
             inner join users us
             on us.id = trans.idUser

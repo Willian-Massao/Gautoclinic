@@ -32,6 +32,10 @@ const routes = require('./routes/profile.routes.js');
 // porta do servidor
 const port = 3000;
 
+// Controllers
+let FreteController = require('./controllers/FreteController.js');
+let freteCon;
+
 // cria tabela
 const users = new userDAO();
 const itens = new itemDAO();
@@ -42,7 +46,7 @@ const admins = new adminDAO();
 const passwordForgot = new passwordForgotDAO();
 const envio = new envioDAO();
 const refound = new refoundDAO();
-const frete = new freteDAO();
+//const frete = new freteDAO();
 const ownershop = new ownershopDAO();
 
 users.create();
@@ -54,7 +58,7 @@ images.create();
 admins.create();
 passwordForgot.create();
 envio.create();
-frete.create();
+//frete.create();
 ownershop.create();
 
 // Configuração do express
@@ -73,6 +77,7 @@ app.use(passport.session());
 app.use(flash());
 app.use(routes);
 
+
 // Rotas post
 app.post('/carrinho' ,async  (req, res) => {
     const itens = new itemDAO();
@@ -90,58 +95,55 @@ app.post('/carrinho' ,async  (req, res) => {
 });
 
 app.post('/payment', async(req, res) => {
-    const frete = new freteDAO();
+    //const frete = new freteDAO();
     const itens = new itemDAO();
     let databaseRes = await itens.select();
     const CacheFrete = req.body.frete;
     const cacheItens = req.body.itens;
-    let shipping = [];
-    
-    let id;
-    let idUser;
-    let check_ref = uuid.create().toString();
-    let price = 0;
-    let currency = process.env.SUMUP_CURRENCY;
-    let pay2mail = process.env.SUMUP_EMAIL;
-    let status = '';
-    let date = '';
-    
+    let transaction = {
+        id: '',
+        idUser: '',
+        check_ref: uuid.create().toString(),
+        price: 0,
+        currency: process.env.SUMUP_CURRENCY,
+        pay2mail: process.env.SUMUP_EMAIL,
+        status: '',
+        date: '',
+        shipping: []
+    }
 
-    if(CacheFrete != undefined && CacheFrete.length > 0){
-        frete.findId(req.user.id).then( data => {
-            let userShipping = parseInt(CacheFrete[0].id);
-            data.info.userShipping = userShipping;
-            frete.InsertorUpdate(data);
-            
-            data = data.fretes;
-            data.forEach(element => {
-                if(element.id == parseInt(CacheFrete[0].id)){
-                    price += parseFloat(element.price);
-                }
-                
-            });
-            cacheItens.forEach(item => {
-                databaseRes.forEach(res => {
-                    if(res.id == item.id){
-                        price += res.price * item.qtd;
-                        shipping.push({
-                            id: res.id,
-                            name: res.name,
-                            price: res.price,
-                            qtd: item.qtd,
-                            dimensions:{
-                                width: res.width,
-                                height: res.height,
-                                depth: res.depth,
-                                weight: res.weight
-                            }
-                        });
-                    }
-                });
-            });
-        }).then(()=>{
-            sumupReq({id, idUser, check_ref, price, currency, pay2mail, status, date, shipping}, req, res);
+    let cache = {
+        frete: CacheFrete,
+        itens: cacheItens
+    }
+
+    if(cache.frete != undefined && cache.frete.length > 0){
+        data = freteCon.getAgencias()[0];
+        data.forEach(element => {
+            if(element.id == parseInt(cache.frete[0].id)){
+                transaction.price += parseFloat(element.price);
+            }
         });
+        cache.itens.forEach(item => {
+            databaseRes.forEach(res => {
+                if(res.id == item.id){
+                    transaction.price += res.price * item.qtd;
+                    transaction.shipping.push({
+                        id: res.id,
+                        name: res.name,
+                        price: res.price,
+                        qtd: item.qtd,
+                        dimensions:{
+                            width: res.width,
+                            height: res.height,
+                            depth: res.depth,
+                            weight: res.weight
+                        }
+                    });
+                }
+            });
+        });
+        sumupReq(transaction, cache, req, res);
     }else{
         req.flash('error', 'Por favor selecione um frete');
         res.json({err: 'Por favor selecione um frete'});
@@ -150,7 +152,7 @@ app.post('/payment', async(req, res) => {
     
 });
 
-async function sumupReq(trans, req, res){
+async function sumupReq(trans, cache, req, res){
     const apiRes = await fetch('https://api.sumup.com/v0.1/checkouts',{
         method: 'POST',
         headers: {
@@ -178,6 +180,11 @@ async function sumupReq(trans, req, res){
         }).catch(err => {
                 res.status(500).send('Something broke!')
         });
+
+        if(cache.frete != undefined && cache.frete.length > 0){
+            let userShipping = cache.frete[0].id;
+            freteCon.setEscolha(userShipping)
+        }
     }else{
         res.status(500).send('sumup unauthorized')
     }
@@ -206,7 +213,7 @@ app.post('/make/refund', async(req, res) => {
 app.post('/calcularFrete', async (req, res) => {
     let {itens, CEP, numero, complemento} = req.body;
     const melhorEnvio = new envioDAO();
-    const fretesDAO = new freteDAO();
+    //const fretesDAO = new freteDAO();
     let bearerMelhorEnvio = 'Bearer ';
     await melhorEnvio.buscaToken()
     .then(bearer => {  bearerMelhorEnvio += bearer.access_token});
@@ -274,10 +281,11 @@ app.post('/calcularFrete', async (req, res) => {
                                 },
                         "userShipping": ""
                         };
-                    fretesDAO.InsertorUpdate({idUser: req.user.id, fretes: jsonfretes, info: jsoninfo}).then(()=>{
-                        res.status(200).send('Sucesso');  
-                    });
-                }else{
+                    freteCon = new FreteController({agencias: jsonfretes, to: jsoninfo.to, from: jsoninfo.from});
+                    //fretesDAO.InsertorUpdate({idUser: req.user.id, fretes: jsonfretes, info: jsoninfo}).then(()=>{
+                        //});
+                    res.status(200).send('Sucesso');  
+                    }else{
                     req.flash('error', 'Não existem opções de frete para este CEP');
                     res.json({err: 'Por favor digite um CEP válido'});;
                 }
@@ -368,13 +376,11 @@ app.get('/search', (req, res) =>{
 });
 
 routes.get('/fretes', helper.ensureAuthenticated, (req, res) => {
-    const fretesDAO = new freteDAO();
+    const frete = new freteDAO();
     const errorMessage = req.flash('error');
-    let freteJson;
-    fretesDAO.findId(req.user.id).then( freteTable => {
-        freteJson = freteTable.fretes;
-        res.render('fretes', { user: req.user,fretes: freteJson, error: errorMessage});
-    });     
+    let freteJson = freteCon.getAgencias()[0];
+
+    res.render('fretes', { user: req.user, fretes: freteJson, error: errorMessage});
 });
 
 app.use('/database/', routerDatabase)

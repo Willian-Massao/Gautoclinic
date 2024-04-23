@@ -6,13 +6,16 @@
 <body>
     <%- include ("partials/alert.ejs") %>
     <%- include ("partials/navbaradmin.ejs") %>
-    <main>
+    <main class="table">
         <table class="green-table">
                 <tr>
                     <% indexes.forEach((e)=>{ %>
                         <th> <%= e.Field %> </th>
                     <% }) %>
                     <th>Apagar</th>
+                    <% if(table == "etiqueta" || table == "paying"){ %>
+                        <th>Ver</th>    
+                    <% } %>
                 </tr>
                 <% data.forEach((e)=>{ %>
                     <tr>
@@ -45,6 +48,33 @@
                                     </button>
                                 </form>
                             </td>
+                        <% }else if(table == "etiqueta" || table == "paying"){ %>
+                            <% if( table == "paying" && e['authorization_code'] != null){ %>
+                                <td>
+                                    <form action="/admin/print/<%= table %>" method="POST">
+                                        <input type="text" name="id" value="<%= e.id %>" class="disable" readonly>
+                                        <button style="background-color: #32ac47;"><i class="fi fi-rr-print"></i></i></button>
+                                    </form>
+                                </td>
+                            <% }else if( table == "paying" && e['paid_at'] != null){ %>
+                                <td>
+                                    <form action="/admin/generate/<%= table %>" method="POST">
+                                        <input type="text" name="id" value="<%= e.id %>" class="disable" readonly>
+                                        <button style="background-color: #662eed;"><i class="fi fi-rr-magic-wand"></i></button>
+                                    </form>
+                                </td>
+                            <% }else{ %>
+                                <td>
+                                    <form action="/database/delete/<%= table %>" method="POST">
+                                        <input type="text" name="id" value="<%= e.id %>" class="disable" readonly>
+                                        <button><i class="fi fi-rr-trash-xmark"></i></button>
+                                    </form>
+                                </td>
+                            <% } %>
+                            <td>
+                                    <input type="text" name="id" value="<%= e.id %>" class="disable" readonly>
+                                    <a style="background-color: #24a0ed;" href="/admin/<%= table %>/<%= e.id %>"><i class="fi fi-rr-search"></i></i></i></a>
+                            </td>
                         <% }else{ %>
                             <td>
                                 <form action="/database/delete/<%= table %>" method="POST">
@@ -55,7 +85,7 @@
                         <% } %>
                     </tr>
                 <% }) %>
-                <tr><% if(table != "refund"){ %>
+                <tr><% if(table != "refund" && table != 'etiqueta' && table != "paying"){ %>
                         <% indexes.forEach((e)=>{ %>
                             <% if(e.Field == "image"){ %>
                                 <td>
@@ -118,7 +148,7 @@
                 </div>
             </div>
         </div>
-        <% if(table != "refund"){ %>
+        <% if(table != "refund" && table != 'etiqueta' && table != "paying"){ %>
         <div class="mobile-table">
             <div class="header">
                 <% indexes.forEach((headers)=>{ %>

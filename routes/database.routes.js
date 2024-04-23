@@ -6,6 +6,7 @@ const imageDAO = require('../database/imageDAO.js');
 const itemDAO = require('../database/itemDAO.js');
 const adminDAO = require('../database/adminDAO.js');
 const commentDAO = require('../database/commentDAO.js');
+const envioDAO = require('../database/melhorenvioDAO.js');
 
 routes.post('/add/images', helper.upload.single('image') ,async (req, res) => {
     const img = new imageDAO();
@@ -103,5 +104,26 @@ routes.post('/delete/comments', (req, res) => {
         res.redirect('/admin/comments');
     });
 });
+
+routes.post('/delete/etiqueta', async (req, res)=>{
+    const { id } = req.body;
+    const melhorEnvio = new envioDAO();
+    let bearerMelhorEnvio = 'Bearer ';
+    await melhorEnvio.buscaToken()
+    .then(bearer => {  bearerMelhorEnvio += bearer.access_token});
+
+    let fetchres = await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/cart/' + id, {
+        method: 'DELETE',
+        headers: {
+            "Accept":"application/json",
+            "Content-Type": "application/json",
+            "Authorization": bearerMelhorEnvio,
+            "User-Agent": "Aplicação (email para contato técnico)",
+        }
+    })
+    if(fetchres.ok){
+        res.redirect('/admin/etiqueta');
+    }
+})
 
 module.exports = routes;

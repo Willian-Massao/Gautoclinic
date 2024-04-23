@@ -37,6 +37,11 @@ header{
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.30);
     height: 75px;
 }
+header.admin{
+    position: fixed;
+    width: 100%;
+    background-color: white;
+}
 header .align{
     width: 370px;
 }
@@ -118,6 +123,15 @@ main{
     align-items: center;
     flex-direction: column;
     min-height: 100vh;
+}
+main.table{
+    align-items: start;
+    padding-top: 75px;
+    min-height: 1px;
+}
+main.frete{
+    padding-top: 75px;
+    min-height: 1px;
 }
 main > div{
     margin-top: 15px;
@@ -780,19 +794,19 @@ table.green-table{
     max-width:  100%;
     max-height:  100%;
 }
-.green-table tr button{
+.green-table tr button, .green-table tr a{
     background-color: #ff5454;
     color: white;
     border: none;
     padding: 10px 20px 10px 20px;
-    border-radius: 3px;;
+    border-radius: 3px;
     width: 100%;
 }
-.green-table tr button:hover{
+.green-table tr button:hover, .green-table tr a:hover{
     background-color: #cc4343;
     color: white;
 }
-.green-table tr button:active{
+.green-table tr button:active, .green-table tr a:active{
     background-color: #ff5454;
 }
 .green-table tr i{
@@ -1319,4 +1333,199 @@ button.star-button {
 
 .comment-container input[type="number"] {
     display: none;
+}
+main.etiqueta{
+    width: 1300px;
+    margin: auto;
+}
+.Banner-envio{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    background-color: #000000;
+    color: white;
+    padding: 30px;
+    border-radius: 5px;
+}
+.Banner-envio .postilhado{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.Banner-envio .postilhado hr{
+    width: 100%;
+    height: 0px;
+    border: 1px dashed white;
+}
+.Banner-envio .postilhado p{
+    padding: 5px;
+    background-color: white;
+    border-radius: 3px;
+    color: #000000;
+}
+.Banner-envio .localidade{
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    justify-content: space-between;
+}
+.Banner-envio p{
+    color: white;
+    font-weight: bolder;
+    font-size: larger;
+    margin: 0;
+    width: fit-content;
+}
+.Banner-envio .subline{
+    font-weight: unset;
+    font-size: small;
+}
+.Banner-envio .outline{
+    font-weight: bolder;
+}
+.localidade .section{
+    width: 35%;
+}
+.Banner-envio .local{
+    width: 33%;
+}
+.Banner-envio .assurance{
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+}
+.Banner-envio .assurance p{
+    color: white;
+}
+.card{
+    display: flex;
+    width: calc(450px - 40px);
+    box-shadow: 0 0 10px 0px rgba(0,0,0,0.25);
+    padding: 20px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: start;
+    align-items: start;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+.card>div{
+    max-width: 30%;
+    display: flex;
+    flex-direction: column;
+    margin-right: 20px;
+}
+.card>div>div, .card>div>a{
+    width: 100%;
+}
+.card>div>div img, .card>div>a img{
+    flex-shrink:  0;
+    -webkit-flex-shrink: 0;
+    max-width:  80%;
+    max-height:  80%;
+}
+main.etiqueta .subline{
+    font-weight: unset;
+    font-size: small;
+}
+main.etiqueta .outline{
+    font-weight: bolder;
+}
+.card p {
+    width: fit-content;
+    margin-top: 10px;
+}
+.etiqueta-container{
+    width: 100%;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+}
+.etiqueta-to{
+    width: calc(100% - 450px - 15px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.etiqueta-to .dec{
+    border-radius: 5px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 10px 0px rgba(0,0,0,0.25);
+}
+.etiqueta-to .dec div{
+    width: 60%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+.etiqueta-to .section{
+    display: flex;
+    flex-direction: row;
+    width: calc(100% - 30px);
+    flex-wrap: wrap;
+    box-shadow: 0 0 10px 0px rgba(0,0,0,0.25);
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 5px;
+}
+.etiqueta-to .section h1{
+    width: 100%;
+    margin-top: 0;
+}
+.etiqueta-to .section input{
+    width: calc(100% - 25px);
+    padding-top: 20px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
+.etiqueta-to .section label{
+    margin: 0;
+    position: absolute;
+    margin-left: -200px;
+    margin-top: 3px;
+    font-size: 11px;
+    color: rgba(0, 0, 0, 0.5);
+}
+.section .item{
+    margin: 15px;
+}
+.action{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 15px;
+}
+.action form{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.action input[type="submit"]{
+    width: calc(100% - 30px);
+    padding: 15px;
+    border-radius: 5px;
+}
+.action .cancel input[type="submit"]{
+    background-color: #ff5454;
+    color: white;
+    border: none;
+}
+.action .accept input[type="submit"]{
+    background-color: #009979;
+    color: white;
+    border: none;
 }

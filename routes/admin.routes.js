@@ -8,6 +8,7 @@ const adminDAO = require('../database/adminDAO.js');
 const envioDAO = require('../database/melhorenvioDAO.js');
 const refundDAO = require('../database/refoundDAO.js');
 const commentDAO = require('../database/commentDAO.js');
+const melhorEnvioDAO = require('../database/melhorenvioDAO.js');
 
 const Envio = require('../controllers/EnvioController.js');
 
@@ -20,13 +21,10 @@ routes.get('/users', helper.ensureAdmin, (req, res) => {
     users.select().then( item =>{
         users.describe().then( index =>{
             index.forEach((element, i) => {
-                console.log(element.Field , element.Field === 'password' || element.Field === 'salt');
                 if(element.Field === 'password'){
                     index.splice(i, 2);
                 }
             });
-            console.log(index);
-            console.log("depois de remover");
             res.render('admin', {data: item, indexes: index, table: 'users', error: errorMessage});
         }).catch(err => res.status(500).send('Something broke!'));
     }).catch(err => res.status(500).send('Something broke!'));
@@ -81,10 +79,150 @@ routes.get('/refund', helper.ensureAdmin, (req, res) => {
 
     refund.select().then( item =>{
         refund.describe().then( index =>{
-            console.log(item);
             res.render('admin', {data: item, indexes: index, table: 'refund', error: errorMessage});
         }).catch(err => res.status(500).send('Something broke!'));
     }).catch(err => res.status(500).send('Something broke!'));
+});
+
+routes.get('/etiqueta', helper.ensureAdmin, async (req, res) => {
+    const errorMessage = req.flash('error');
+    const melhorEnvio = new melhorEnvioDAO();
+
+    let bearerMelhorEnvio = 'Bearer ';
+    await melhorEnvio.buscaToken().then(bearer => {  bearerMelhorEnvio += bearer.access_token});
+    
+    let fetchres = await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/cart',{
+        method: 'GET',
+        headers: {
+            "Accept": "application/json",
+            "Authorization": bearerMelhorEnvio,
+            "User-Agent": "Aplicação (email para contato técnico)"
+        }
+    });
+
+    if(fetchres.ok){
+        let temp = await fetchres.json();
+        let filter = [];
+        let index = [];
+        for (const key in temp.data[0]) {
+            //if(temp.data[0][key] != null && (key != "invoice" && key != "tags" && key != "products" && key != "volumes")){
+                index.push({Field: key, Type: 'varchar(255)', Null: 'YES', Key: '', Default: null, Extra: ''});
+            //}
+        }
+        temp.data.forEach(element => {
+            let temp = {};
+            for (const key in element) {
+                //if(element[key] != null){
+                    if(key == "from" || key == "to"){
+                        temp[key] = element[key].postal_code;
+                    }else if(key == "service"){
+                        temp[key] = element[key].name;
+                    }else{//if(key != "invoice" && key != "tags" && key != "products" && key != "volumes"){
+                        temp[key] = element[key];
+                    }
+                //}
+            }
+            filter.push(temp);
+        });
+        res.render('admin',{data: filter, indexes: index, table: 'etiqueta', error: errorMessage});
+    }
+});
+
+routes.get('/paying', helper.ensureAdmin, async (req, res) => {
+    const errorMessage = req.flash('error');
+    const melhorEnvio = new melhorEnvioDAO();
+
+    let bearerMelhorEnvio = 'Bearer ';
+    await melhorEnvio.buscaToken().then(bearer => {  bearerMelhorEnvio += bearer.access_token});
+    
+    let fetchres = await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/orders',{
+        method: 'GET',
+        headers: {
+            "Accept": "application/json",
+            "Authorization": bearerMelhorEnvio,
+            "User-Agent": "Aplicação (email para contato técnico)"
+        }
+    });
+
+    if(fetchres.ok){
+        let temp = await fetchres.json();
+        let filter = [];
+        let index = [];
+        for (const key in temp.data[0]) {
+            //if(temp.data[0][key] != null && (key != "invoice" && key != "tags" && key != "products" && key != "volumes")){
+                index.push({Field: key, Type: 'varchar(255)', Null: 'YES', Key: '', Default: null, Extra: ''});
+            //}
+        }
+        temp.data.forEach(element => {
+            let temp = {};
+            for (const key in element) {
+                //if(element[key] != null){
+                    if(key == "from" || key == "to"){
+                        temp[key] = element[key].postal_code;
+                    }else if(key == "service"){
+                        temp[key] = element[key].name;
+                    }else{//if(key != "invoice" && key != "tags" && key != "products" && key != "volumes"){
+                        temp[key] = element[key];
+                    }
+                //}
+            }
+            filter.push(temp);
+        });
+        res.render('admin',{data: filter, indexes: index, table: 'paying', error: errorMessage});
+    }
+});
+
+routes.get('/paying/:id', helper.ensureAdmin, async (req, res)=>{
+    const errorMessage = req.flash('error');
+    const { id } = req.params;
+    const melhorEnvio = new envioDAO();
+
+    let bearerMelhorEnvio = 'Bearer ';
+    await melhorEnvio.buscaToken().then(bearer => {  bearerMelhorEnvio += bearer.access_token});
+
+    let fetchres = await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/orders/' + id, {
+        method: 'GET',
+        headers: {
+            "Accept": "application/json",
+            "Authorization": bearerMelhorEnvio,
+            "User-Agent": "Aplicação (email para contato técnico)"
+        }
+    })
+    if(fetchres.ok){
+        let temp = await fetchres.json();
+        console.log(temp);
+        res.render('etiqueta', {data: temp, error: errorMessage, table: 'paying'});
+    }else{
+        req.flash('error', 'ID da etiqueta incorreto!');
+        res.redirect('/admin/paying');
+    }
+});
+
+
+routes.get('/etiqueta/:id', helper.ensureAdmin, async (req, res)=>{
+    const errorMessage = req.flash('error');
+    const { id } = req.params;
+    const melhorEnvio = new envioDAO();
+
+    let bearerMelhorEnvio = 'Bearer ';
+    await melhorEnvio.buscaToken().then(bearer => {  bearerMelhorEnvio += bearer.access_token});
+
+    let fetchres = await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/cart/' + id, {
+        method: 'GET',
+        headers: {
+            "Accept": "application/json",
+            "Authorization": bearerMelhorEnvio,
+            "User-Agent": "Aplicação (email para contato técnico)"
+        }
+    })
+    if(fetchres.ok){
+        let temp = await fetchres.json();
+        console.log(temp);
+        res.render('etiqueta', {data: temp, error: errorMessage, table: 'etiqueta'});
+    }else{
+        req.flash('error', 'ID da etiqueta incorreto!');
+        res.redirect('/admin/etiqueta');
+    }
 });
 
 routes.get('/envio', helper.ensureAdmin, async(req, res) => {
@@ -137,6 +275,124 @@ routes.post('/envio', async(req, res) => {
     url += `&response_type=code`
     url += `&scope=${concatenatedString}`
     res.redirect(url);
+});
+
+routes.post('/confirm/etiqueta', async(req, res) => {
+    const { id } = req.body;
+    const melhorEnvio = new envioDAO();
+
+    let bearerMelhorEnvio = 'Bearer ';
+    await melhorEnvio.buscaToken().then(bearer => {  bearerMelhorEnvio += bearer.access_token});
+
+    let fetchres = await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/shipment/checkout',{
+            method: 'POST',
+            headers: {
+                "Accept": " application/json",
+                "Authorization": bearerMelhorEnvio,
+                "Content-Type": "application/json",
+                "User-Agent": "Aplicação (email para contato técnico)",
+            },
+            body: JSON.stringify({
+                "orders": [
+                    id
+                ]
+            })
+        });
+    if(fetchres.ok){
+        res.redirect('/admin/etiqueta');
+    }else{
+        req.flash('error', 'ID da etiqueta incorreto!');
+        res.redirect('/admin/etiqueta');
+    }
+});
+
+routes.post('/confirm/paying', async(req, res) => {
+    const { id } = req.body;
+    const melhorEnvio = new envioDAO();
+
+    let bearerMelhorEnvio = 'Bearer ';
+    await melhorEnvio.buscaToken().then(bearer => {  bearerMelhorEnvio += bearer.access_token});
+
+    let fetchres = await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/shipment/checkout',{
+            method: 'POST',
+            headers: {
+                "Accept": " application/json",
+                "Authorization": bearerMelhorEnvio,
+                "Content-Type": "application/json",
+                "User-Agent": "Aplicação (email para contato técnico)",
+            },
+            body: JSON.stringify({
+                "orders": [
+                    id
+                ]
+            })
+        });
+    if(fetchres.ok){
+        res.redirect('/admin/paying');
+    }else{
+        req.flash('error', 'ID da etiqueta incorreto!');
+        res.redirect('/admin/paying');
+    }
+});
+
+routes.post('/generate/paying', async(req, res) => {
+    const { id } = req.body;
+    const melhorEnvio = new envioDAO();
+
+    let bearerMelhorEnvio = 'Bearer ';
+    await melhorEnvio.buscaToken().then(bearer => {  bearerMelhorEnvio += bearer.access_token});
+
+    let fetchres = await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/shipment/generate',{
+            method: 'POST',
+            headers: {
+                "Accept": " application/json",
+                "Authorization": bearerMelhorEnvio,
+                "Content-Type": "application/json",
+                "User-Agent": "Aplicação (email para contato técnico)",
+            },
+            body: JSON.stringify({
+                "orders": [
+                    id
+                ]
+            })
+        });
+    if(fetchres.ok){
+        res.redirect('/admin/paying');
+    }else{
+        req.flash('error', 'ID da etiqueta incorreto!');
+        res.redirect('/admin/paying');
+    }
+});
+
+routes.post('/print/paying', async(req, res) => {
+    const { id } = req.body;
+    const melhorEnvio = new envioDAO();
+
+    let bearerMelhorEnvio = 'Bearer ';
+    await melhorEnvio.buscaToken().then(bearer => {  bearerMelhorEnvio += bearer.access_token});
+
+    let fetchres = await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/shipment/print',{
+            method: 'POST',
+            headers: {
+                "Accept": " application/json",
+                "Authorization": bearerMelhorEnvio,
+                "Content-Type": "application/json",
+                "User-Agent": "Aplicação (email para contato técnico)",
+            },
+            body: JSON.stringify({
+                "mode": "public",
+                "orders": [
+                    id
+                ]
+            })
+        });
+    if(fetchres.ok){
+        let temp = await fetchres.json();
+        res.redirect(temp.url);
+    }else{
+        req.flash('error', 'ID da etiqueta incorreto!');
+        res.redirect('/admin/paying');
+    }
 });
 
 module.exports = routes;
