@@ -133,7 +133,7 @@ routes.post('/alterarSenha',function(req,res){
         bcrypt.hash(password, salt, async (err, hash) => {
             // Salva o usuário no banco de dados
             users.updatePass({password: hash, salt, id}).then(()=> {
-                res.redirect('/login');
+                res.redirect('/user/login');
             }).catch(err => {
                 req.flash('error', 'campo preenchido incorretamente!');
                 res.redirect('/alterarSenha');
@@ -158,7 +158,7 @@ routes.post('/register', async (req, res) => {
             bcrypt.hash(password, salt, async (err, hash) => {
                 // Salva o usuário no banco de dados
                 users.insert({name, email, lastname, tel, cpf, cep, city, district, adress, number, password: hash, salt}).then(()=> {
-                    res.redirect('/login');
+                    res.redirect('/user/login');
                 }).catch(err => {
                     req.flash('error', 'campo preenchido incorretamente!');
                     res.redirect('/register');
