@@ -65,7 +65,7 @@ module.exports  = class itens{
     async findUser(id){
         const conn = await pool.getConnection();
         try {
-            const sql = `SELECT * FROM transaction WHERE idUser = ?`;
+            const sql = `SELECT * FROM transaction WHERE idUser = ? ORDER BY status ASC, DATE DESC`;
             const [rows] = await conn.query(sql, [id]);
             return rows;
         }catch(err){
@@ -108,7 +108,7 @@ module.exports  = class itens{
     async select(){
         const conn = await pool.getConnection();
         try {
-            const sql = `SELECT * FROM transaction`;
+            const sql = `SELECT * FROM transaction ORDER BY date DESC`;
             const [row] = await conn.query(sql);
             return row;
         }catch(err){
