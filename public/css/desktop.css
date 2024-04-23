@@ -1335,10 +1335,13 @@ button.star-button {
     display: none;
 }
 main.etiqueta{
-    width: 1300px;
+    width: 100%;
+    max-width: 1500px;
+    min-width: 1200px;
     margin: auto;
 }
 .Banner-envio{
+    width: calc(100% - 60px);
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
