@@ -92,7 +92,7 @@ routes.post('/esqueceuSenha', function(req,res){
         })
         .catch(err => {
         req.flash('error', 'Email não encontrado');
-        res.redirect('/register');
+        res.redirect('/user/register');
     });
 })
 
@@ -161,12 +161,12 @@ routes.post('/register', async (req, res) => {
                     res.redirect('/user/login');
                 }).catch(err => {
                     req.flash('error', 'campo preenchido incorretamente!');
-                    res.redirect('/register');
+                    res.redirect('/user/register');
                 });
             });
         });
     }).catch(err => (
-        res.redirect('/register')
+        res.redirect('/user/register')
     ));
 });
 
