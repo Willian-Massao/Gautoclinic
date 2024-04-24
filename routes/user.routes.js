@@ -21,11 +21,11 @@ passport.use(new LocalStrategy({
     const users = new userDAO();
     users.findEmail(email)
     .then(user => {
-        controllerUser = new User(user);
         if (!user) {
             console.log('Email ou senha incorretos.');
             return done(null, false, { message: 'Email ou senha incorretos.' });
         }
+        controllerUser = new User(user);
         // Verifica se a senha fornecida está correta
         bcrypt.compare(password, user.password, (err, result) => {
         if (err) {
