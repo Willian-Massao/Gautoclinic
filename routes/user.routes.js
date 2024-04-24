@@ -11,6 +11,7 @@ const bcrypt = require('bcryptjs');
 const userDAO = require('../database/userDAO.js');
 const melhorenvioDAO = require('../database/melhorenvioDAO.js')
 const freteDAO = require('../database/freteDAO.js');
+const passwordForgotDAO = require('../database/passwordFogotDAO.js');
 const { json } = require('body-parser');
 
 passport.use(new LocalStrategy({
@@ -64,6 +65,7 @@ routes.post('/logout', function(req, res, next){
 });
 
 routes.post('/esqueceuSenha', function(req,res){
+    const passwordForgot = new passwordForgotDAO();
     const {email} = req.body;
     let randomNumber;
     let assunto= 'Redefinição de senha GautoClinic';
@@ -76,8 +78,8 @@ routes.post('/esqueceuSenha', function(req,res){
     const users = new userDAO();
     let id;
         users.findEmail(email)
-        .then(user => {        
-            if (user) {
+       .then(user => {        
+             if (user) {
                 controllerUser = new User(user);
                 randomNumber = helper.numeroAleatorioRange(100000,999999)
                 html = `<style>#container {width: calc(100% - 30px);background-color: #f3f4f8;}h1 {color: #000;}#img-container{width: 10%;}p{color: #6b688a;font-weight: 400;}img{flex-shrink:  0;-webkit-flex-shrink: 0;max-width:  100%;max-height:  100%;}#code{height: 50px;width: 100%;background-color: #f3f4f8;border-radius: 5px;display: flex;justify-content: center;align-items: center;}#border{background-color: white;display: flex;justify-content: center;flex-direction: column;font-family: 'Trebuchet MS', sans-serif;padding: 30px;margin: 25px;border-radius: 5px;}</style><script>function copy() {var copyText = document.querySelector("p");navigator.clipboard.writeText(copyText.innerText);}</script><div id="container"><div id="border"><h1>Seu código</h1><p>Por favor, insira o código de verificação na página de redefinição de senha. Esse código foi enviado para o seu e-mail registrado. Após inserir o código,vocêpoderácriar uma nova senha.</p><div id="code"><h3>${randomNumber}</h3></div><p>Se você não solicitou a alteração da senha, entre em contato conosco imediatamente. Sua segurança é nossa prioridade.</p></div></div>`
@@ -97,6 +99,7 @@ routes.post('/esqueceuSenha', function(req,res){
 })
 
 routes.post('/confirmarCodigo',function(req,res){
+    const passwordForgot = new passwordForgotDAO();
     const {codigo} = req.body;
     let date = new Date();
     let tipoErro;
@@ -104,7 +107,7 @@ routes.post('/confirmarCodigo',function(req,res){
     .then(passwordForgot =>{
         if( passwordForgot['dateTimeExpirationCod'] > date) {
                 if (passwordForgot['authVerificationCod'] == codigo){
-                    res.redirect('/alterarSenha');
+                    res.redirect('/user/alterarSenha');
                 }else{
                     tipoErro = 1;
                     throw new Error()
@@ -120,26 +123,32 @@ routes.post('/confirmarCodigo',function(req,res){
         }
         if(tipoErro === 2){
             req.flash('error', 'Código Expirado');
-            res.redirect('/esqueceuSenha');
+            res.redirect('/user/esqueceuSenha');
         }
     })
 })
 
 routes.post('/alterarSenha',function(req,res){
+    const users = new userDAO();
     const {password}= req.body;
-    let id = controllerUser.id;
     // Gera o salt e a senha criptografada
-    bcrypt.genSalt(10, (err, salt) => {
-        bcrypt.hash(password, salt, async (err, hash) => {
-            // Salva o usuário no banco de dados
-            users.updatePass({password: hash, salt, id}).then(()=> {
-                res.redirect('/user/login');
-            }).catch(err => {
-                req.flash('error', 'campo preenchido incorretamente!');
-                res.redirect('/alterarSenha');
+    if(typeof controllerUser !== 'undefined'){
+        let id = controllerUser.id;
+        bcrypt.genSalt(10, (err, salt) => {
+            bcrypt.hash(password, salt, async (err, hash) => {
+                // Salva o usuário no banco de dados
+                users.updatePass({password: hash, salt, id}).then(()=> {
+                    res.redirect('/user/login');
+                }).catch(err => {
+                    req.flash('error', 'campo preenchido incorretamente!');
+                    res.redirect('/user/alterarSenha');
+                });
             });
         });
-    });
+    }else{
+        req.flash('error', 'Erro ao alterar senha!');
+        res.redirect('/user/esqueceuSenha');
+    }
 })
 
 routes.post('/register', async (req, res) => {

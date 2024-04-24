@@ -42,21 +42,37 @@
                         </div>
                     </div>
                 </div>
+                <div>
+                    <p id="alerts"></p>
+                </div>
                 <input type="submit" id = "alterar" class="btn" value="Alterar">
             </form>
         </div>
     </div>
-    <script type="text/javascript" src="./script/scriptLogin.js"></script>
+    <script type="text/javascript" src="/script/scriptLogin.js"></script>
 </body>
 <script>
 function comparePassword(){
     var password = document.getElementById("password").value;
     var confirmedPassword = document.getElementById("confirmedPassword").value;
+    var alerts = document.getElementById('alerts');
 
-    if (password === confirmedPassword) {
-        document.getElementById('alterar').disabled = false;
+    alerts.innerHTML = "";
+
+    if( password.length >= 8 && confirmedPassword.length >= 8){
+        if (password === confirmedPassword) {
+            document.getElementById('alterar').disabled = false;
+            document.getElementById('alterar').style.color = "#fff";
+            alerts.innerHTML = "";
+        }else{
+        document.getElementById('alterar').disabled = true;
+        document.getElementById('alterar').style.color = "#ff0000";
+        alerts.innerHTML = "As senhas devem ser iguais<br>";
+        }
     }else{
         document.getElementById('alterar').disabled = true;
+        document.getElementById('alterar').style.color = "#ff0000";
+        alerts.innerHTML = "As senhas devem ter no mínimo 8 caracteres<br>";
     }
 }
 </script>
