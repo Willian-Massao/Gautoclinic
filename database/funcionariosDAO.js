@@ -6,9 +6,12 @@ module.exports  = class funcionarios{
         const conn = await pool.getConnection();
         try{
             const sql = `CREATE TABLE if not exists funcionarios (
-                idFuncionario INT NOT NULL AUTO_INCREMENT,
-                nome VARCHAR(60) NOT NULL,
-                PRIMARY KEY (idFuncionario));`;
+                idFuncionario int NOT NULL AUTO_INCREMENT,
+                nome varchar(60) NOT NULL,
+                PRIMARY KEY (idFuncionario),
+                CONSTRAINT idFuncionario
+                FOREIGN KEY (idFuncionario)
+                REFERENCES users (id))`;
             await conn.query(sql);
             console.log("Tabela funcionarios criada com sucesso!");
         }catch(err){
@@ -23,8 +26,8 @@ module.exports  = class funcionarios{
         const conn = await pool.getConnection();
         try{
             NN(funcionarios);
-            const sql = "insert into funcionarios (nome)"
-            await conn.query(sql, [funcionarios.nome])
+            const sql = "insert into funcionarios (idFuncionario, nome) values (?, ?)"
+            await conn.query(sql, [funcionarios.idUser, funcionarios.nome])
             console.log("funcionarios inserido com sucesso!");
         }catch(err){
             console.log(err);
