@@ -6,19 +6,22 @@ module.exports  = class agendamentos{
         const conn = await pool.getConnection();
         try{
             const sql = `CREATE TABLE if not exists agendamentos (
+                id varchar(36) NOT NULL,
                 idUser int NOT NULL,
                 dataHoraAgendamento datetime NOT NULL,
                 idFuncionario int NOT NULL,
                 confirmado tinyint NOT NULL DEFAULT '0',
                 idProcedimento int NOT NULL,
+                price float NOT NULL,
                 pagamentoOnline tinyint NOT NULL DEFAULT '0',
+                check_ref varchar(36) NOT NULL,
+                status varchar(10) NOT NULL DEFAULT 'PENDING',
                 KEY IdFuncionarioagendamento_idx (idFuncionario),
                 KEY idUserAgendamentos (idUser),
                 KEY idProcedimentoAgendamentos_idx (idProcedimento),
                 CONSTRAINT IdFuncionarioagendamento FOREIGN KEY (idFuncionario) REFERENCES funcionarios (idFuncionario),
                 CONSTRAINT idProcedimentoAgendamentos FOREIGN KEY (idProcedimento) REFERENCES procedimentos (idProcedimentos),
-                CONSTRAINT idUserAgendamentos FOREIGN KEY (idUser) REFERENCES users (id)
-            );`;
+                CONSTRAINT idUserAgendamentos FOREIGN KEY (idUser) REFERENCES users (id));`;
             await conn.query(sql);
             console.log("Tabela agendamentos criada com sucesso!");
         }catch(err){
@@ -33,8 +36,8 @@ module.exports  = class agendamentos{
         const conn = await pool.getConnection();
         try{
             NN(agendamentos);
-            const sql = "insert into agendamentos (idUser, dataHoraAgendamento, idProcedimento,idFuncionario) values (?,?,?,?)"
-            await conn.query(sql, [agendamentos.idUser,agendamentos.dataHoraAgendamento, agendamentos.idProcedimento ,agendamentos.idFuncionario])
+            const sql = "insert into agendamentos (id, idUser, dataHoraAgendamento, idProcedimento,idFuncionario, check_ref, price) values (?,?,?,?,?,?,?)"
+            await conn.query(sql, [agendamentos.idsumup, agendamentos.idUser,agendamentos.dataHoraAgendamento, agendamentos.idProcedimento ,agendamentos.idFuncionario, agendamentos.check_ref, agendamentos.price])
             console.log("agendamentos inserido com sucesso!");
         }catch(err){
             console.log(err);
@@ -60,12 +63,12 @@ module.exports  = class agendamentos{
         }
     }
 
-    async findUser(id){
+    async findId(agendamentos){
         const conn = await pool.getConnection();
         try {
-            const sql = `SELECT authVerificationCod, dateTimeExpirationCod FROM passwordforgot WHERE id = ?;`;
-            const [rows] = await conn.query(sql, [id]);
-            return rows[0];
+            const sql = `SELECT id FROM agendamentos WHERE idUser = ? and check_ref = ?;`;
+            const [rows] = await conn.query(sql, [agendamentos.idUser, agendamentos.check_ref]);
+            return rows;
         }catch(err){
             console.log(err);
         }finally{

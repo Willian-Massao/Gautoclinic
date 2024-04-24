@@ -51,6 +51,20 @@ module.exports  = class procedimentos{
         }
     }
 
+    //findId
+    async findId(procedimentos){
+        const conn = await pool.getConnection();
+        try {
+            const sql = `SELECT * FROM procedimentos WHERE idProcedimentos = ?;`;
+            const [rows] = await conn.query(sql, [procedimentos.id]);
+            return rows[0];
+        }catch(err){
+            console.log(err);
+        }finally{
+            conn.release();
+        }
+    }
+
     async select(){
         const conn = await pool.getConnection();
         try {
