@@ -95,6 +95,25 @@ function sendEmail(destinatario, assunto,html,text){
 
 const upload = multer({ storage });
 
+function calcularIdade(data){
+    let nascimento = new Date(data);
+    let hoje = new Date();
+    let idade = hoje.getFullYear() - nascimento.getFullYear();
+    let mes = hoje.getMonth() - nascimento.getMonth();
+    if(mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())){
+        idade--;
+    }
+    return idade;
+}
+
+function calcularData(data){
+    let hoje = new Date();
+    let dataAgendamento = new Date(data);
+    let diferenca = dataAgendamento - hoje;
+    let dias = diferenca/(1000*60*60*24);
+    return dias;
+}
+
 module.exports = {
     ensureAuthenticated,
     ensureAdmin,
@@ -103,4 +122,6 @@ module.exports = {
     sendEmail,
     mailer,
     upload,
+    calcularIdade,
+    calcularData
 }

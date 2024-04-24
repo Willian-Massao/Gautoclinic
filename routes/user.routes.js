@@ -199,5 +199,11 @@ routes.get('/register', (req, res) => {
     res.render('register', {error: errorMessage});
 });
 
+routes.get('/agendamentos', helper.ensureAuthenticated, (req, res) => {
+    const errorMessage = req.flash('error');
+    
+    res.render('agendamentos', { user: req.user, error: errorMessage});
+});
+
 
 module.exports = routes;

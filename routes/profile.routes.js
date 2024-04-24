@@ -175,4 +175,22 @@ routes.post('/refund', helper.ensureAuthenticated, async (req, res) => {
     });
 });
 
+routes.get('/consultas', helper.ensureAuthenticated, (req, res) => {
+    const errorMessage = req.flash('error');
+    const transaction = new transactionDAO();
+    const ptTable = {
+        'PENDING': 'Pendente',
+        'PAID': 'Aprovado',
+        'FAILED': 'Recusado',
+        'FINISH': 'Entregue'
+    }
+
+    transaction.findUser(req.user.id).then( orders => {
+        orders.forEach(element => {
+            element.status = ptTable[element.status];
+        });
+        res.render('consultas', { user: req.user, orders: orders, error: errorMessage});
+    });
+});
+
 module.exports = routes;

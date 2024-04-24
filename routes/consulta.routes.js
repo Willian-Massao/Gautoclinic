@@ -1,0 +1,109 @@
+const routes = require('express').Router();
+const helper = require('../helpers/helper');
+const uuid = require("uuid-lib");
+
+const userDAO = require('../database/userDAO.js');
+const agendamentosDAO = require('../database/agendamentosDAO.js');
+const funcionariosDAO = require('../database/funcionariosDAO.js');
+const fun2proceDAO = require('../database/funcionariosProcedimentosDAO.js');
+const procedimentosDAO = require('../database/procedimentosDAO.js');
+const transactionDAO = require('../database/transactionDAO.js');
+
+routes.post('/add/', async (req, res) => {
+    const { nascimento, data, time, procedimentos, funcionario, aviso } = req.body;
+    let consulDate = new Date(data + ' ' + time);
+    const proces = new procedimentosDAO();
+
+    let ListOf = [];
+
+    let transaction = {
+        id: '',
+        idUser: '',
+        check_ref: uuid.create().toString(),
+        price: 200,
+        currency: process.env.SUMUP_CURRENCY,
+        pay2mail: process.env.SUMUP_EMAIL,
+        status: '',
+        date: '',
+        shipping: []
+    }
+
+    
+    try{
+        //verificar se é maior de 18
+        if(helper.calcularIdade(nascimento) < 18){
+            throw new Error('É necessário ser maior de 18 anos para marcar um procedimento');
+        }
+        //verificar se a data é 1 dia a frente
+        if(helper.calcularData(data) < 1){
+            throw new Error('É necessário marcar com 1 dia de antecedência');
+        }
+        //verificar se foi aceito os termos
+        if(aviso != 'on'){
+            throw new Error('É necessário aceitar os termos de uso');
+        }
+
+        procedimentos.forEach(procedimento => {
+            proces.findId({id: procedimento}).then( data => {
+                ListOf.push({
+                    idsumup: '',
+                    idUser: req.user.id,
+                    dataHoraAgendamento: consulDate,
+                    idProcedimento: procedimento,
+                    idFuncionario: funcionario,
+                    check_ref: transaction.check_ref,
+                    price: data.preco
+                });
+            });
+        });
+        sumupReq(transaction, ListOf, req, res)
+    }catch(err){
+        req.flash('error', err.message);
+        res.redirect('/marcar');
+    }
+});
+
+async function sumupReq(trans, ListOf, req, res){
+    const agendamentos = new agendamentosDAO();
+    const apiRes = await fetch('https://api.sumup.com/v0.1/checkouts',{
+        method: 'POST',
+        headers: {
+            "Authorization": "Bearer " + process.env.SUMUP_KEY,
+            "Content-Type": "application/json",
+        }, body:JSON.stringify({
+            "checkout_reference": trans.check_ref,
+            "amount": trans.price,
+            "currency": trans.currency,
+            "pay_to_email": trans.pay2mail,
+        })
+    });
+    if(apiRes.ok){
+        let data = await apiRes.json();
+
+        trans.id = data.id;
+        trans.idUser = req.user.id;
+        trans.check_ref = data.checkout_reference;
+        trans.status = data.status;
+        trans.price = data.amount;
+
+        for (let item of ListOf) {
+            item.idsumup = data.id;
+            await agendamentos.insert(item);
+        }
+
+        res.redirect('/consulta/payment/' + data.checkout_reference);
+    }else{
+        res.status(500).send('sumup unauthorized')
+    }
+}
+
+routes.get('/payment/:id', (req, res)=>{
+    const errorMessage = req.flash('error');
+    const agendamentos = new agendamentosDAO();
+    
+    agendamentos.findId({idUser: req.user.id, check_ref: req.params.id}).then( data =>{
+        res.render('payment', {data: data, user: req.user, error: errorMessage});
+    }).catch(err => res.status(500).send('Something broke!'));
+});
+
+module.exports = routes;

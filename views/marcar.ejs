@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include ("partials/head.ejs") %>
+</head>
+<body>
+    <%- include ("partials/alert.ejs") %>
+    <%- include ("partials/navbar.ejs") %>
+    <%- include ("partials/header.ejs") %>
+    <main>
+        <div class="consulta-form">
+            <form method="post" action="/consulta/add">
+                <h2>MARCAR CONSULTA</h2>
+                <div class="consulta-campo">
+                    <label class="subline outline" for="nascimento">DATA DE NASCIMENTO</label>
+                    <input type="date" name="nascimento" id="nascimento" placeholder="nascimento">
+                </div>
+                <div class="consulta-campo">
+                    <label class="subline outline" for="data">DATA E HORARIO</label>
+                    <div>
+                        <input type="date" name="data" id="data" placeholder="data">
+                        <input type="time" name="time" id="time" placeholder="time">
+                    </div>
+                </div>
+                <fieldset class="consulta-campo"> 
+                    <label class="subline outline">PROCEDIMENTO</label>
+                    <% procedimentos.forEach((e)=>{ %>
+                        <div class="subcampo-consulta">
+                            <input type="checkbox" name="procedimentos" id="<%= e.nome %>" value="<%= e.idProcedimentos %>">
+                            <label for="procedimentos"><%= e.nome.replace('-', ' ') %></label>
+                        </div>
+                    <% }) %>
+                </fieldset>
+                <div class="consulta-campo">
+                    <label class="subline outline">FUNCIONARIO</label>
+                    <select name="funcionario">
+                        <% funcionarios.forEach((e)=>{ %>
+                            <option value="<%= e.idFuncionario %>"><%= e.Nome %></option>
+                        <% }) %>
+                    </select>
+                </div>
+                <div class="consulta-campo">
+                    <p class="aviso">Atente-se com sua data e horário, em caso de cancelamento ou não comparecimento não devolvemos o valor de agendamento. Apenas remarcamos somente 1 vez dentro do mesmo mês. Assim que o valor do agendamento for pago e considerado que você ja iniciou o processo e protocolo do procedimento, sendo assim você não terá o direito de reembolso de qualquer valor pago antes. </p>
+                    <div>
+                        <input type="checkbox" name="aviso"><label for="aviso">Li e concordo</label>
+                    </div>
+                </div>
+                <input type="submit" value="Marcar">
+            </form>
+        </div>
+    </main>
+    <%- include ("partials/footer.ejs") %>
+</body>
+</html>

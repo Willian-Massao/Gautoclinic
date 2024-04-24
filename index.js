@@ -12,6 +12,7 @@ const routerDatabase = require('./routes/database.routes.js');
 const routerAdmin = require('./routes/admin.routes.js');
 const routerProfile = require('./routes/profile.routes.js');
 const routerUser = require('./routes/user.routes.js');
+const routerConsulta = require('./routes/consulta.routes.js');
 
 const helper = require('./helpers/helper.js');
 
@@ -27,7 +28,12 @@ const envioDAO = require("./database/melhorenvioDAO.js");
 const refoundDAO = require("./database/refoundDAO.js");
 const freteDAO = require("./database/freteDAO.js");
 const ownershopDAO = require("./database/ownershopDAO.js")
+const procedimentosDAO = require("./database/procedimentosDAO.js")
+const funcionariosDAO = require("./database/funcionariosDAO.js")
+const funcionariosProcedimentosDAO = require("./database/funcionariosProcedimentosDAO.js")
+const agendamentosDAO = require("./database/agendamentosDAO.js")
 const routes = require('./routes/profile.routes.js');
+
 
 // porta do servidor
 const port = 3000;
@@ -48,6 +54,10 @@ const envio = new envioDAO();
 const refound = new refoundDAO();
 //const frete = new freteDAO();
 const ownershop = new ownershopDAO();
+const procedimentos = new procedimentosDAO();
+const funcionarios = new funcionariosDAO();
+const funcionariosProcedimentos = new funcionariosProcedimentosDAO();
+const agendamentos = new agendamentosDAO();
 
 users.create();
 itens.create();
@@ -60,6 +70,10 @@ passwordForgot.create();
 envio.create();
 //frete.create();
 ownershop.create();
+procedimentos.create();
+funcionarios.create();
+funcionariosProcedimentos.create();
+agendamentos.create();
 
 // Configuração do express
 app.set('view engine', 'ejs');
@@ -375,7 +389,7 @@ app.get('/search', (req, res) =>{
     }).catch(err => res.status(500).send('Something broke!'));
 });
 
-routes.get('/fretes', helper.ensureAuthenticated, (req, res) => {
+app.get('/fretes', helper.ensureAuthenticated, (req, res) => {
     const frete = new freteDAO();
     const errorMessage = req.flash('error');
     let freteJson = freteCon.getAgencias()[0];
@@ -383,13 +397,31 @@ routes.get('/fretes', helper.ensureAuthenticated, (req, res) => {
     res.render('fretes', { user: req.user, fretes: freteJson, error: errorMessage});
 });
 
-app.use('/database/', routerDatabase)
+app.get('/marcar', helper.ensureAuthenticated, async (req, res) => {
+    const procedimentos = new procedimentosDAO();
+    const funcionarios = new funcionariosDAO();
+    const errorMessage = req.flash('error');
+    let func,proc;
+    
+    try{
+        func = await funcionarios.select();
+        proc = await procedimentos.select();
+    }catch(err){
+        console.log(err);
+    }finally{
+        res.render('marcar', { procedimentos: proc, funcionarios: func, user: req.user, error: errorMessage});
+    }
+});
 
-app.use('/admin/', routerAdmin)
+app.use('/database/', routerDatabase);
 
-app.use('/profile/', routerProfile)
+app.use('/admin/', routerAdmin);
 
-app.use('/user/', routerUser)
+app.use('/profile/', routerProfile);
+
+app.use('/user/', routerUser);
+
+app.use('/consulta/', routerConsulta);
 
 app.listen(port, () => {
     console.log(`Servidor rodando em http://localhost:${port}`);
