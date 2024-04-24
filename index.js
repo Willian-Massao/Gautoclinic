@@ -27,7 +27,12 @@ const envioDAO = require("./database/melhorenvioDAO.js");
 const refoundDAO = require("./database/refoundDAO.js");
 const freteDAO = require("./database/freteDAO.js");
 const ownershopDAO = require("./database/ownershopDAO.js")
+const procedimentosDAO = require("./database/procedimentosDAO.js")
+const funcionariosDAO = require("./database/funcionariosDAO.js")
+const funcionariosProcedimentosDAO = require("./database/funcionariosProcedimentosDAO.js")
+const agendamentosDAO = require("./database/agendamentosDAO.js")
 const routes = require('./routes/profile.routes.js');
+
 
 // porta do servidor
 const port = 3000;
@@ -48,6 +53,10 @@ const envio = new envioDAO();
 const refound = new refoundDAO();
 //const frete = new freteDAO();
 const ownershop = new ownershopDAO();
+const procedimentos = new procedimentosDAO();
+const funcionarios = new funcionariosDAO();
+const funcionariosProcedimentos = new funcionariosProcedimentosDAO();
+const agendamentos = new agendamentosDAO();
 
 users.create();
 itens.create();
@@ -60,6 +69,10 @@ passwordForgot.create();
 envio.create();
 //frete.create();
 ownershop.create();
+procedimentos.create();
+funcionarios.create();
+funcionariosProcedimentos.create();
+agendamentos.create();
 
 // Configuração do express
 app.set('view engine', 'ejs');
@@ -381,6 +394,12 @@ routes.get('/fretes', helper.ensureAuthenticated, (req, res) => {
     let freteJson = freteCon.getAgencias()[0];
 
     res.render('fretes', { user: req.user, fretes: freteJson, error: errorMessage});
+});
+
+routes.get('/agendamentos', helper.ensureAuthenticated, (req, res) => {
+    const errorMessage = req.flash('error');
+    
+    res.render('agendamentos', { user: req.user, error: errorMessage});
 });
 
 app.use('/database/', routerDatabase)
