@@ -33,8 +33,8 @@ module.exports  = class agendamentos{
         const conn = await pool.getConnection();
         try{
             NN(agendamentos);
-            const sql = "insert into agendamentos (idUser, dataHoraAgendamento,idFuncionario,confirmado)"
-            await conn.query(sql, [agendamentos.idUser,agendamentos.dataHoraAgendamento, agendamentos.idFuncionario, agendamentos.confirmado])
+            const sql = "insert into agendamentos (idUser, dataHoraAgendamento, idProcedimento,idFuncionario) values (?,?,?,?)"
+            await conn.query(sql, [agendamentos.idUser,agendamentos.dataHoraAgendamento, agendamentos.idProcedimento ,agendamentos.idFuncionario])
             console.log("agendamentos inserido com sucesso!");
         }catch(err){
             console.log(err);

@@ -51,6 +51,19 @@ module.exports  = class procedimentos{
         }
     }
 
+    async select(){
+        const conn = await pool.getConnection();
+        try {
+            const sql = `SELECT idProcedimentos, nome, preco, tempoAproximado FROM procedimentos;`;
+            const [rows] = await conn.query(sql, [procedimentos.id]);
+            return rows;
+        }catch(err){
+            console.log(err);
+        }finally{
+            conn.release();
+        }
+    }
+
     async selecionaProcedimentos(procedimentos){
         const conn = await pool.getConnection();
         try {

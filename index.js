@@ -12,6 +12,7 @@ const routerDatabase = require('./routes/database.routes.js');
 const routerAdmin = require('./routes/admin.routes.js');
 const routerProfile = require('./routes/profile.routes.js');
 const routerUser = require('./routes/user.routes.js');
+const routerConsulta = require('./routes/consulta.routes.js');
 
 const helper = require('./helpers/helper.js');
 
@@ -388,7 +389,7 @@ app.get('/search', (req, res) =>{
     }).catch(err => res.status(500).send('Something broke!'));
 });
 
-routes.get('/fretes', helper.ensureAuthenticated, (req, res) => {
+app.get('/fretes', helper.ensureAuthenticated, (req, res) => {
     const frete = new freteDAO();
     const errorMessage = req.flash('error');
     let freteJson = freteCon.getAgencias()[0];
@@ -396,19 +397,31 @@ routes.get('/fretes', helper.ensureAuthenticated, (req, res) => {
     res.render('fretes', { user: req.user, fretes: freteJson, error: errorMessage});
 });
 
-routes.get('/agendamentos', helper.ensureAuthenticated, (req, res) => {
+app.get('/marcar', helper.ensureAuthenticated, async (req, res) => {
+    const procedimentos = new procedimentosDAO();
+    const funcionarios = new funcionariosDAO();
     const errorMessage = req.flash('error');
+    let func,proc;
     
-    res.render('agendamentos', { user: req.user, error: errorMessage});
+    try{
+        func = await funcionarios.select();
+        proc = await procedimentos.select();
+    }catch(err){
+        console.log(err);
+    }finally{
+        res.render('marcar', { procedimentos: proc, funcionarios: func, user: req.user, error: errorMessage});
+    }
 });
 
-app.use('/database/', routerDatabase)
+app.use('/database/', routerDatabase);
 
-app.use('/admin/', routerAdmin)
+app.use('/admin/', routerAdmin);
 
-app.use('/profile/', routerProfile)
+app.use('/profile/', routerProfile);
 
-app.use('/user/', routerUser)
+app.use('/user/', routerUser);
+
+app.use('/consulta/', routerConsulta);
 
 app.listen(port, () => {
     console.log(`Servidor rodando em http://localhost:${port}`);

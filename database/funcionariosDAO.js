@@ -46,6 +46,21 @@ module.exports  = class funcionarios{
             conn.release();
         }
     }
+
+    //select
+    async select(){
+        const conn = await pool.getConnection();
+        try {
+            const sql = `SELECT idFuncionario, Nome FROM funcionarios;`;
+            const [rows] = await conn.query(sql);
+            return rows;
+        }catch(err){
+            console.log(err);
+        }finally{
+            conn.release();
+        }
+    }
+
     async describe(){
         const conn = await pool.getConnection();
         try {
