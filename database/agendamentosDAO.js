@@ -9,8 +9,9 @@ module.exports  = class agendamentos{
                 idUser int NOT NULL,
                 dataHoraAgendamento datetime NOT NULL,
                 idFuncionario int NOT NULL,
-                confirmado tinyint NOT NULL DEFAULT 0,
+                confirmado tinyint NOT NULL DEFAULT '0',
                 idProcedimento int NOT NULL,
+                pagamentoOnline tinyint NOT NULL DEFAULT '0',
                 KEY IdFuncionarioagendamento_idx (idFuncionario),
                 KEY idUserAgendamentos (idUser),
                 KEY idProcedimentoAgendamentos_idx (idProcedimento),
@@ -25,7 +26,7 @@ module.exports  = class agendamentos{
         }finally{
             conn.release();
         }
-    }
+    } 
 
     // insertUpdate
     async insert(agendamentos){
