@@ -32,10 +32,10 @@ routes.post('/add/admins', (req, res) => {
     });
 });
 routes.post('/add/products', (req, res) => {
-    const { name, qtd, price, descount, type, description, mRate, height, width, depth, weight } = req.body;
+    const { name, qtd, price, descount, type, description, mRate, height, width, depth, weight, uses, active,benefits } = req.body;
     const itens = new itemDAO();
 
-    itens.insert({ name, qtd, price, descount, type, description, mRate, height, width, depth, weight }).then(()=>{
+    itens.insert({ name, qtd, price, descount, type, description, mRate, height, width, depth, weight, uses, active,benefits }).then(()=>{
         res.redirect('/admin/products')}
     ).catch(err => {
         req.flash('error', 'Preenchido incorretamente!');
