@@ -248,7 +248,6 @@ function compac(result){
                         check_ref: element.check_ref
                     });
                 }else{
-                    console.log(newRows.comments)
                     let isIn = false;
                     newRows.comments.forEach((e)=>{
                         if(e.idUser == element.comment2user && e.idItem == element.comment2product && e.check_ref == element.check_ref){

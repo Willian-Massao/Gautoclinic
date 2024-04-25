@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include ("partials/head.ejs") %>
+</head>
+<body>
+    <%- include ("partials/alert.ejs") %>
+<main>
+    <div class="job-container info">
+        <div class="job-options">
+            <div class="job-card">
+                <h6>NOME</h6>
+                <h4><%= data[0].idUser %></h4>
+            </div>
+            <div class="job-card">
+                <h6>DATA</h6>
+                <h4><%= data[0].dataHoraAgendamento.toLocaleDateString("pt-BR",{timeZone: 'America/Sao_Paulo',year: 'numeric',month: 'numeric',day: 'numeric',hour: 'numeric',minute: 'numeric',second: 'numeric',}).replace(', ', ' - ') %></h4>
+            </div>
+            <div class="job-card">
+                <h6>STATUS</h6>
+                <h3 class="<%= data[0].status %>"><%= data[0].status %></h3>
+            </div>
+        </div>
+        <div class="job-list">
+            <div>
+                <% data.forEach(item => { %>
+                    <div class="job-card">
+                        <h3><%= item.idProcedimento %></h3>
+                        <div>
+                            <h5>Valor Individual: R$ <%= item.price %></h5>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+            <div>
+                <div class="job-card total">
+                    <h3>Valor Total</h3>
+                    <h6>-R$ 200 de taxa</h6>
+                    <h4>R$ <%= data.reduce((acc, item) => acc + item.price, 0)-200 %></h4>
+                    <div class="form-buttons">
+                        <input class="cancel" type="submit" value="Recusar" form="cancel">
+                        <input class="accept" type="submit" value="Aceitar" form="accept">
+                    </div>
+                </div>
+                <form action="/consulta/cancel" method="post" id="cancel">
+                    <input type="text" value="<%= data[0].check_ref%>" style="display: none;">
+                </form>
+                <form action="/consulta/accept" method="post" id="accept">
+                    <input type="text" value="<%= data[0].check_ref%>" style="display: none;">
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

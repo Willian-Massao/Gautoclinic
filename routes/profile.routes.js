@@ -5,6 +5,7 @@ const userDAO = require('../database/userDAO.js');
 const transactionDAO = require('../database/transactionDAO.js');
 const refundDAO = require('../database/refoundDAO.js');
 const commentDAO = require('../database/commentDAO.js');
+const agendamentoDAO = require('../database/agendamentosDAO.js');
 
 //Profile routes
 routes.get('/account', helper.ensureAuthenticated, (req, res) => {
@@ -62,7 +63,6 @@ routes.post('/comments/add/:check_ref/:idItem', async(req, res) => {
         });
     }).finally(() => {
         if(isEqual){
-            console.log({check_ref: check_ref, idProduct: idItem, idUser: req.user.id, name: req.user.name, comment, rate});
             comments.insert({check_ref: check_ref, idProduct: idItem, idUser: req.user.id, name: req.user.name, comment, rate}).then(() => {
                 res.redirect(`/orders`)
             }).catch(err => {
@@ -119,6 +119,42 @@ routes.get('/orders/:check_ref', helper.ensureAuthenticated, (req, res) => {
         res.render('orderinfo', { user: req.user, orders: orders, error: errorMessage});
     });
 });
+
+routes.get('/consultas', helper.ensureAuthenticated, (req, res) => {
+    const errorMessage = req.flash('error');
+    const agendamento = new agendamentoDAO();
+    const ptTable = {
+        'PENDING': 'Pendente',
+        'PAID': 'Aprovado',
+        'FAILED': 'Recusado',
+        'FINISH': 'Entregue'
+    }
+
+    agendamento.findUser({idUser: req.user.id}).then( orders => {
+        let temp = [];
+        orders.forEach(element => {
+            if(element.status != 'PENDING'){
+                if(temp.length == 0){
+                    temp.push(element)
+                    temp.status = ptTable[element.status];
+                }else{
+                    let isEqual = false;
+                    temp.forEach(item => {
+                        if(item.check_ref == element.check_ref){
+                            isEqual = true;
+                        }
+                    });
+                    if(!isEqual){
+                        temp.push(element)
+                        temp.status = ptTable[element.status];
+                    }
+                }
+            }
+        });
+        res.render('consultasorders', { user: req.user, orders: temp, error: errorMessage});
+    });
+});
+
 
 routes.get('/edit', helper.ensureAuthenticated, (req, res) => {
     const errorMessage = req.flash('error');

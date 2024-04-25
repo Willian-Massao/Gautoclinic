@@ -50,6 +50,7 @@ passport.deserializeUser(function(user, done) {
     const users = new userDAO();
     users.findId(user.id).then(user => {
         user.hasAdmin = controllerUser.hasAdmin;
+        user.hasFunc = controllerUser.hasFunc;
         done(null, user);
     }).catch(err => done(err));
 });

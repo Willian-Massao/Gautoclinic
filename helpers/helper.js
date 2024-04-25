@@ -24,6 +24,18 @@ async function ensureAdmin(req, res, next) {
     }
 }
 
+async function ensureFunc(req, res, next) {
+    if(req.isAuthenticated()){
+        if(req.user.hasFunc == 1){
+            return next();
+        }else{
+            res.redirect('/');
+        }
+    }else{
+        res.redirect('/user/login');
+    }
+}
+
 async function removeFile(file){
     let contents = await fs.readFile(file, {encoding: 'base64'});
     await fs.unlink(file);
@@ -123,5 +135,6 @@ module.exports = {
     mailer,
     upload,
     calcularIdade,
-    calcularData
+    calcularData,
+    ensureFunc
 }

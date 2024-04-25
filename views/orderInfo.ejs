@@ -10,14 +10,7 @@
     <main>
         <div class="profile-container">
             <div class="navlist">
-                <ul>
-                    <li><a href="/profile/account">Minha conta</a></li>
-                    <li><a href="/profile/orders">Meus pedidos</a></li>
-                    <li><a href="/profile/edit">Editar conta</a></li>
-                    <% if(user.hasAdmin){ %>
-                        <li><a href="/admin/users">Administrador</a></li>
-                    <% } %>
-                </ul>
+                <%- include ("partials/profilenav.ejs") %>
             </div>
             <div class="account-info">
                 <h1>Minha conta</h1>

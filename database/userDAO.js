@@ -68,7 +68,7 @@ module.exports  = class itens{
     async findEmail(email){
         const conn = await pool.getConnection();
         try {
-            const sql = `SELECT US.id, US.email, US.name, US.password, US.salt, case when AD.id is not null then true else false end AS hasAdmin FROM users US left join admins AD on US.id = AD.id WHERE US.email = ?;`;
+            const sql = `SELECT US.id, US.email, US.name, US.password, US.salt, case when AD.id is not null then true else false end AS hasAdmin, case when FU.idFuncionario is not null then true else false end AS hasFunc FROM users US left join admins AD on US.id = AD.id left join funcionarios FU on US.id = FU.idFuncionario WHERE US.email = ?;`;
             const [rows] = await conn.query(sql, [email]);
             return rows[0];
         }catch(err){

@@ -97,7 +97,7 @@ async function sumupReq(trans, ListOf, req, res){
     }
 }
 
-routes.get('/payment/:id', (req, res)=>{
+routes.get('/payment/:id', helper.ensureFunc, (req, res)=>{
     const errorMessage = req.flash('error');
     const agendamentos = new agendamentosDAO();
     
@@ -105,5 +105,97 @@ routes.get('/payment/:id', (req, res)=>{
         res.render('payment', {data: data, user: req.user, error: errorMessage});
     }).catch(err => res.status(500).send('Something broke!'));
 });
+
+routes.get('/orders', helper.ensureFunc, (req, res) => {
+    const errorMessage = req.flash('error');
+    const agendamentos = new agendamentosDAO();
+
+    const ptTable = {
+        'PAID': 'PAGO',
+        'FINISH': 'COMPLETADO',
+        'ACCEPT': 'ACEITO',
+        'REFUNDED': 'CANCELADO',
+    }
+
+    try{
+        agendamentos.findFunc({idFuncionario: 1}).then( data => {
+            //merge itens with same check_ref into one preserving all idProcedimento in array first
+            //filter PENDING not enter
+            data = data.filter( item => item.status != 'PENDING');
+            data = data.map( item => {
+                item.status = ptTable[item.status];
+                return item;
+            });
+            data = mergeItems(data);
+            res.render('consultasFunc', {data: data, user: req.user, error: errorMessage});
+        });
+    }catch(err){
+        console.log(err);
+        res.status(500).send('Something broke!');
+    }
+    function mergeItems(data){
+        let merged = [];
+        let check = [];
+        let temp = {};
+        for (let item of data) {
+            if(check.includes(item.check_ref)){
+                temp = merged.find( obj => obj.check_ref == item.check_ref);
+                temp.idProcedimento.push(item.idProcedimento);
+            }else{
+                check.push(item.check_ref);
+                temp = item;
+                temp.idProcedimento = [item.idProcedimento];
+                merged.push(temp);
+            }
+        }
+        return merged;
+    }
+});
+
+routes.get('/orders/:id', helper.ensureFunc, (req, res) => {
+    const errorMessage = req.flash('error');
+    const agendamentos = new agendamentosDAO();
+
+    const ptTable = {
+        'PAID': 'PAGO',
+        'FINISH': 'COMPLETADO',
+        'ACCEPT': 'ACEITO',
+        'REFUNDED': 'CANCELADO',
+    }
+
+    try{
+        agendamentos.findCheck_ref({idFuncionario: 1, check_ref: req.params.id}).then( data => {
+            //merge itens with same check_ref into one preserving all idProcedimento in array first
+            //filter PENDING not enter
+            data = data.filter( item => item.status != 'PENDING');
+            data = data.map( item => {
+                item.status = ptTable[item.status];
+                return item;
+            });
+            res.render('consultasFuncInfo', {data: data, user: req.user, error: errorMessage});
+        });
+    }catch(err){
+        console.log(err);
+        res.status(500).send('Something broke!');
+    }
+    function mergeItems(data){
+        let merged = [];
+        let check = [];
+        let temp = {};
+        for (let item of data) {
+            if(check.includes(item.check_ref)){
+                temp = merged.find( obj => obj.check_ref == item.check_ref);
+                temp.idProcedimento.push(item.idProcedimento);
+            }else{
+                check.push(item.check_ref);
+                temp = item;
+                temp.idProcedimento = [item.idProcedimento];
+                merged.push(temp);
+            }
+        }
+        return merged;
+    }
+});
+
 
 module.exports = routes;
