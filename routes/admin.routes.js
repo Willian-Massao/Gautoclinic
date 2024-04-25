@@ -190,7 +190,6 @@ routes.get('/paying/:id', helper.ensureAdmin, async (req, res)=>{
     })
     if(fetchres.ok){
         let temp = await fetchres.json();
-        console.log(temp);
         res.render('etiqueta', {data: temp, error: errorMessage, table: 'paying'});
     }else{
         req.flash('error', 'ID da etiqueta incorreto!');
@@ -217,7 +216,6 @@ routes.get('/etiqueta/:id', helper.ensureAdmin, async (req, res)=>{
     })
     if(fetchres.ok){
         let temp = await fetchres.json();
-        console.log(temp);
         res.render('etiqueta', {data: temp, error: errorMessage, table: 'etiqueta'});
     }else{
         req.flash('error', 'ID da etiqueta incorreto!');

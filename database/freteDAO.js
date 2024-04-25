@@ -52,7 +52,6 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try{
             NN(fretes);
-            console.log(fretes);
             const sql = "update fretes set fretes = ?, info = ?, check_ref = ? where idUser = ?;"
             await conn.query(sql, [JSON.stringify(fretes.fretes), JSON.stringify(fretes.info), fretes.check_ref, fretes.idUser]);
             console.log("fretes atualizados com sucesso!");

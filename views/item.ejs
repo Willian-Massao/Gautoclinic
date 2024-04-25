@@ -129,12 +129,10 @@
         // quando o mouse passar em cima de uma classe image-sidebar pegar a imagem e colocar na image-principal
         function setPrincipal(e){
             let img = document.getElementById(`img-${e}`);
-            console.log(img);
             let imgPrincipal = document.getElementById("image-principal");
             imgPrincipal.src = img.src;
         }
         function select(sec){
-            console.log(sec);
             let div = document.getElementsByClassName("sec");
             let secbutton = document.getElementsByClassName("sec-button");
             for(let i = 0; i < div.length; i++){

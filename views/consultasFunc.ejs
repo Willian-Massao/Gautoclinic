@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include ("partials/head.ejs") %>
+</head>
+<body>
+    <%- include ("partials/alert.ejs") %>
+<main>
+    <div class="job-container">
+        <div class="job-options">
+            <div class="job-card">
+                <h2>Job completed</h2>
+                <h2>12</h2>
+            </div>
+            <div class="job-card">
+                <h2>Job Applied</h2>
+                <h2>12</h2>
+            </div>
+            <div class="job-card">
+                <h2>Job Offers</h2>
+                <h2>02</h2>
+            </div>
+        </div>
+        <div class="job-list">
+            <% data.forEach(item => { %>
+                <a href="/consulta/orders/<%= item.check_ref %>" class="job-card">
+                    <h3><%= item.idProcedimento[0] %>(+<%= item.idProcedimento.length - 1 %>)</h3>
+                    <p class="subline">Cliente: <%= item.idUser %></p>
+                    <p><%= item.dataHoraAgendamento.toLocaleDateString("pt-BR",{timeZone: 'America/Sao_Paulo',year: 'numeric',month: 'numeric',day: 'numeric',hour: 'numeric',minute: 'numeric',second: 'numeric',}).replace(', ',' - ') %></p>
+                    <div>
+                        <p>Valor: R$ <%= item.price %></p>
+                        <p class="<%= item.status %>"><%= item.status %></p>
+                    </div>
+                </a>
+            <% }) %>
+        </div>
+    </div>
+</main>
+</body>
+</html>

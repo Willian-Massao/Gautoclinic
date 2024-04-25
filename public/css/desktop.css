@@ -1199,6 +1199,7 @@ input[type=number] {
     padding: 10px;
     padding-left: 30px;
     padding-right: 30px;
+    text-align: center;
 } 
 .account-container table td{
     text-align: center;
@@ -1600,6 +1601,140 @@ main.etiqueta .outline{
 .consulta-form form option{
     padding: 10px;
 }
+.job-container{
+    width: 100%;
+    max-width: 1500px;
+    min-width: 1280px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
+}
+.job-container .job-options{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
+.job-container .job-options .job-card{
+    width: 220px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: row;
+    margin: 15px;   
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    padding: 15px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    border-radius: 5px;
+}
+.job-container .job-options .job-card :first-child{
+    margin-right: 15px;
+}
+.job-container .job-options .job-card h2{
+    margin: 0;
+}
+.job-container .job-list{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
 
-
-
+}
+.job-container .job-list .job-card{
+    min-width: 250px;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+    margin: 15px;   
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    padding: 5px;
+    padding-left: 25px;
+    padding-right: 25px;
+    border-radius: 5px;
+}
+.job-container .job-list .job-card>div{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+}
+.job-list .job-card>div>p{
+    font-weight: bolder;
+}
+.job-container .job-card .PAGO{
+    color: #ffd366;
+    text-shadow: 0 0 20px rgba(255, 211, 102, 0.3);
+}
+.job-container .job-card .ACEITO{
+    color: #3b69c5;
+    text-shadow: 0 0 20px rgba(59, 105, 197, 0.3);
+}
+.job-container .job-card .COMPLETO{
+    color: #009979;
+    text-shadow: 0 0 20px rgba(0, 151, 121, 0.3);
+}
+.job-container .job-card .CANCELADO{
+    color: #ff5454;
+    text-shadow: 0 0 20px rgba(255, 84, 84, 0.3);
+}
+.job-card:hover{
+    border: 1px solid #5060ff;
+    outline: 2px solid #5060ff;
+    box-shadow: 0 0 30px 0px rgba(80, 96, 255, 0.35);
+    cursor: pointer;
+}
+.job-container.info .job-card{
+    flex-direction: column;
+    justify-content: center;
+}
+.job-container.info .job-card h6:first-child{
+    margin: 0;
+    margin-right: 0;
+}
+.job-container.info .job-card>h6{
+    margin: 0;
+    margin-right: 0;
+}
+.job-container.info .job-card>div>h6{
+    margin-bottom: 15px;
+    margin-right: 0;
+}
+.job-container.info .job-card input[type="submit"]{
+    width: 45%;
+    padding: 10px;
+    border: 0;
+    border-radius: 5px;
+    transition: 50ms ease-in-out;
+}
+.job-container.info .job-card .form-buttons{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+.form-buttons .cancel{
+    background-color: #ff5454;
+    color: white;
+}
+.form-buttons .cancel:hover{
+    background-color: #cc4343;
+}
+.form-buttons .cancel:active{
+    background-color: #ff5454;
+}
+.form-buttons .accept{
+    background-color: #009979;
+    color: white;
+}
+.form-buttons .accept:hover{
+    background-color: #007a5f;
+}
+.form-buttons .accept:active{
+    background-color: #009979;
+}

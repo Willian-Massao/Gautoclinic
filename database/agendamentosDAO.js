@@ -16,6 +16,7 @@ module.exports  = class agendamentos{
                 pagamentoOnline tinyint NOT NULL DEFAULT '0',
                 check_ref varchar(36) NOT NULL,
                 status varchar(10) NOT NULL DEFAULT 'PENDING',
+                PRIMARY KEY (idUser, idProcedimento, check_ref),
                 KEY IdFuncionarioagendamento_idx (idFuncionario),
                 KEY idUserAgendamentos (idUser),
                 KEY idProcedimentoAgendamentos_idx (idProcedimento),
@@ -75,6 +76,46 @@ module.exports  = class agendamentos{
             conn.release();
         }
     }
+
+    async findUser(agendamentos){
+        const conn = await pool.getConnection();
+        try {
+            const sql = `SELECT * FROM agendamentos WHERE idUser = ?;`;
+            const [rows] = await conn.query(sql, [agendamentos.idUser]);
+            return rows;
+        }catch(err){
+            console.log(err);
+        }finally{
+            conn.release();
+        }
+    }
+
+    async findFunc(agendamentos){
+        const conn = await pool.getConnection();
+        try {
+            const sql = `SELECT AG.id, AG.dataHoraAgendamento, AG.dataHoraAgendamento, AG.confirmado, AG.price, AG.pagamentoOnline, AG.check_ref, AG.status, US.name as idUser, PC.nome as idProcedimento FROM agendamentos AG left join users US on US.id = AG.idUser left join procedimentos PC on AG.idProcedimento = PC.idProcedimentos WHERE idFuncionario = ?;`;
+            const [rows] = await conn.query(sql, [agendamentos.idFuncionario]);
+            return rows;
+        }catch(err){
+            console.log(err);
+        }finally{
+            conn.release();
+        }
+    }
+
+    async findCheck_ref(agendamentos){
+        const conn = await pool.getConnection();
+        try {
+            const sql = `SELECT AG.id, AG.dataHoraAgendamento, AG.dataHoraAgendamento, AG.confirmado, PC.preco AS price, AG.pagamentoOnline, AG.check_ref, AG.status, US.name as idUser, PC.nome as idProcedimento FROM agendamentos AG left join users US on US.id = AG.idUser left join procedimentos PC on AG.idProcedimento = PC.idProcedimentos WHERE idFuncionario = ? and check_ref = ?;`;
+            const [rows] = await conn.query(sql, [agendamentos.idFuncionario, agendamentos.check_ref]);
+            return rows;
+        }catch(err){
+            console.log(err);
+        }finally{
+            conn.release();
+        }
+    }
+
     async describe(){
         const conn = await pool.getConnection();
         try {

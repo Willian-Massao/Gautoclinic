@@ -20,18 +20,14 @@
                         <table>
                             <tr>
                                 <th class="mob-only">Id</th>
-                                <th>Data</th>
                                 <th>Preço</th>
                                 <th class="mob-only">Status</th>
-                                <th class="mob-only">Detalhes</th>
                             </tr>
                             <% orders.forEach((order)=>{ %>
                                 <tr>
                                     <td class="mob-only"><%= order.check_ref.slice(0,10) %></td>
-                                    <td><%= order.date.toLocaleDateString() %></td>
                                     <td>R$ <%= order.price %></td>
                                     <td class="mob-only"><%= order.status %></td>
-                                    <td class="mob-only"><a href="/profile/orders/<%= order.check_ref.slice(0,10) %>"><i class="fi fi-rr-search"></i></a></td>
                                 </tr>
                             <% }) %>
                         </table>
