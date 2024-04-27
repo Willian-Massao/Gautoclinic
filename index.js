@@ -400,16 +400,18 @@ app.get('/fretes', helper.ensureAuthenticated, (req, res) => {
 app.get('/marcar', helper.ensureAuthenticated, async (req, res) => {
     const procedimentos = new procedimentosDAO();
     const funcionarios = new funcionariosDAO();
+    const agendamentos = new agendamentosDAO();  
     const errorMessage = req.flash('error');
-    let func,proc;
+    let func,proc,agend;
     
     try{
         func = await funcionarios.select();
         proc = await procedimentos.select();
+        agend = await agendamentos.selecionaAgendamentos();
     }catch(err){
         console.log(err);
     }finally{
-        res.render('marcar', { procedimentos: proc, funcionarios: func, user: req.user, error: errorMessage});
+        res.render('marcar', { procedimentos: proc, funcionarios: func, agendamentos:agend, user: req.user, error: errorMessage});
     }
 });
 

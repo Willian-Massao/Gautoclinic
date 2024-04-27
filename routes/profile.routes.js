@@ -125,9 +125,9 @@ routes.get('/consultas', helper.ensureAuthenticated, (req, res) => {
     const agendamento = new agendamentoDAO();
     const ptTable = {
         'PENDING': 'Pendente',
-        'PAID': 'Aprovado',
-        'FAILED': 'Recusado',
-        'FINISH': 'Entregue'
+        'PAID': 'Marcado',
+        'FAILED': 'Desmarcado',
+        'FINISH': 'Finalizado'
     }
 
     agendamento.findUser({idUser: req.user.id}).then( orders => {
