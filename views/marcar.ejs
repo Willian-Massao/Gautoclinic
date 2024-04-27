@@ -18,8 +18,8 @@
                 <div class="consulta-campo">
                     <label class="subline outline" for="data">DATA E HORARIO</label>
                     <div>
-                        <input type="date" name="data" id="data" placeholder="data">
-                        <input type="time" name="time" id="time" placeholder="time">
+                        <input type="date" name="data" id="data" oninput="validaData()" placeholder="data">
+                        <input type="time" name="time" id="time" oninput="validaHora()" placeholder="time">
                     </div>
                 </div>
                 <fieldset class="consulta-campo"> 
@@ -33,7 +33,7 @@
                 </fieldset>
                 <div class="consulta-campo">
                     <label class="subline outline">FUNCIONARIO</label>
-                    <select name="funcionario">
+                    <select name="funcionario" id="funcionario">
                         <% funcionarios.forEach((e)=>{ %>
                             <option value="<%= e.idFuncionario %>"><%= e.Nome %></option>
                         <% }) %>
@@ -45,10 +45,39 @@
                         <input type="checkbox" name="aviso"><label for="aviso">Li e concordo</label>
                     </div>
                 </div>
-                <input type="submit" value="Marcar">
+                <p id="alerts"></p>
+                <input type="submit" id="Marcar" value="Marcar">
             </form>
         </div>
     </main>
     <%- include ("partials/footer.ejs") %>
 </body>
+<script>
+    function validaData(){
+        var date = document.getElementById("date").value;
+        var idFuncionario = document.getElementById("funcionario").value;
+        alerts.innerHTML = "";
+        agendamentos.forEach(agend => {
+            if (date.value === agend.dataAgendamento && agend.idFuncionario === idFuncionario.value){
+                validaHora();
+            }
+            
+        });
+    }
+
+    function validaHora(){
+        var alerts = document.getElementById('alerts');
+        var time = document.getElementById("time").value;
+        var idFuncionario = document.getElementById("funcionario").value;
+        agendamentos.forEach(agend => {
+        if (time.value === agend.horaAgendamento && agend.idFuncionario === idFuncionario.value){
+            alerts.innerHTML = "Não é possivel marcar neste horário com este funcionário ";
+            document.getElementById('Marcar').disabled = true;
+        }else{
+            alerts.innerHTML = ""
+            document.getElementById('Marcar').disabled = false;
+        }
+    });
+    }
+    </script>
 </html>
