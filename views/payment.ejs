@@ -17,6 +17,8 @@
     <script type="text/javascript">
       SumUpCard.mount({
         id: 'sumup-card',
+        locale: "pt-BR",
+        showFooter: false,
         checkoutId: '<%= data[0].id %>',
         onResponse: function (type, body) {
           console.log('Type', type);

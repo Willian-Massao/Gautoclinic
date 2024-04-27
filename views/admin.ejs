@@ -91,6 +91,12 @@
                                 <td>
                                     <input id="image-admin" type="file" name="<%= e.Field %>" form="myform">
                                 </td>
+                            <% }else if(e.Field == "type"){ %>
+                                <td>
+                                    <select name="type" id="">
+                                        <option value="facial">Facial</option>
+                                    </select>
+                                </td>
                             <% }else{ %>
                                 <td> 
                                     <input type="text" name="<%= e.Field %>" form="myform">

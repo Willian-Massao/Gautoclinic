@@ -174,9 +174,11 @@ async function sumupReq(trans, cache, req, res){
             "Content-Type": "application/json",
         }, body:JSON.stringify({
             "checkout_reference": trans.check_ref,
-            "amount": trans.price,
+            "amount": 1,
             "currency": trans.currency,
             "pay_to_email": trans.pay2mail,
+            "payment_type": "pix",
+            "redirect_url": "https://gautoclinic.com.br/"
         })
     });
     if(apiRes.ok){
