@@ -48,12 +48,12 @@ module.exports  = class agendamentos{
         }
     }
 
-    async selecionaAgendamentos(agendamentos){
+    async selecionaAgendamentos(){
         const conn = await pool.getConnection();
         try{
-            NN(agendamentos);
             const sql = "select *, DATE(dataHoraAgendamento) as 'dataAgendamento', TIME(dataHoraAgendamento) as 'horaAgendamento'  from agendamentos where dataHoraAgendamento >= DATE_ADD(now(), INTERVAL 1 DAY)"
-            await conn.query(sql)
+            const [rows] = await conn.query(sql)
+            return rows;
             console.log("agendamentos selecionados");
         }catch(err){
             console.log(err);

@@ -10,27 +10,28 @@
     <main>
         <div class="consulta-form">
             <form method="post" action="/consulta/add">
-                <h2>MARCAR CONSULTA</h2>
-                <div class="consulta-campo">
+                <h2>AGENDAR CONSULTA</h2>
+                <!-- <div class="consulta-campo">
                     <label class="subline outline" for="nascimento">DATA DE NASCIMENTO</label>
                     <input type="date" name="nascimento" id="nascimento" placeholder="nascimento">
-                </div>
+                </div> -->
                 <div class="consulta-campo">
                     <label class="subline outline" for="data">DATA E HORARIO</label>
                     <div>
-                        <input type="date" name="data" id="data" oninput="validaData()" placeholder="data">
-                        <input type="time" name="time" id="time" oninput="validaHora()" placeholder="time">
+                        <input type="date" name="data" id="data" oninput="validaData()" placeholder="data" >
+                        <input type="time" name="time" id="time" oninput="validaHora()" placeholder="time" value="08:00">
                     </div>
                 </div>
-                <fieldset class="consulta-campo"> 
+                <div class="consulta-campo"> 
                     <label class="subline outline">PROCEDIMENTO</label>
+                    <div class="subcampo-consulta">
+                        <select name="procedimentos" id="procedimentos" value="procedimentos">
                     <% procedimentos.forEach((e)=>{ %>
-                        <div class="subcampo-consulta">
-                            <input type="checkbox" name="procedimentos" id="<%= e.nome %>" value="<%= e.idProcedimentos %>">
-                            <label for="procedimentos"><%= e.nome.replace('-', ' ') %></label>
-                        </div>
+                            <option value="<%= e.idProcedimentos %>"> <%= e.nome %></option>                        
                     <% }) %>
-                </fieldset>
+                        </select>
+                    </div>
+                </div>
                 <div class="consulta-campo">
                     <label class="subline outline">FUNCIONARIO</label>
                     <select name="funcionario" id="funcionario">
@@ -46,15 +47,17 @@
                     </div>
                 </div>
                 <p id="alerts"></p>
-                <input type="submit" id="Marcar" value="Marcar">
+                <input type="submit" id="Agendar" value="Agendar">
             </form>
         </div>
     </main>
     <%- include ("partials/footer.ejs") %>
 </body>
 <script>
+    document.getElementById('data').valueAsDate = new Date();
+
     function validaData(){
-        var date = document.getElementById("date").value;
+        var date = document.getElementById("data").value;
         var idFuncionario = document.getElementById("funcionario").value;
         alerts.innerHTML = "";
         agendamentos.forEach(agend => {
@@ -69,15 +72,24 @@
         var alerts = document.getElementById('alerts');
         var time = document.getElementById("time").value;
         var idFuncionario = document.getElementById("funcionario").value;
-        agendamentos.forEach(agend => {
-        if (time.value === agend.horaAgendamento && agend.idFuncionario === idFuncionario.value){
-            alerts.innerHTML = "Não é possivel marcar neste horário com este funcionário ";
-            document.getElementById('Marcar').disabled = true;
+        var timeMin = new Date();
+        timeMin.setHours(8);
+        var timeMax = new Date();
+        timeMax.setHours(18);
+        if(time.value <= timeMax.getHours() && time.value >= timeMin.getHours()){
+            agendamentos.forEach(agend => {
+                if (time.value === agend.horaAgendamento && agend.idFuncionario === idFuncionario.value){
+                    alerts.innerHTML = "Não é possivel agendar neste horário com este funcionário ";
+                    document.getElementById('Agendar').disabled = true;
+                }else{
+                    alerts.innerHTML = ""
+                    document.getElementById('Agendar').disabled = false;
+                }
+            });
         }else{
-            alerts.innerHTML = ""
-            document.getElementById('Marcar').disabled = false;
+            alerts.innerHTML = "Por favor selecione uma horário entre 08AM e 18PM"
+            document.getElementById('Agendar').disabled = true;
         }
-    });
     }
     </script>
 </html>

@@ -229,7 +229,6 @@ app.post('/make/refund', async(req, res) => {
 app.post('/calcularFrete', async (req, res) => {
     let {itens, CEP, numero, complemento} = req.body;
     const melhorEnvio = new envioDAO();
-    //const fretesDAO = new freteDAO();
     let bearerMelhorEnvio = 'Bearer ';
     await melhorEnvio.buscaToken()
     .then(bearer => {  bearerMelhorEnvio += bearer.access_token});
@@ -246,7 +245,6 @@ app.post('/calcularFrete', async (req, res) => {
         });
 
         if(apiRes.ok){
-            //let produtos = "";
             itens.forEach(i => {
                 produtos += "id:" + i.id + ", width: "+ i.width + ", height: " + i.height + ", length: " + i.depth +", weight: " + i.weight + ", insurance_value: "+ i.price+", quantity: " + i.qtd
             });  
@@ -298,8 +296,6 @@ app.post('/calcularFrete', async (req, res) => {
                         "userShipping": ""
                         };
                     freteCon = new FreteController({agencias: jsonfretes, to: jsoninfo.to, from: jsoninfo.from});
-                    //fretesDAO.InsertorUpdate({idUser: req.user.id, fretes: jsonfretes, info: jsoninfo}).then(()=>{
-                        //});
                     res.status(200).send('Sucesso');  
                     }else{
                     req.flash('error', 'Não existem opções de frete para este CEP');

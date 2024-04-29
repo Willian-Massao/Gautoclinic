@@ -15,48 +15,46 @@ routes.post('/add/', async (req, res) => {
     const proces = new procedimentosDAO();
 
     let ListOf = [];
-
-    let transaction = {
-        id: '',
-        idUser: '',
-        check_ref: uuid.create().toString(),
-        price: 200,
-        currency: process.env.SUMUP_CURRENCY,
-        pay2mail: process.env.SUMUP_EMAIL,
-        status: '',
-        date: '',
-        shipping: []
-    }
-
-    
+    let transaction;
+ 
     try{
         //verificar se é maior de 18
-        if(helper.calcularIdade(nascimento) < 18){
-            throw new Error('É necessário ser maior de 18 anos para marcar um procedimento');
-        }
+        // if(helper.calcularIdade(nascimento) < 18){
+        //     throw new Error('É necessário ser maior de 18 anos para marcar um procedimento');
+        // }
         //verificar se a data é 1 dia a frente
-        if(helper.calcularData(data) < 1){
+        if(helper.calcularData(consulDate) < 1){
             throw new Error('É necessário marcar com 1 dia de antecedência');
         }
         //verificar se foi aceito os termos
         if(aviso != 'on'){
             throw new Error('É necessário aceitar os termos de uso');
         }
-
-        procedimentos.forEach(procedimento => {
-            proces.findId({id: procedimento}).then( data => {
+            proces.findId({id: procedimentos}).then( data => {
+                let check_ref = uuid.create().toString();
                 ListOf.push({
                     idsumup: '',
                     idUser: req.user.id,
                     dataHoraAgendamento: consulDate,
-                    idProcedimento: procedimento,
+                    idProcedimento: data.idProcedimentos,
                     idFuncionario: funcionario,
-                    check_ref: transaction.check_ref,
+                    check_ref: check_ref,
                     price: data.preco
                 });
+                transaction = {
+                    id: '',
+                    idUser: '',
+                    check_ref: check_ref,
+                    price: data.preco,
+                    currency: process.env.SUMUP_CURRENCY,
+                    pay2mail: process.env.SUMUP_EMAIL,
+                    status: '',
+                    date: '',
+                    shipping: []
+                }
+                sumupReq(transaction, ListOf, req, res)
             });
-        });
-        sumupReq(transaction, ListOf, req, res)
+
     }catch(err){
         req.flash('error', err.message);
         res.redirect('/marcar');
@@ -90,8 +88,16 @@ async function sumupReq(trans, ListOf, req, res){
             item.idsumup = data.id;
             await agendamentos.insert(item);
         }
-
-        res.redirect('/consulta/payment/' + data.checkout_reference);
+        const paymentGet = await fetch('/consulta/payment/'+ data.checkout_reference,{
+        method: 'GET',
+        headers: {
+            "Content-Type": "application/json",
+        }
+    });
+    if(paymentGet.ok) {
+     console.log("VISH")       
+    }
+        
     }else{
         res.status(500).send('sumup unauthorized')
     }

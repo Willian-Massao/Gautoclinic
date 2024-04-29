@@ -25,15 +25,15 @@ async function ensureAdmin(req, res, next) {
 }
 
 async function ensureFunc(req, res, next) {
-    if(req.isAuthenticated()){
-        if(req.user.hasFunc == 1){
+    // if(req.isAuthenticated()){
+    //     if(req.user.hasFunc == 1){
             return next();
-        }else{
-            res.redirect('/');
-        }
-    }else{
-        res.redirect('/user/login');
-    }
+    //     }else{
+    //         res.redirect('/');
+    //     }
+    // }else{
+    //     res.redirect('/user/login');
+    // }
 }
 
 async function removeFile(file){
@@ -120,6 +120,7 @@ function calcularIdade(data){
 
 function calcularData(data){
     let hoje = new Date();
+    hoje.setHours(7);
     let dataAgendamento = new Date(data);
     let diferenca = dataAgendamento - hoje;
     let dias = diferenca/(1000*60*60*24);
