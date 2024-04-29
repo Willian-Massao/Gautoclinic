@@ -97,9 +97,10 @@ async function sumupReq(trans, ListOf, req, res){
 
             ListOf[0].idsumup = data.id;
             await agendamentos.insert(ListOf[0]).then(()=>{
-                res.json({ url: trans.check_ref})
+                res.redirect('/consulta/payment/'+ data.checkout_reference);
             }).catch(err => {
-                    res.status(500).send('Something broke!')
+                req.flash('error', 'Erro ao inserir no banco de dados');
+                res.redirect('/marcar');
             });    
 
     //     const paymentGet = await fetch('/consulta/payment/'+ data.checkout_reference,{
@@ -111,7 +112,6 @@ async function sumupReq(trans, ListOf, req, res){
     // if(paymentGet.ok) {
     //  console.log("VISH")       
     // }
-        
     }else{
         res.status(500).send('sumup unauthorized')
     }

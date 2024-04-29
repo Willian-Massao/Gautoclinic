@@ -9,7 +9,7 @@
     <%- include ("partials/header.ejs") %>
     <main>
         <div class="consulta-form">
-            <form>
+            <form method="post" action="/consulta/add">
                 <h2>AGENDAR CONSULTA</h2>
                 <!-- <div class="consulta-campo">
                     <label class="subline outline" for="nascimento">DATA DE NASCIMENTO</label>
@@ -47,7 +47,7 @@
                     </div>
                 </div>
                 <p id="alerts"></p>
-                <button class="summary-box-button" id="Agendar" value="Agendar" onclick="agendaHorario()">Agendar</button>
+                <input type="submit" class="summary-box-button" id="Agendar" value="Agendar">
             </form>
         </div>
     </main>
@@ -93,22 +93,18 @@
         }
     }
     function agendaHorario(){
-        axios({
-            method: "post",
-            url: "/consulta/add",
-            data: {
+        axios.post('/consulta/add',{
                 data: document.getElementById("data").value,
                 time: document.getElementById("time").value,
                 procedimentos: document.getElementById("procedimentos").value,
                 funcionario:document.getElementById("funcionario").value,
                 aviso: document.getElementById("aviso").value
-            },
-        }).then((res) => {
+            }).then((res) => {
             console.log("12345");
             console.log(res.data.url);
             if(res.data.url != undefined){
                 console.log(res.data.url);
-                window.location.href = '/paymentconsulta/' + res.data.url;
+                window.location.href = '/consulta/payment/' + res.data.url;
             }else{
                 location.reload()
             }

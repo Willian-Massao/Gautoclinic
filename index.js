@@ -378,15 +378,6 @@ app.get('/payment/:id', (req, res)=>{
     }).catch(err => res.status(500).send('Something broke!'));
 });
 
-routes.get('/paymentconsulta/:id', helper.ensureFunc, (req, res)=>{
-    const errorMessage = req.flash('error');
-    const agendamentos = new agendamentosDAO();
-    
-    agendamentos.findId({idUser: req.user.id, check_ref: req.params.id}).then( data =>{
-        res.render('payment', {data: data, user: req.user, error: errorMessage});
-    }).catch(err => res.status(500).send('Something broke!'));
-});
-
 app.get('/search', (req, res) =>{
     const itens = new itemDAO();
     const errorMessage = req.flash('error');
