@@ -131,6 +131,19 @@ module.exports  = class agendamentos{
         }
     }
 
+    async verificaHorarioFunc(agendamentos){
+        const conn = await pool.getConnection();
+        try {
+            const sql = `SELECT case when TIMESTAMPDIFF(minute, dataHoraAgendamento, ?) > 45 then 1 else 0 end as 'PodeAgendar' from agendamentos WHERE idFuncionario = 2 and date(dataHoraAgendamento) = ?;`;
+            const [rows] = await conn.query(sql, [agendamentos.dataHoraAgendamento, agendamentos.dataConsulta]);
+            return rows;
+        }catch(err){
+            console.log(err);
+        }finally{
+            conn.release();
+        }
+    }
+
     async describe(){
         const conn = await pool.getConnection();
         try {

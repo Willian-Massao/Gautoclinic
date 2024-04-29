@@ -9,7 +9,7 @@
     <%- include ("partials/header.ejs") %>
     <main>
         <div class="consulta-form">
-            <form method="post" action="/consulta/add">
+            <form>
                 <h2>AGENDAR CONSULTA</h2>
                 <!-- <div class="consulta-campo">
                     <label class="subline outline" for="nascimento">DATA DE NASCIMENTO</label>
@@ -43,11 +43,11 @@
                 <div class="consulta-campo">
                     <p class="aviso">Atente-se com sua data e horário, em caso de cancelamento ou não comparecimento não devolvemos o valor de agendamento. Apenas remarcamos somente 1 vez dentro do mesmo mês. Assim que o valor do agendamento for pago e considerado que você ja iniciou o processo e protocolo do procedimento, sendo assim você não terá o direito de reembolso de qualquer valor pago antes. </p>
                     <div>
-                        <input type="checkbox" name="aviso"><label for="aviso">Li e concordo</label>
+                        <input type="checkbox" name="aviso" id="aviso"><label for="aviso">Li e concordo</label>
                     </div>
                 </div>
                 <p id="alerts"></p>
-                <input type="submit" id="Agendar" value="Agendar">
+                <button class="summary-box-button" id="Agendar" value="Agendar" onclick="agendaHorario()">Agendar</button>
             </form>
         </div>
     </main>
@@ -70,13 +70,14 @@
 
     function validaHora(){
         var alerts = document.getElementById('alerts');
-        var time = document.getElementById("time").value;
+        var time = new Date();
+        time.setHours(document.getElementById("time").value.substring(0,2));
         var idFuncionario = document.getElementById("funcionario").value;
         var timeMin = new Date();
         timeMin.setHours(8);
         var timeMax = new Date();
         timeMax.setHours(18);
-        if(time.value <= timeMax.getHours() && time.value >= timeMin.getHours()){
+        if(time.getHours() <= timeMax.getHours() && time.getHours() >= timeMin.getHours()){
             agendamentos.forEach(agend => {
                 if (time.value === agend.horaAgendamento && agend.idFuncionario === idFuncionario.value){
                     alerts.innerHTML = "Não é possivel agendar neste horário com este funcionário ";
@@ -91,5 +92,28 @@
             document.getElementById('Agendar').disabled = true;
         }
     }
+    function agendaHorario(){
+        axios({
+            method: "post",
+            url: "/consulta/add",
+            data: {
+                data: document.getElementById("data").value,
+                time: document.getElementById("time").value,
+                procedimentos: document.getElementById("procedimentos").value,
+                funcionario:document.getElementById("funcionario").value,
+                aviso: document.getElementById("aviso").value
+            },
+        }).then((res) => {
+            console.log("12345");
+            console.log(res.data.url);
+            if(res.data.url != undefined){
+                console.log(res.data.url);
+                window.location.href = '/paymentconsulta/' + res.data.url;
+            }else{
+                location.reload()
+            }
+        })
+    }
+    
     </script>
 </html>
