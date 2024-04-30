@@ -16,14 +16,24 @@
                     <input type="date" name="nascimento" id="nascimento" placeholder="nascimento">
                 </div> -->
                 <div class="consulta-campo">
-                    <label class="subline outline" for="data">DATA E HORARIO</label>
-                    <div>
-                        <input type="date" name="data" id="data" oninput="validaData()" placeholder="data" >
-                        <input type="time" name="time" id="time" oninput="validaHora()" placeholder="time" value="08:00">
+                    <label class="subline outline" for="data">Data e Horario</label>
+                    <div class="subcampo-consulta">
+                        <% let diaSeguinte = new Date(); diaSeguinte.setDate(diaSeguinte.getDate() + 1);%>
+                        <input type="date" name="data" id="data" oninput="validaData()" placeholder="data" min = "<%= diaSeguinte.getFullYear() +"-"+(diaSeguinte.getMonth()+1).toString().padStart(2,'0')+"-"+diaSeguinte.getDate().toString().padStart(2,'0') %>" >
+                        <select name="time" id="time" value="time">
+                            <% let minuto = 0;
+                                for(var hora = 8; hora <= 18; hora++){ 
+                                    minuto = 0;  %>
+                                <% for(var quartoHora = 1; quartoHora <= 4; quartoHora++){%>
+                                    <option value="<%= hora+":"+minuto.toString().padEnd(2,'0') %>"> <%= hora+":"+minuto.toString().padEnd(2,'0') %></option>   
+                                <% minuto += 15; if (hora=== 18) {break;} }%>
+                            <% }%>                    
+                                </select>
+                        
                     </div>
                 </div>
                 <div class="consulta-campo"> 
-                    <label class="subline outline">PROCEDIMENTO</label>
+                    <label class="subline outline">Procedimento</label>
                     <div class="subcampo-consulta">
                         <select name="procedimentos" id="procedimentos" value="procedimentos">
                     <% procedimentos.forEach((e)=>{ %>
@@ -33,15 +43,16 @@
                     </div>
                 </div>
                 <div class="consulta-campo">
-                    <label class="subline outline">FUNCIONARIO</label>
+                    <label class="subline outline">Funcionario</label>
                     <select name="funcionario" id="funcionario">
-                        <% funcionarios.forEach((e)=>{ %>
-                            <option value="<%= e.idFuncionario %>"><%= e.Nome %></option>
-                        <% }) %>
+                        <p> Equipe Gautoclinic </p>
+                        // <% funcionarios.forEach((e)=>{ %>
+                        //     <option value="<%= e.idFuncionario %>"><%= e.Nome %></option>
+                        // <% }) %>
                     </select>
                 </div>
                 <div class="consulta-campo">
-                    <p class="aviso">Atente-se com sua data e horário, em caso de cancelamento ou não comparecimento não devolvemos o valor de agendamento. Apenas remarcamos somente 1 vez dentro do mesmo mês. Assim que o valor do agendamento for pago e considerado que você ja iniciou o processo e protocolo do procedimento, sendo assim você não terá o direito de reembolso de qualquer valor pago antes. </p>
+                    <p class="aviso">Atenção à data e horário agendados! Em caso de cancelamento ou não comparecimento, o valor do agendamento não será devolvido. Apenas uma remarcação é permitida dentro do mesmo mês. Após o pagamento do agendamento, o processo e protocolo do procedimento são considerados iniciados, não havendo direito a reembolso de qualquer valor pago anteriormente.</p>
                     <div>
                         <input type="checkbox" name="aviso" id="aviso"><label for="aviso">Li e concordo</label>
                     </div>
@@ -54,8 +65,9 @@
     <%- include ("partials/footer.ejs") %>
 </body>
 <script>
-    document.getElementById('data').valueAsDate = new Date();
-    
+    let diaSeguinte = new Date();
+    document.getElementById('data').valueAsDate = new Date(diaSeguinte.setDate(diaSeguinte.getDate() + 1));
+
     function validaData(){
         let agendamentos = <%- agendamentos %>;
         var date = document.getElementById("data").value;
@@ -88,7 +100,7 @@
                 const diffTime = Math.abs(time - dateAgend);
                 const diffMinutes= Math.ceil(diffTime / (1000 * 60));
                 if (diffMinutes <= 45 && agendamentos[agend].idFuncionario === parseInt(idFuncionario)){
-                    alerts.innerHTML = "Não é possivel agendar neste horário com este funcionário!";
+                    alerts.innerHTML = "Este horário já está reservado. Por favor, selecione outro horário disponível.";
                     document.getElementById('Agendar').disabled = true;
                     break;
                 }else{

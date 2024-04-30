@@ -141,7 +141,7 @@ routes.post('/alterarSenha',function(req,res){
                 users.updatePass({password: hash, salt, id}).then(()=> {
                     res.redirect('/user/login');
                 }).catch(err => {
-                    req.flash('error', 'campo preenchido incorretamente!');
+                    req.flash('error', 'Campo preenchido incorretamente!');
                     res.redirect('/user/alterarSenha');
                 });
             });
@@ -160,7 +160,7 @@ routes.post('/register', async (req, res) => {
     users.findEmail(email)
     .then(user => {
         if (user) {
-            req.flash('error', 'E-mail Ja cadastrado!');
+            req.flash('error', 'E-mail Já cadastrado!');
             throw Error;
         }
         // Gera o salt e a senha criptografada
@@ -170,7 +170,7 @@ routes.post('/register', async (req, res) => {
                 users.insert({name, email, lastname, tel, cpf, cep, city, district, adress, number, password: hash, salt}).then(()=> {
                     res.redirect('/user/login');
                 }).catch(err => {
-                    req.flash('error', 'campo preenchido incorretamente!');
+                    req.flash('error', 'Campo preenchido incorretamente!');
                     res.redirect('/user/register');
                 });
             });
