@@ -62,7 +62,11 @@
                 <% } %>
                 <div class="item-benefit">
                     <h1>Beneficios</h1>
-                    <p><%= item.benefits %></p>
+                    <ul>
+                    <% item.benefits.split(';').forEach((e)=>{ %>
+                        <li><%= e %></li>       
+                    <%}) %>
+                    </ul>
                 </div>
                 <div class="sec-container">
                     <div class="desc-sec">

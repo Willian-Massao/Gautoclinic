@@ -25,15 +25,15 @@ async function ensureAdmin(req, res, next) {
 }
 
 async function ensureFunc(req, res, next) {
-    // if(req.isAuthenticated()){
-    //     if(req.user.hasFunc == 1){
+    if(req.isAuthenticated()){
+        if(req.user.hasFunc == 1){
             return next();
-    //     }else{
-    //         res.redirect('/');
-    //     }
-    // }else{
-    //     res.redirect('/user/login');
-    // }
+        }else{
+            res.redirect('/');
+        }
+    }else{
+        res.redirect('/user/login');
+    }
 }
 
 async function removeFile(file){
