@@ -117,7 +117,7 @@ async function sumupReq(trans, ListOf, req, res){
     }
 }
 
-routes.get('/payment/:id', helper.ensureFunc, (req, res)=>{
+routes.get('/payment/:id', helper.ensureAuthenticated, (req, res)=>{
     const errorMessage = req.flash('error');
     const agendamentos = new agendamentosDAO();
     
@@ -138,7 +138,7 @@ routes.get('/orders', helper.ensureFunc, (req, res) => {
     }
 
     try{
-        agendamentos.findFunc({idFuncionario: 1}).then( data => {
+        agendamentos.select().then( data => {
             //merge itens with same check_ref into one preserving all idProcedimento in array first
             //filter PENDING not enter
             data = data.filter( item => item.status != 'PENDING');
