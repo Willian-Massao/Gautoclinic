@@ -409,7 +409,7 @@ app.get('/marcar', helper.ensureAuthenticated, async (req, res) => {
     }catch(err){
         console.log(err);
     }finally{
-        res.render('marcar', { procedimentos: proc, funcionarios: func, agendamentos:agend, user: req.user, error: errorMessage});
+        res.render('marcar', { procedimentos: proc, funcionarios: func, agendamentos: JSON.stringify(agend), user: req.user, error: errorMessage});
     }
 });
 
