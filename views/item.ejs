@@ -40,10 +40,10 @@
                     <div class="item-stock">
                         <% if(item.qtd != 0){ %>
                             <i class="fi fi-rr-check-circle instock"></i>
-                            <p class="instock">em estoque</p>
+                            <p class="instock">Em estoque</p>
                         <% }else{ %>
                             <i class="fi fi-rr-cross-circle outstock"></i>
-                            <p class="outstock">sem estoque</p>
+                            <p class="outstock">Sem estoque</p>
                         <% } %>
                     </div>
                 </div>
@@ -62,7 +62,11 @@
                 <% } %>
                 <div class="item-benefit">
                     <h1>Beneficios</h1>
-                    <p><%= item.benefits %></p>
+                    <ul>
+                    <% item.benefits.split(';').forEach((e)=>{ %>
+                        <li><%= e %></li>       
+                    <%}) %>
+                    </ul>
                 </div>
                 <div class="sec-container">
                     <div class="desc-sec">

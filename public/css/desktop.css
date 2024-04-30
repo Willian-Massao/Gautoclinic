@@ -145,6 +145,101 @@ main .banner img{
     width: 100%;
     margin-top: -1100px;
 }
+i.banner {
+	position: relative;
+	display: block;
+	width: 100%;
+	height: 350px;
+	overflow: hidden;
+}
+
+i.banner:before, i.banner:after {
+	content: '⥪';
+	position: absolute;
+	top: 50%;
+	left: 1rem;
+	z-index: 2;
+	width: 2rem;
+	height: 2rem;
+	background: var(--secodary-color);
+	color: black;
+	border-radius: 50%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	pointer-events: none;
+}
+
+i.banner:after {
+	content: '⥭';
+	left: auto;
+	right: 1rem;
+}
+
+/* I haven't found a way for IE and Edge to let me style inputs that way */
+i.banner input {
+	appearance: none;
+	-ms-appearance: none;
+	-webkit-appearance: none;
+	display: block;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: center;
+	transform: translateX(100%);
+	transition: transform ease-in-out 400ms;
+	z-index: 1;
+    margin: 0;
+}
+
+i.banner input:focus {
+	outline: none;
+}
+
+i.banner input:after {
+	content: attr(title);
+	position: absolute;
+	top: 1rem;
+	left: 1rem;
+	background-color: rgba(0,0,0,0.4);
+	color: white;
+	padding: .5rem;
+	font-size: 1rem;
+}
+
+i.banner input:not(checked):before {
+	content: '';
+	position: absolute;
+	width: 2rem;
+	height: 2rem;
+	border-radius: 50%;
+	top: 50%;
+	left: calc(-100% + 1rem);
+}
+
+i.banner input:checked:before {
+	display: none;
+	left: 1rem;
+}
+
+i.banner input:checked {
+	transform: translateX(0);
+	pointer-event: none;
+	z-index: 0;
+	box-shadow: -5px 10px 20px -15px rgba(0,0,0,1);
+}
+
+i.banner input:checked + input:before {
+	left: -3rem;
+}
+
+i.banner input:checked + input ~ input:before {
+	display: none;
+}
 main .itens{
     display: flex;
     justify-content: center;
@@ -463,7 +558,7 @@ main .item-images div img{
     justify-content: start;
     align-items: start;
     flex-direction: column;
-    width: 25%;
+    width: 450px;
 }
 .item-container .item-name{
     min-width: 350px;
@@ -525,7 +620,7 @@ button.item-buy:active{
     align-items: center;
     flex-direction: column;
     width: 80%;
-
+    margin-bottom: 30px;
 }
 .item-rating{
     display: flex;
@@ -584,8 +679,16 @@ button.item-buy:active{
 .sec.active{
     display: unset;
 }
-.item-benefit p{
+.item-benefit{
+    background: rgb(255,239,161);
+    background: linear-gradient(45deg, rgba(255,239,161,1) 0%, rgba(206,155,54,1) 33%, rgba(206,155,54,1) 67%, rgba(255,239,161,1) 100%); 
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: 10px;
+}
+.item-benefit li{
     text-align: justify;
+    margin-top: 15px;
 }
 .appraisal-container{
     display: flex;
@@ -1589,7 +1692,7 @@ main.etiqueta .outline{
     border: 1px solid rgba(0, 0, 0, 0.15);
     border-radius: 5px;
     box-shadow: 0 0 10px 0px rgba(0,0,0,0.15);
-    color: black;
+    color: white;
     transition: 50ms ease-in-out;
 }
 .consulta-form form select{

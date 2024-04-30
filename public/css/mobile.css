@@ -120,13 +120,100 @@ main{
 main > div{
     margin-top: 15px;
 }
-main .banner{
-    width: 100%;
-    height: 350px;
-    overflow: hidden;
+i.banner {
+	position: relative;
+	display: block;
+	width: 100%;
+	height: 350px;
+	overflow: hidden;
 }
-main .banner img{
-    margin-top: -660px;
+
+i.banner:before, i.banner:after {
+	content: '⥪';
+	position: absolute;
+	top: 50%;
+	left: 1rem;
+	z-index: 2;
+	width: 2rem;
+	height: 2rem;
+	background: var(--secodary-color);
+	color: black;
+	border-radius: 50%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	pointer-events: none;
+}
+
+i.banner:after {
+	content: '⥭';
+	left: auto;
+	right: 1rem;
+}
+
+/* I haven't found a way for IE and Edge to let me style inputs that way */
+i.banner input {
+	appearance: none;
+	-ms-appearance: none;
+	-webkit-appearance: none;
+	display: block;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: center;
+	transform: translateX(100%);
+	transition: transform ease-in-out 400ms;
+	z-index: 1;
+    margin: 0;
+}
+
+i.banner input:focus {
+	outline: none;
+}
+
+i.banner input:after {
+	content: attr(title);
+	position: absolute;
+	top: 1rem;
+	left: 1rem;
+	background-color: rgba(0,0,0,0.4);
+	color: white;
+	padding: .5rem;
+	font-size: 1rem;
+}
+
+i.banner input:not(checked):before {
+	content: '';
+	position: absolute;
+	width: 2rem;
+	height: 2rem;
+	border-radius: 50%;
+	top: 50%;
+	left: calc(-100% + 1rem);
+}
+
+i.banner input:checked:before {
+	display: none;
+	left: 1rem;
+}
+
+i.banner input:checked {
+	transform: translateX(0);
+	pointer-event: none;
+	z-index: 0;
+	box-shadow: -5px 10px 20px -15px rgba(0,0,0,1);
+}
+
+i.banner input:checked + input:before {
+	left: -3rem;
+}
+
+i.banner input:checked + input ~ input:before {
+	display: none;
 }
 main .itens{
     display: flex;
@@ -450,7 +537,7 @@ main .item-images div img{
     width: 100%;
 }
 .item-container .item-name{
-    min-width: 350px;
+    max-width: 100%;
     font-size: 30px;
     font-weight: bolder;
     overflow: hidden;
@@ -568,6 +655,20 @@ button.item-buy:active{
 .sec.active{
     display: unset;
 }
+.item-benefit{
+    background: rgb(255,239,161);
+    background: linear-gradient(45deg, rgba(255,239,161,1) 0%, rgba(206,155,54,1) 33%, rgba(206,155,54,1) 67%, rgba(255,239,161,1) 100%); 
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: 5px;
+}
+.item-benefit li{
+    text-align: justify;
+    margin-top: 15px;
+}
+.item-benefit ul{
+    padding-left: 10px;
+}
 .appraisal-container{
     display: flex;
     justify-content: center;
@@ -618,7 +719,7 @@ button.item-buy:active{
     scale: 0.95;
 }
 .product-container{
-    width: 80%;
+    width: 95%;
     margin-top: 100px;
 }
 .summary-box-info{
@@ -1234,6 +1335,7 @@ input[type=number] {
     justify-content: center;
     height: 450px;
     flex-direction: column;
+    width: 100%;
 }
 .frete #summary{
     display: flex;
@@ -1264,7 +1366,8 @@ input[type=number] {
     flex-direction: column;
     justify-content: start;
     align-items: start;
-    min-width: 400px;
+    margin-top: 35px;
+    min-width: 360px;
     width: calc(100% - 40px);
 }
 .account-container.frete table th, .account-container.frete table td{
@@ -1571,6 +1674,74 @@ main.etiqueta .outline{
     background-color: #009979;
     color: white;
     border: none;
+}
+.consulta-form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: fit-content;
+    max-width: 1500px;
+}
+.consulta-form form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: calc(100% - 60px);
+    max-width: 450px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    padding: 30px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 5px;
+    box-shadow: 0 0 10px 0px rgba(0,0,0,0.15);
+}
+.consulta-form form .consulta-campo{
+    width: calc(95%);
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    padding: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 5px;
+    margin-bottom: 5px;
+    margin: 15px;
+}
+.subline{
+    font-weight: unset;
+    font-size: small;
+    margin-bottom: 10px;
+}
+.outline{
+    font-weight: bolder;
+}
+.consulta-form form div.consulta-campo input{
+    padding: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    margin-bottom: 5px;
+}
+.consulta-form form fieldset{
+    border: 0;
+}
+.consulta-form form input[type="submit"]{
+    width: 150px;
+    padding: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 5px;
+    box-shadow: 0 0 10px 0px rgba(0,0,0,0.15);
+    color: white;
+    transition: 50ms ease-in-out;
+}
+.consulta-form form select{
+    width: 100%;
+    padding: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    margin-bottom: 5px;
+}
+.consulta-form form option{
+    padding: 10px;
 }
 .job-container{
     width: 100%;

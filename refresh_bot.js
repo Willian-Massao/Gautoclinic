@@ -14,13 +14,9 @@ const transactions = new transactionDAO();
         let res = await transactions.select()
         let temp;
 
-        res.forEach(
-            async (trans) => 
-            {
-            if(trans.status == 'PENDING')
-            {
-                const apiRes = await fetch('https://api.sumup.com/v0.1/checkouts/' + trans.id,
-                {
+        res.forEach(async (trans) =>{
+            if(trans.status == 'PENDING'){
+                const apiRes = await fetch('https://api.sumup.com/v0.1/checkouts/' + trans.id,{
                     method: 'GET',
                     headers: 
                     {
@@ -30,75 +26,62 @@ const transactions = new transactionDAO();
                 });
                 temp = await apiRes.json();
                 //if(true)
-                if(temp.status != 'PENDING')
-                {
+                if(temp.status != 'PENDING'){
                     console.log(temp);
-                    transactions.update(temp).then( // isso não esta funcionando para debugar mais vezes
-                         async() =>
-                         {
+                    try{
+                        let products = [];
+                        let volumes = [];
+                        let itens;
+                        let company;
+
+                        await transactions.update(temp);
                         const ownershop = new ownershopDAO();
+                        let tableOwner = await ownershop.buscaOwner();
+                        let tableUsuario = await transactions.buscaUsuarioFreteTransaction(trans.check_ref);
 
-                        await ownershop.buscaOwner().then
-                        ( 
-                            async tableOwner =>
-                            {
-                                console.log(tableOwner);
-                                await transactions.buscaUsuarioFreteTransaction(trans.check_ref).then
-                                ( 
-                                    async tableUsuario => 
-                                    {
-                                        let products = [];
-                                        let volumes = [];
-                                        let itens;
-                                        let company;
+                        tableUsuario.shipping.forEach((e)=>{
+                            products.push({
+                                "name": e.name,//Nome Produto
+                                "quantity": e.qtd,//Quantidade
+                                "unitary_value": e.price//Valor Unitario
+                            });
+                            volumes.push({
+                                "height": e.dimensions.height,//Altura
+                                "length": e.dimensions.depth,//Comprimento
+                                "width": e.dimensions.width,//Largura
+                                "weight": e.dimensions.weight//Peso
+                            })//Volume
+                        })
 
+                        itens = {
+                            products: products,
+                            volumes: volumes
+                        }
 
-                                        tableUsuario.shipping.forEach((e)=>{
-                                            products.push({
-                                                "name": e.name,//Nome Produto
-                                                "quantity": e.qtd,//Quantidade
-                                                "unitary_value": e.price//Valor Unitario
-                                            });
-                                            volumes.push({
-                                                "height": e.dimensions.height,//Altura
-                                                "length": e.dimensions.depth,//Comprimento
-                                                "width": e.dimensions.width,//Largura
-                                                "weight": e.dimensions.weight//Peso
-                                            })//Volume
-                                        })
-
-                                        itens = {
-                                            products: products,
-                                            volumes: volumes
-                                        }
-
-                                        tableUsuario.fretes.forEach((e)=>{
-                                            if(e.id == tableUsuario.info.userShipping){
-                                                company = e.name;
-                                            }
-                                        })
-                                        console.log(company);
-                                        if(company == 'SEDEX'){
-                                            for(let i = 0; i < itens.products.length; i++){
-                                                let temp = {
-                                                    products: [products[i]],
-                                                    volumes: [volumes[i]]
-                                                }
-                                                add2cart(tableUsuario, tableOwner, temp).then((res)=>{
-                                                    console.log(res);
-                                                })
-                                            }
-                                        }else{
-                                            add2cart(tableUsuario, tableOwner, itens).then((res)=>{
-                                                console.log(res);
-                                            })
-                                        }
-                                    }
-                                )
-                                
+                        tableUsuario.fretes.forEach((e)=>{
+                            if(e.id == tableUsuario.info.userShipping){
+                                company = e.name;
                             }
-                        ) 
-                    });
+                        })
+
+                        if(company == 'SEDEX'){
+                            for(let i = 0; i < itens.products.length; i++){
+                                let temp = {
+                                    products: [products[i]],
+                                    volumes: [volumes[i]]
+                                }
+                                add2cart(tableUsuario, tableOwner, temp).then((res)=>{
+                                    console.log(res);
+                                })
+                            }
+                        }else{
+                            add2cart(tableUsuario, tableOwner, itens).then((res)=>{
+                                console.log(res);
+                            })
+                        }
+                    }catch(err){
+                        console.log(err);
+                    }
                 }
             }
         });

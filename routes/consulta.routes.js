@@ -13,50 +13,59 @@ routes.post('/add/', async (req, res) => {
     const { nascimento, data, time, procedimentos, funcionario, aviso } = req.body;
     let consulDate = new Date(data + ' ' + time);
     const proces = new procedimentosDAO();
-
+    const agend = new agendamentosDAO();
+    let dataConsulta = consulDate.getFullYear() +"-"+(consulDate.getMonth()+1).toString().padStart(2,'0')+"-"+consulDate.getDate().toString().padStart(2,'0');
     let ListOf = [];
-
-    let transaction = {
-        id: '',
-        idUser: '',
-        check_ref: uuid.create().toString(),
-        price: 200,
-        currency: process.env.SUMUP_CURRENCY,
-        pay2mail: process.env.SUMUP_EMAIL,
-        status: '',
-        date: '',
-        shipping: []
-    }
-
-    
+    let transaction;
+ 
     try{
         //verificar se é maior de 18
-        if(helper.calcularIdade(nascimento) < 18){
-            throw new Error('É necessário ser maior de 18 anos para marcar um procedimento');
-        }
+        // if(helper.calcularIdade(nascimento) < 18){
+        //     throw new Error('É necessário ser maior de 18 anos para marcar um procedimento');
+        // }
         //verificar se a data é 1 dia a frente
-        if(helper.calcularData(data) < 1){
-            throw new Error('É necessário marcar com 1 dia de antecedência');
+        if(helper.calcularData(consulDate) < 1){
+            throw new Error('É necessário agendar com pelo menos 1 dia de antecedência');
         }
         //verificar se foi aceito os termos
         if(aviso != 'on'){
             throw new Error('É necessário aceitar os termos de uso');
         }
-
-        procedimentos.forEach(procedimento => {
-            proces.findId({id: procedimento}).then( data => {
-                ListOf.push({
-                    idsumup: '',
-                    idUser: req.user.id,
-                    dataHoraAgendamento: consulDate,
-                    idProcedimento: procedimento,
-                    idFuncionario: funcionario,
-                    check_ref: transaction.check_ref,
-                    price: data.preco
+        agend.verificaHorarioFunc({dataHoraAgendamento: consulDate, dataConsulta: dataConsulta}).then(agendamentos => {
+                agendamentos.forEach(agendamento => {
+                    if(agendamento.PodeAgendar != 1){
+                        throw new Error('Este horário já está reservado. Por favor, selecione outro horário disponível.');
+                    } 
                 });
-            });
-        });
-        sumupReq(transaction, ListOf, req, res)
+                proces.findId({id: procedimentos}).then( data => {
+                    let check_ref = uuid.create().toString();
+                    ListOf.push({
+                        idsumup: '',
+                        idUser: req.user.id,
+                        dataHoraAgendamento: consulDate,
+                        idProcedimento: data.idProcedimentos,
+                        idFuncionario: funcionario,
+                        check_ref: check_ref,
+                        price: data.preco
+                    });
+                    transaction = {
+                        id: '',
+                        idUser: '',
+                        check_ref: check_ref,
+                        price: data.preco,
+                        currency: process.env.SUMUP_CURRENCY,
+                        pay2mail: process.env.SUMUP_EMAIL,
+                        status: '',
+                        date: '',
+                        shipping: []
+                    }
+                    sumupReq(transaction, ListOf, req, res)
+                });
+                  
+        }).catch(err => {
+            req.flash('error', err.message);
+                res.redirect('/marcar');
+        });    
     }catch(err){
         req.flash('error', err.message);
         res.redirect('/marcar');
@@ -86,18 +95,29 @@ async function sumupReq(trans, ListOf, req, res){
         trans.status = data.status;
         trans.price = data.amount;
 
-        for (let item of ListOf) {
-            item.idsumup = data.id;
-            await agendamentos.insert(item);
-        }
+            ListOf[0].idsumup = data.id;
+            await agendamentos.insert(ListOf[0]).then(()=>{
+                res.redirect('/consulta/payment/'+ data.checkout_reference);
+            }).catch(err => {
+                req.flash('error', 'Erro ao inserir no banco de dados');
+                res.redirect('/marcar');
+            });    
 
-        res.redirect('/consulta/payment/' + data.checkout_reference);
+    //     const paymentGet = await fetch('/consulta/payment/'+ data.checkout_reference,{
+    //     method: 'GET',
+    //     headers: {
+    //         "Content-Type": "application/json",
+    //     }
+    // });
+    // if(paymentGet.ok) {
+    //  console.log("VISH")       
+    // }
     }else{
         res.status(500).send('sumup unauthorized')
     }
 }
 
-routes.get('/payment/:id', helper.ensureFunc, (req, res)=>{
+routes.get('/payment/:id', helper.ensureAuthenticated, (req, res)=>{
     const errorMessage = req.flash('error');
     const agendamentos = new agendamentosDAO();
     
@@ -118,7 +138,7 @@ routes.get('/orders', helper.ensureFunc, (req, res) => {
     }
 
     try{
-        agendamentos.findFunc({idFuncionario: 1}).then( data => {
+        agendamentos.select().then( data => {
             //merge itens with same check_ref into one preserving all idProcedimento in array first
             //filter PENDING not enter
             data = data.filter( item => item.status != 'PENDING');

@@ -69,7 +69,7 @@ module.exports  = class procedimentos{
         const conn = await pool.getConnection();
         try {
             const sql = `SELECT idProcedimentos, nome, preco, tempoAproximado FROM procedimentos;`;
-            const [rows] = await conn.query(sql, [procedimentos.id]);
+            const [rows] = await conn.query(sql);
             return rows;
         }catch(err){
             console.log(err);

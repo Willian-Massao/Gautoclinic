@@ -159,8 +159,8 @@ app.post('/payment', async(req, res) => {
         });
         sumupReq(transaction, cache, req, res);
     }else{
-        req.flash('error', 'Por favor selecione um frete');
-        res.json({err: 'Por favor selecione um frete'});
+        req.flash('error', 'Por favor selecione um frete!');
+        res.json({err: 'Por favor selecione um frete!'});
     }
 
     
@@ -174,9 +174,12 @@ async function sumupReq(trans, cache, req, res){
             "Content-Type": "application/json",
         }, body:JSON.stringify({
             "checkout_reference": trans.check_ref,
-            "amount": trans.price,
+            "amount": 1,
             "currency": trans.currency,
             "pay_to_email": trans.pay2mail,
+            "payment_type": "pix",
+            "redirect_url": "https://gautoclinic.com.br/",
+            "return_url": "https://gautoclinic.com.br/status"
         })
     });
     if(apiRes.ok){
@@ -218,7 +221,7 @@ app.post('/make/refund', async(req, res) => {
         if(fetchres.ok){
             res.redirect('/admin/refund');
         }else{
-            req.flash('error', 'erro ao fazer o reembolso');
+            req.flash('error', 'Erro ao fazer o reembolso');
             res.redirect('/admin/refund');
         }
     });
@@ -227,7 +230,6 @@ app.post('/make/refund', async(req, res) => {
 app.post('/calcularFrete', async (req, res) => {
     let {itens, CEP, numero, complemento} = req.body;
     const melhorEnvio = new envioDAO();
-    //const fretesDAO = new freteDAO();
     let bearerMelhorEnvio = 'Bearer ';
     await melhorEnvio.buscaToken()
     .then(bearer => {  bearerMelhorEnvio += bearer.access_token});
@@ -244,7 +246,6 @@ app.post('/calcularFrete', async (req, res) => {
         });
 
         if(apiRes.ok){
-            //let produtos = "";
             itens.forEach(i => {
                 produtos += "id:" + i.id + ", width: "+ i.width + ", height: " + i.height + ", length: " + i.depth +", weight: " + i.weight + ", insurance_value: "+ i.price+", quantity: " + i.qtd
             });  
@@ -296,8 +297,6 @@ app.post('/calcularFrete', async (req, res) => {
                         "userShipping": ""
                         };
                     freteCon = new FreteController({agencias: jsonfretes, to: jsoninfo.to, from: jsoninfo.from});
-                    //fretesDAO.InsertorUpdate({idUser: req.user.id, fretes: jsonfretes, info: jsoninfo}).then(()=>{
-                        //});
                     res.status(200).send('Sucesso');  
                     }else{
                     req.flash('error', 'Não existem opções de frete para este CEP');
@@ -380,6 +379,100 @@ app.get('/payment/:id', (req, res)=>{
     }).catch(err => res.status(500).send('Something broke!'));
 });
 
+app.post('/status', async (req, res)=>{
+    const transactions = new transactionDAO();
+    const { id, status, event_type } = req.body;
+
+    //não coloquei para atualizar direto pq a chance de alguem mal intencionado fazer um post para atualizar o status
+    //ai preferi vereficar com eles denovo de foi paga ou não
+
+    //se a requisição for de sucesso e for de mudança de status
+    if(status == 'SUCCESSFUL' && event_type == 'CHECKOUT_STATUS_CHANGED'){
+        try{
+            //vai verificar com a pripria sumup se ela foi realmente paga
+            const apiRes = await fetch('https://api.sumup.com/v0.1/checkouts/' + id,{
+                method: 'GET',
+                headers: 
+                {
+                    'Authorization': 'Bearer ' + process.env.sumup_key,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if(apiRes.ok){
+                let temp = await apiRes.json();
+
+                //se a resposta da api for diferente de pendente
+                if(temp.status != 'PENDING'){
+                    console.log(temp);
+                    try{
+                        let products = [];
+                        let volumes = [];
+                        let itens;
+                        let company;
+
+                        //atualiza o banco de dados
+                        await transactions.update(temp);
+                        //se foi paga coloca dentro do carrinho do melhor envio;
+                        if(temp.status == 'PAID'){
+                            const ownershop = new ownershopDAO();
+                            let tableOwner = await ownershop.buscaOwner();
+                            let tableUsuario = await transactions.buscaUsuarioFreteTransaction(temp.checkout_reference);
+
+                            tableUsuario.shipping.forEach((e)=>{
+                                products.push({
+                                    "name": e.name,//Nome Produto
+                                    "quantity": e.qtd,//Quantidade
+                                    "unitary_value": e.price//Valor Unitario
+                                });
+                                volumes.push({
+                                    "height": e.dimensions.height,//Altura
+                                    "length": e.dimensions.depth,//Comprimento
+                                    "width": e.dimensions.width,//Largura
+                                    "weight": e.dimensions.weight//Peso
+                                })//Volume
+                            })
+
+                            itens = {
+                                products: products,
+                                volumes: volumes
+                            }
+
+                            tableUsuario.fretes.forEach((e)=>{
+                                if(e.id == tableUsuario.info.userShipping){
+                                    company = e.name;
+                                }
+                            })
+
+                            if(company == 'SEDEX'){
+                                for(let i = 0; i < itens.products.length; i++){
+                                    let temp = {
+                                        products: [products[i]],
+                                        volumes: [volumes[i]]
+                                    }
+                                    helper.add2cart(tableUsuario, tableOwner, temp).then((res)=>{
+                                        console.log(res);
+                                    })
+                                }
+                            }else{
+                                helper.add2cart(tableUsuario, tableOwner, itens).then((res)=>{
+                                    console.log(res);
+                                })
+                            }
+                        }
+                    }catch(err){
+                        console.log(err);
+                    }
+                }
+            }
+        }catch(err){
+            console.log(err);
+        }
+    }
+    console.log(req.body);
+    res.send('ok');
+});
+
 app.get('/search', (req, res) =>{
     const itens = new itemDAO();
     const errorMessage = req.flash('error');
@@ -400,16 +493,18 @@ app.get('/fretes', helper.ensureAuthenticated, (req, res) => {
 app.get('/marcar', helper.ensureAuthenticated, async (req, res) => {
     const procedimentos = new procedimentosDAO();
     const funcionarios = new funcionariosDAO();
+    const agendamentos = new agendamentosDAO();  
     const errorMessage = req.flash('error');
-    let func,proc;
+    let func,proc,agend;
     
     try{
         func = await funcionarios.select();
         proc = await procedimentos.select();
+        agend = await agendamentos.selecionaAgendamentos();
     }catch(err){
         console.log(err);
     }finally{
-        res.render('marcar', { procedimentos: proc, funcionarios: func, user: req.user, error: errorMessage});
+        res.render('marcar', { procedimentos: proc, funcionarios: func, agendamentos: JSON.stringify(agend), user: req.user, error: errorMessage});
     }
 });
 
