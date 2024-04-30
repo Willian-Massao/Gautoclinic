@@ -14,7 +14,7 @@ routes.post('/add/', async (req, res) => {
     let consulDate = new Date(data + ' ' + time);
     const proces = new procedimentosDAO();
     const agend = new agendamentosDAO();
-    let dataConsulta = consulDate.getFullYear() +"-"+(consulDate.getMonth()+1)+"-"+consulDate.getDate();
+    let dataConsulta = consulDate.getFullYear() +"-"+(consulDate.getMonth()+1).toString().padStart(2,'0')+"-"+consulDate.getDate().toString().padStart(2,'0');
     let ListOf = [];
     let transaction;
  
@@ -34,7 +34,7 @@ routes.post('/add/', async (req, res) => {
         agend.verificaHorarioFunc({dataHoraAgendamento: consulDate, dataConsulta: dataConsulta}).then(agendamentos => {
                 agendamentos.forEach(agendamento => {
                     if(agendamento.PodeAgendar != 1){
-                        throw new Error('Este horário, para este funcionario já está reservado por favor escolha outro!');
+                        throw new Error('Este horário já está reservado. Por favor, selecione outro horário disponível.');
                     } 
                 });
                 proces.findId({id: procedimentos}).then( data => {
