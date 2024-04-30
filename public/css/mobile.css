@@ -1675,6 +1675,74 @@ main.etiqueta .outline{
     color: white;
     border: none;
 }
+.consulta-form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: fit-content;
+    max-width: 1500px;
+}
+.consulta-form form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: calc(100% - 60px);
+    max-width: 450px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    padding: 30px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 5px;
+    box-shadow: 0 0 10px 0px rgba(0,0,0,0.15);
+}
+.consulta-form form .consulta-campo{
+    width: calc(95%);
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    padding: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 5px;
+    margin-bottom: 5px;
+    margin: 15px;
+}
+.subline{
+    font-weight: unset;
+    font-size: small;
+    margin-bottom: 10px;
+}
+.outline{
+    font-weight: bolder;
+}
+.consulta-form form div.consulta-campo input{
+    padding: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    margin-bottom: 5px;
+}
+.consulta-form form fieldset{
+    border: 0;
+}
+.consulta-form form input[type="submit"]{
+    width: 150px;
+    padding: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 5px;
+    box-shadow: 0 0 10px 0px rgba(0,0,0,0.15);
+    color: white;
+    transition: 50ms ease-in-out;
+}
+.consulta-form form select{
+    width: 100%;
+    padding: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    margin-bottom: 5px;
+}
+.consulta-form form option{
+    padding: 10px;
+}
 .job-container{
     width: 100%;
     display: flex;
