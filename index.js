@@ -178,7 +178,8 @@ async function sumupReq(trans, cache, req, res){
             "currency": trans.currency,
             "pay_to_email": trans.pay2mail,
             "payment_type": "pix",
-            "redirect_url": "https://gautoclinic.com.br/"
+            "redirect_url": "https://gautoclinic.com.br/",
+            "return_url": "https://gautoclinic.com.br/status"
         })
     });
     if(apiRes.ok){
@@ -376,6 +377,100 @@ app.get('/payment/:id', (req, res)=>{
     transaction.findId(req.params.id).then( data =>{
         res.render('payment', {data: data, user: req.user, error: errorMessage});
     }).catch(err => res.status(500).send('Something broke!'));
+});
+
+app.post('/status', async (req, res)=>{
+    const transactions = new transactionDAO();
+    const { id, status, event_type } = req.body;
+
+    //não coloquei para atualizar direto pq a chance de alguem mal intencionado fazer um post para atualizar o status
+    //ai preferi vereficar com eles denovo de foi paga ou não
+
+    //se a requisição for de sucesso e for de mudança de status
+    if(status == 'SUCCESSFUL' && event_type == 'CHECKOUT_STATUS_CHANGED'){
+        try{
+            //vai verificar com a pripria sumup se ela foi realmente paga
+            const apiRes = await fetch('https://api.sumup.com/v0.1/checkouts/' + id,{
+                method: 'GET',
+                headers: 
+                {
+                    'Authorization': 'Bearer ' + process.env.sumup_key,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if(apiRes.ok){
+                let temp = await apiRes.json();
+
+                //se a resposta da api for diferente de pendente
+                if(temp.status != 'PENDING'){
+                    console.log(temp);
+                    try{
+                        let products = [];
+                        let volumes = [];
+                        let itens;
+                        let company;
+
+                        //atualiza o banco de dados
+                        await transactions.update(temp);
+                        //se foi paga coloca dentro do carrinho do melhor envio;
+                        if(temp.status == 'PAID'){
+                            const ownershop = new ownershopDAO();
+                            let tableOwner = await ownershop.buscaOwner();
+                            let tableUsuario = await transactions.buscaUsuarioFreteTransaction(temp.checkout_reference);
+
+                            tableUsuario.shipping.forEach((e)=>{
+                                products.push({
+                                    "name": e.name,//Nome Produto
+                                    "quantity": e.qtd,//Quantidade
+                                    "unitary_value": e.price//Valor Unitario
+                                });
+                                volumes.push({
+                                    "height": e.dimensions.height,//Altura
+                                    "length": e.dimensions.depth,//Comprimento
+                                    "width": e.dimensions.width,//Largura
+                                    "weight": e.dimensions.weight//Peso
+                                })//Volume
+                            })
+
+                            itens = {
+                                products: products,
+                                volumes: volumes
+                            }
+
+                            tableUsuario.fretes.forEach((e)=>{
+                                if(e.id == tableUsuario.info.userShipping){
+                                    company = e.name;
+                                }
+                            })
+
+                            if(company == 'SEDEX'){
+                                for(let i = 0; i < itens.products.length; i++){
+                                    let temp = {
+                                        products: [products[i]],
+                                        volumes: [volumes[i]]
+                                    }
+                                    helper.add2cart(tableUsuario, tableOwner, temp).then((res)=>{
+                                        console.log(res);
+                                    })
+                                }
+                            }else{
+                                helper.add2cart(tableUsuario, tableOwner, itens).then((res)=>{
+                                    console.log(res);
+                                })
+                            }
+                        }
+                    }catch(err){
+                        console.log(err);
+                    }
+                }
+            }
+        }catch(err){
+            console.log(err);
+        }
+    }
+    console.log(req.body);
+    res.send('ok');
 });
 
 app.get('/search', (req, res) =>{
