@@ -412,7 +412,7 @@ nav{
     bottom:0;
     left:0;
     right:0;
-    z-index: 1;
+    z-index: 3;
     overflow-x: hidden;
     transition: 0.5s;
     background: rgba(0, 0, 0, 0.35);
@@ -538,7 +538,7 @@ main .item-images div img{
 }
 .item-container .item-name{
     max-width: 100%;
-    font-size: 30px;
+    font-size: 1.875rem;
     font-weight: bolder;
     overflow: hidden;
     white-space: wrap;
@@ -1200,7 +1200,7 @@ margin-top: 5px;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    font-size: 16px;
+    font-size: 1rem;
 }
 
 #frete-form input[type="checkbox"] {
@@ -1641,7 +1641,7 @@ main.etiqueta .outline{
     position: absolute;
     margin-left: 10px;
     margin-top: -43px;
-    font-size: 11px;
+    font-size: 0.688rem;
     color: rgba(0, 0, 0, 0.5);
 }
 .section .item{

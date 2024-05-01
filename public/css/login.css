@@ -93,7 +93,7 @@ form{
 	top: 50%;
 	transform: translateY(-50%);
 	color: #999;
-	font-size: 18px;
+	font-size: 1.125rem;
 	transition: .3s;
 }
 
@@ -121,7 +121,7 @@ form{
 
 .input-div.focus > div > h5{
 	top: -5px;
-	font-size: 15px;
+	font-size: 0.938rem;
 	color: #2b2b2b;
 }
 

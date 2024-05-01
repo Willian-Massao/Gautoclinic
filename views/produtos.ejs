@@ -8,11 +8,7 @@
     <%- include ("partials/header.ejs") %>
     <%- include ("partials/alert.ejs") %>
     <main>
-        <i class="banner">
-            <input checked type="radio" name="s" style="background-image: url('/src/consulta.jpg');" title="Gauto 1">
-            <input type="radio" name="s" style="background-image: url('/src/faciais.png');" title="Gauto 2">
-            <input type="radio" name="s" style="background-image: url('/src/cursos.png');" title="Gauto 3">
-        </i>
+        <%- include ("partials/banner.ejs") %>
         <div class="itens">
             <% itens.forEach((item)=>{ %>
                 <a class="product" href="/item/<%= item.id %>">
