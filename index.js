@@ -141,11 +141,11 @@ app.post('/payment', async(req, res) => {
         cache.itens.forEach(item => {
             databaseRes.forEach(res => {
                 if(res.id == item.id){
-                    transaction.price += res.price * item.qtd;
+                    transaction.price += (res.price - (res.price * (res.descount/100))) * item.qtd;
                     transaction.shipping.push({
                         id: res.id,
                         name: res.name,
-                        price: res.price,
+                        price: (res.price - (res.price * (res.descount/100))),
                         qtd: item.qtd,
                         dimensions:{
                             width: res.width,
@@ -174,7 +174,7 @@ async function sumupReq(trans, cache, req, res){
             "Content-Type": "application/json",
         }, body:JSON.stringify({
             "checkout_reference": trans.check_ref,
-            "amount": 1,
+            "amount": trans.price,
             "currency": trans.currency,
             "pay_to_email": trans.pay2mail,
             "payment_type": "pix",
@@ -195,7 +195,7 @@ async function sumupReq(trans, cache, req, res){
         transaction.insert(trans).then(()=>{
             res.json({ url: trans.check_ref})
         }).catch(err => {
-                res.status(500).send('Something broke!')
+            res.status(500).send('Something broke!')
         });
 
         if(cache.frete != undefined && cache.frete.length > 0){
