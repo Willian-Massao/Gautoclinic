@@ -335,7 +335,7 @@ app.get('/produtos/:sec', (req, res) =>{
     const itens = new itemDAO();
 
     itens.findType(req.params.sec).then( itens =>{
-        res.render('produtos', {itens: itens, user: req.user, error: errorMessage});
+            res.render('produtos', {itens: itens, user: req.user, error: errorMessage});
     }).catch(err => res.status(500).send('Something broke!'));
 });
 
@@ -352,7 +352,7 @@ app.get('/item/:id', (req, res) =>{
             })
             itens.newRate({mRate: (rates/(data.comments.length)), id: req.params.id});
         }
-        res.render('item', {item: data, user: req.user, image: data.images, error: errorMessage});
+            res.render('item', {item: data, user: req.user, image: data.images, error: errorMessage});
     })
 });
 
