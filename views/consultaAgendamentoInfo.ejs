@@ -16,13 +16,13 @@
                 <h1>Minha conta</h1>
                 <div class="info-contaner">
 
-                    <h2>Meu pedido</h2>
-                    <p><%= orders[0].date.toLocaleDateString() %> | Pedido n° <%= orders[0].check_ref.slice(0,10) %></p>
+                    <h2>Meu agendamento <%= orders[0].dataHoraAgendamento.toLocaleDateString() %></h2>
+                    <p> Agendamento n° <%= orders[0].check_ref.slice(0,10) %></p>
                     <div class="account-container single">
                         <div class="information">
                             <div>
-                                <label for="end">Endereço de envio</label>
-                                <p><%= user.city %>, <%= user.cep %></p>
+                                <label for="end">Procedimento</label>
+                                <p><%= orders[0].idProcedimento %></p>
                             </div>
                             <div>
                                 <label for="status">Status do pedido</label>
@@ -33,60 +33,23 @@
                                 <p>R$ <%= orders[0].price %></p>
                             </div>
                         </div>
-                        <div class="destinatario">
-                            <label for="">Destinatário</label>
-                            <p><%= user.name %> <%= user.lastname %></p>
-                            <p><%= user.tel %></p>
-                            <p><%= user.cpf %></p>
-                        </div>
                         <div class="button-container">
-                            <% if(orders[0].status == "Aprovado" || orders[0].status == "Entregue"){ %>
-                                <input class="button"   type="submit" value="Cancelar Pedido" form="myform" >
+                            <% if(orders[0].status == "Pago" || orders[0].status == "Entregue"){ %>
+                                <input class="button" onclick="comunicarEquipe()"  type="submit" value="Cancelar agendamentos" form="myform" >
                             <% } %>
                         </div>
-                        <% if(orders[0].shipping){ %>
-                            <div class="account-container table">
-                                <table>
-                                    <tr>
-                                        <% if(orders[0].status == "Aprovado" || orders[0].status == "Entregue"){ %>
-                                            <th class="mob-only">comentario</th>
-                                        <% } %>
-                                        <th class="mob-only">Produto</th>
-                                        <% if(orders[0].status == "Aprovado" || orders[0].status == "Entregue"){ %>
-                                            <th>Quantidade</th>
-                                            <% }else{ %>
-                                            <th class="mob-only">Quantidade</th>
-                                        <% } %>
-                                        <th class="mob-only">Preço</th>
-                                    </tr>
-                                    <% orders[0].shipping.forEach((e)=>{ %>
-                                        <tr>
-                                            <% if(orders[0].status == "Aprovado" || orders[0].status == "Entregue"){ %>
-                                            <td class="mob-only"><a class="button" href="/profile/comments/<%= orders[0].check_ref.slice(0,10) %>/<%= e.id %>">Avaliação</a></td>
-                                            <% } %>
-                                            <td class="mob-only"><%= e.name %></td>
-                                            <% if(orders[0].status == "Aprovado" || orders[0].status == "Entregue"){ %>
-                                                <td><%= e.qtd %>x</td>
-                                                <% }else{ %>
-                                                <td class="mob-only"><%= e.qtd %>x</td>
-                                            <% } %>
-                                            <td class="mob-only">R$ <%= e.price.toFixed(2) %></td>
-                                        </tr>
-                                    <% }) %>
-                                        <tr>
-                                            <td class="total mob-only desktop" colspan="3">Total</td>
-                                            <td class="total mob-only mobile" colspan="2">Total</td>
-                                            <td class="total mob-only">R$ <%= orders[0].price.toFixed(2) %></td>
-                                        </tr>
-                                </table>
-                            </div>
-                        <% } %>
                     </div>
                 </div>
             </div>
             </div>
         </main>
-        <form action="/profile/refund" method="post" style="display: none;" id="myform"><input type="text" name="check_ref" id="" value="<%= orders[0].check_ref.slice(0,10) %>"></form>
         <%- include ("partials/footer.ejs") %>
+        <script>
+        function comunicarEquipe(){
+            alert("Para cancelar um agendamento entre em contato com a nossa equipe. Você será redirecionado para o nosso WhatsApp");
+            window.location = "https://api.whatsapp.com/message/MACLYMXPASI3N1?autoload=1&app_absent=0"
+        }
+        </script>
     </body>
     </html>
+ 
