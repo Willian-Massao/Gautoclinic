@@ -157,21 +157,21 @@ routes.get('/consultasAgendamento', helper.ensureAuthenticated, (req, res) => {
 
 routes.get('/consultasAgendamento/:check_ref', helper.ensureAuthenticated, (req, res) => {
     const errorMessage = req.flash('error');
-    const trans = new transactionDAO();
+    const agend = new agendamentoDAO();
     const check_ref = req.params.check_ref;
     const idItem = req.params.idItem;
     const ptTable = {
         'PENDING': 'Pendente',
-        'PAID': 'Aprovado',
+        'PAID': 'Pago',
         'FAILED': 'Recusado',
         'FINISH': 'Entregue'
     }
 
-    trans.like({check_ref: check_ref, idUser: req.user.id }).then( orders => {
+    agend.findCheck_ref({ idFuncionario: 1, check_ref: check_ref }).then( orders => {
         orders.forEach(element => {
             element.status = ptTable[element.status];
         });
-        res.render('orderinfo', { user: req.user, orders: orders, error: errorMessage});
+            res.render('consultaAgendamentoInfo', { user: req.user, orders: orders, error: errorMessage});
     });
 });
 
