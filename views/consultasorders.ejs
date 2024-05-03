@@ -15,19 +15,23 @@
             <div class="account-info">
                 <h1>Minha conta</h1>
                 <form action="/profile/edit" method="post">
-                    <h2>Meus Agendamentos</h2>
+                    <h2>Meus agendamentos</h2>
                     <div class="account-container table">
                         <table>
                             <tr>
                                 <th class="mob-only">Data</th>
-                                <th>Preço</th>
+                                <th class="mob-only">Procedimento</th>
+                                <th class="mob-only">Preço</th>
                                 <th class="mob-only">Status</th>
+                                <th class="mob-only">Detalhes</th>
                             </tr>
                             <% orders.forEach((order)=>{ %>
                                 <tr>
-                                    <td class="mob-only"><%= order.check_ref.slice(0,10) %></td>
-                                    <td>R$ <%= order.price %></td>
+                                    <td class="mob-only"><%= order.dataHoraAgendamento.toLocaleDateString() %></td> 
+                                    <td class="mob-only"><%= order.nome %></td>
+                                    <td class="mob-only">R$ <%= order.price %></td>
                                     <td class="mob-only"><%= order.status %></td>
+                                    <td class="mob-only"><a href="/profile/consultasAgendamento/<%= order.check_ref.slice(0,10) %>"><i class="fi fi-rr-search"></i></a></td>
                                 </tr>
                             <% }) %>
                         </table>

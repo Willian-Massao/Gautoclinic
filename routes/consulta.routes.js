@@ -8,6 +8,7 @@ const funcionariosDAO = require('../database/funcionariosDAO.js');
 const fun2proceDAO = require('../database/funcionariosProcedimentosDAO.js');
 const procedimentosDAO = require('../database/procedimentosDAO.js');
 const transactionDAO = require('../database/transactionDAO.js');
+const refoundDAO = require("../database/refoundDAO.js");
 
 routes.post('/add/', async (req, res) => {
     const { nascimento, data, time, procedimentos,  aviso } = req.body;
@@ -106,21 +107,12 @@ async function sumupReq(trans, ListOf, req, res){
                 res.redirect('/marcar');
             });    
 
-    //     const paymentGet = await fetch('/consulta/payment/'+ data.checkout_reference,{
-    //     method: 'GET',
-    //     headers: {
-    //         "Content-Type": "application/json",
-    //     }
-    // });
-    // if(paymentGet.ok) {
-    //  console.log("VISH")       
-    // }
     }else{
         res.status(500).send('sumup unauthorized')
     }
 }
 
-routes.get('/payment/:id', helper.ensureAuthenticated, (req, res)=>{
+routes. get('/payment/:id', helper.ensureAuthenticated, (req, res)=>{
     const errorMessage = req.flash('error');
     const agendamentos = new agendamentosDAO();
     
@@ -129,9 +121,67 @@ routes.get('/payment/:id', helper.ensureAuthenticated, (req, res)=>{
     }).catch(err => res.status(500).send('Something broke!'));
 });
 
-routes.get('/orders', helper.ensureFunc, (req, res) => {
+routes.post('/accept', helper.ensureAdmin), async (req, res) =>{
+    const {checkRef} = req.body;
+    const agendamentos = new agendamentosDAO();
+    const assunto = "Confirmação agendamento GautoClinic";
+
+    let tableAgendamento = await agendamentos.findCheck_ref({idFuncionario:1,check_ref:checkRef})
+    let html = "Olá, "+ req.user.name +" o seu agendamento para o procedimento " + tableAgendamento[0].idProcedimento + " foi confirmado para o dia " + tableAgendamento[0].dataHoraAgendamento+ " estaremos esperando por você. Atenciosamente Equipe GautoClinic."
+    const text = "";
+    await agendamentos.confirmaAgendamento({confirmado:1, idUser:req.user.id, check_ref:checkRef});
+    helper.sendEmail(req.user.email,assunto,html,text);
+
+}
+routes.get('/cancel', helper.ensureAdmin), async (req, res) =>{
+    const {checkRef} = req.body;
+    const agendamentos = new agendamentosDAO();
+    const assunto = "Cancelamento agendamento GautoClinic";
+    
+    let tableAgendamento = await agendamentos.findCheck_ref({idFuncionario:1,check_ref:checkRef})
+    let html = "Olá, "+ req.user.name +" o seu agendamento para o procedimento " + tableAgendamento[0].idProcedimento + " do dia " + tableAgendamento[0].dataHoraAgendamento+ " foi estornado e cancelado pela nossa equipe, por favor entre em contato conosco para mais informações. Atenciosamente Equipe GautoClinic."
+    const text = "";
+
+    const apiRes = await fetch('https://api.sumup.com/v0.1/checkouts/' + tableAgendamento[0].id,{
+                method: 'GET',
+                headers: 
+                {
+                    'Authorization': 'Bearer ' + process.env.SUMUP_KEY,
+                    'Content-Type': 'application/json'
+                }
+    });
+    if(apiRes.ok){
+        let temp = await apiRes.json();
+
+        //se a resposta da api for diferente de pendente
+        if(temp.status != 'PENDING'){
+            let fetchres = await fetch('https://api.sumup.com/v0.1/me/refund/' + temp.transaction_id,{
+                method: 'POST',
+                headers: {
+                    "Authorization": "Bearer " + process.env.SUMUP_KEY,
+                }
+            });
+            
+            if(fetchres.ok){
+                await agendamentos.confirmaAgendamento({confirmado:0, idUser:req.user.id, check_ref:checkRef});
+                helper.sendEmail(req.user.email,assunto,html,text);
+            }
+            else{
+                req.flash('error', 'Erro ao fazer o reembolso');
+                res.redirect('/orders');
+            }
+        }else{
+            req.flash('error', 'O pagamento não está em um status reembolsável');
+            res.redirect('/orders');
+        }
+    }
+}
+
+routes.get('/orders', helper.ensureAdmin, (req, res) => {
     const errorMessage = req.flash('error');
     const agendamentos = new agendamentosDAO();
+    let consulDate = new Date();
+    let dataConsulta = consulDate.getFullYear() +"-"+(consulDate.getMonth()+1).toString().padStart(2,'0')+"-"+consulDate.getDate().toString().padStart(2,'0');
 
     const ptTable = {
         'PAID': 'PAGO',
@@ -141,7 +191,7 @@ routes.get('/orders', helper.ensureFunc, (req, res) => {
     }
 
     try{
-        agendamentos.select().then( data => {
+        agendamentos.select({data:dataConsulta}).then( data => {
             //merge itens with same check_ref into one preserving all idProcedimento in array first
             //filter PENDING not enter
             data = data.filter( item => item.status != 'PENDING');
@@ -175,7 +225,7 @@ routes.get('/orders', helper.ensureFunc, (req, res) => {
     }
 });
 
-routes.get('/orders/:id', helper.ensureFunc, (req, res) => {
+routes.get('/orders/:id', helper.ensureAdmin, (req, res) => {
     const errorMessage = req.flash('error');
     const agendamentos = new agendamentosDAO();
 
@@ -200,23 +250,6 @@ routes.get('/orders/:id', helper.ensureFunc, (req, res) => {
     }catch(err){
         console.log(err);
         res.status(500).send('Something broke!');
-    }
-    function mergeItems(data){
-        let merged = [];
-        let check = [];
-        let temp = {};
-        for (let item of data) {
-            if(check.includes(item.check_ref)){
-                temp = merged.find( obj => obj.check_ref == item.check_ref);
-                temp.idProcedimento.push(item.idProcedimento);
-            }else{
-                check.push(item.check_ref);
-                temp = item;
-                temp.idProcedimento = [item.idProcedimento];
-                merged.push(temp);
-            }
-        }
-        return merged;
     }
 });
 

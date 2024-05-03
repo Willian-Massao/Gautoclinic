@@ -394,7 +394,7 @@ app.post('/status', async (req, res)=>{
                 method: 'GET',
                 headers: 
                 {
-                    'Authorization': 'Bearer ' + process.env.sumup_key,
+                    'Authorization': 'Bearer ' + process.env.SUMUP_KEY,
                     'Content-Type': 'application/json'
                 }
             });
@@ -404,7 +404,7 @@ app.post('/status', async (req, res)=>{
 
                 //se a resposta da api for diferente de pendente
                 if(temp.status != 'PENDING'){
-                    console.log(temp);
+                    
                     try{
                         let products = [];
                         let volumes = [];
@@ -451,12 +451,12 @@ app.post('/status', async (req, res)=>{
                                         volumes: [volumes[i]]
                                     }
                                     helper.add2cart(tableUsuario, tableOwner, temp).then((res)=>{
-                                        console.log(res);
+
                                     })
                                 }
                             }else{
                                 helper.add2cart(tableUsuario, tableOwner, itens).then((res)=>{
-                                    console.log(res);
+
                                 })
                             }
                         }
@@ -469,7 +469,7 @@ app.post('/status', async (req, res)=>{
             console.log(err);
         }
     }
-    console.log(req.body);
+
     res.send('ok');
 });
 
