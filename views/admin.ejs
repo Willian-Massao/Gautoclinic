@@ -65,7 +65,7 @@
                                 </td>
                             <% }else{ %>
                                 <td>
-                                    <form action="/database/delete/<%= table %>" method="POST">
+                                    <form action="/admin/delete/<%= table %>" method="POST">
                                         <input type="text" name="id" value="<%= e.id %>" class="disable" readonly>
                                         <button><i class="fi fi-rr-trash-xmark"></i></button>
                                     </form>

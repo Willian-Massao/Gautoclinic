@@ -304,7 +304,7 @@ routes.post('/confirm/etiqueta', async(req, res) => {
     }
 });
 
-routes.post('/delete/paying', async(req, res) => {
+routes.post('/delete/etiqueta', async(req, res) => {
     const { id } = req.body;
     const melhorEnvio = new envioDAO();
 
@@ -321,7 +321,69 @@ routes.post('/delete/paying', async(req, res) => {
             }
         });
     if(fetchres.ok){
-        res.redirect('/admin/paying');
+        res.redirect('/admin/etiqueta');
+    }else{
+        req.flash('error', 'ID da etiqueta incorreto!');
+        res.redirect('/admin/etiqueta');
+    }
+});
+
+routes.post('/delete/paying', async(req, res) => {
+    const { id } = req.body;
+    const melhorEnvio = new envioDAO();
+
+    console.log(id);
+
+    let bearerMelhorEnvio = 'Bearer ';
+    await melhorEnvio.buscaToken().then(bearer => {  bearerMelhorEnvio += bearer.access_token});
+
+    let fetchres = await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/shipment/cancellable',{
+        method: 'POST',
+        headers: {
+            "Accept": " application/json",
+            "Authorization": bearerMelhorEnvio,
+            "Content-Type": "application/json",
+            "User-Agent": "Contatar servidorclientesaws@gmail.com",
+        },
+        body: JSON.stringify({
+            "orders": [
+                id
+            ]
+        })
+    });
+    let temp = await fetchres.json();
+    if(fetchres.ok){
+        console.log(temp[`${id}`]);
+        if(temp[`${id}`].cancellable == true){
+            console.log('entrou');
+            let fetchres = await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/shipment/cancel',{
+                method: 'POST',
+                headers: {
+                    "Accept": " application/json",
+                    "Authorization": bearerMelhorEnvio,
+                    "Content-Type": "application/json",
+                    "User-Agent": "Contatar servidorclientesaws@gmail.com",
+                },
+                body: JSON.stringify({
+                    "order": {
+                        "id": id,
+                        "reason_id": "2",
+                        "description": "Cancelamento de etiqueta"
+                    }
+                })
+            });
+            if(fetchres.ok){
+                temp = await fetchres.json();
+                console.log(temp);
+                res.redirect('/admin/paying');
+            }else{
+                req.flash('error', 'A etiqueta não pode ser cancelada!');
+                res.redirect('/admin/paying');
+            }
+        }else{
+            req.flash('error', 'A etiqueta não pode ser cancelada!');
+            res.redirect('/admin/paying');
+        }
     }else{
         req.flash('error', 'ID da etiqueta incorreto!');
         res.redirect('/admin/paying');
