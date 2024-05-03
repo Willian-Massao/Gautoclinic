@@ -17,10 +17,8 @@ module.exports  = class agendamentos{
                 check_ref varchar(36) NOT NULL,
                 status varchar(10) NOT NULL DEFAULT 'PENDING',
                 PRIMARY KEY (idUser, idProcedimento, check_ref),
-                KEY IdFuncionarioagendamento_idx (idFuncionario),
                 KEY idUserAgendamentos (idUser),
                 KEY idProcedimentoAgendamentos_idx (idProcedimento),
-                CONSTRAINT IdFuncionarioagendamento FOREIGN KEY (idFuncionario) REFERENCES funcionarios (idFuncionario),
                 CONSTRAINT idProcedimentoAgendamentos FOREIGN KEY (idProcedimento) REFERENCES procedimentos (idProcedimentos),
                 CONSTRAINT idUserAgendamentos FOREIGN KEY (idUser) REFERENCES users (id));`;
             await conn.query(sql);
@@ -51,7 +49,7 @@ module.exports  = class agendamentos{
     async selecionaAgendamentos(){
         const conn = await pool.getConnection();
         try{
-            const sql = "select *, DATE(dataHoraAgendamento) as 'dataAgendamento', TIME(dataHoraAgendamento) as 'horaAgendamento'  from agendamentos where dataHoraAgendamento >= DATE_ADD(date(now()), INTERVAL 1 DAY)"
+            const sql = "select dataHoraAgendamento, DATE(dataHoraAgendamento) as 'dataAgendamento', TIME(dataHoraAgendamento) as 'horaAgendamento'  from agendamentos where dataHoraAgendamento >= DATE_ADD(date(now()), INTERVAL 1 DAY)"
             const [rows] = await conn.query(sql)
             console.log("agendamentos selecionados");
             return rows;
@@ -149,7 +147,7 @@ module.exports  = class agendamentos{
     async verificaHorarioFunc(agendamentos){
         const conn = await pool.getConnection();
         try {
-            const sql = `SELECT case when TIMESTAMPDIFF(minute, dataHoraAgendamento, ?) > 45 then 1 else 0 end as 'PodeAgendar' from agendamentos WHERE idFuncionario = 2 and date(dataHoraAgendamento) = ?;`;
+            const sql = `SELECT case when TIMESTAMPDIFF(minute, dataHoraAgendamento, ?) > 45 then 1 else 0 end as 'PodeAgendar' from agendamentos WHERE date(dataHoraAgendamento) = ?;`;
             const [rows] = await conn.query(sql, [agendamentos.dataHoraAgendamento, agendamentos.dataConsulta]);
             return rows;
         }catch(err){

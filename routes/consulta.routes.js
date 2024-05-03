@@ -10,10 +10,11 @@ const procedimentosDAO = require('../database/procedimentosDAO.js');
 const transactionDAO = require('../database/transactionDAO.js');
 
 routes.post('/add/', async (req, res) => {
-    const { nascimento, data, time, procedimentos, funcionario, aviso } = req.body;
+    const { nascimento, data, time, procedimentos,  aviso } = req.body;
     let consulDate = new Date(data + ' ' + time);
     const proces = new procedimentosDAO();
     const agend = new agendamentosDAO();
+    const funcionario = 1;
     let dataConsulta = consulDate.getFullYear() +"-"+(consulDate.getMonth()+1).toString().padStart(2,'0')+"-"+consulDate.getDate().toString().padStart(2,'0');
     let ListOf = [];
     let transaction;
@@ -32,11 +33,13 @@ routes.post('/add/', async (req, res) => {
             throw new Error('É necessário aceitar os termos de uso');
         }
         agend.verificaHorarioFunc({dataHoraAgendamento: consulDate, dataConsulta: dataConsulta}).then(agendamentos => {
+            if(agendamentos.length > 0){
                 agendamentos.forEach(agendamento => {
                     if(agendamento.PodeAgendar != 1){
                         throw new Error('Este horário já está reservado. Por favor, selecione outro horário disponível.');
                     } 
                 });
+            }    
                 proces.findId({id: procedimentos}).then( data => {
                     let check_ref = uuid.create().toString();
                     ListOf.push({
