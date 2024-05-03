@@ -1880,3 +1880,6 @@ main.etiqueta .outline{
 .form-buttons .accept:active{
     background-color: #009979;
 }
+form #alerts{
+    color:red;
+}

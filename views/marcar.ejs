@@ -20,14 +20,8 @@
                     <div class="subcampo-consulta">
                         <% let diaSeguinte = new Date(); diaSeguinte.setDate(diaSeguinte.getDate() + 1);%>
                         <input type="date" name="data" id="data" oninput="validaData()" placeholder="data" min = "<%= diaSeguinte.getFullYear() +"-"+(diaSeguinte.getMonth()+1).toString().padStart(2,'0')+"-"+diaSeguinte.getDate().toString().padStart(2,'0') %>" >
-                        <select name="time" id="time" value="time">
-                            <% let minuto = 0;
-                                for(var hora = 8; hora <= 18; hora++){ 
-                                    minuto = 0;  %>
-                                <% for(var quartoHora = 1; quartoHora <= 4; quartoHora++){%>
-                                    <option value="<%= hora+":"+minuto.toString().padEnd(2,'0') %>"> <%= hora+":"+minuto.toString().padEnd(2,'0') %></option>   
-                                <% minuto += 15; if (hora=== 18) {break;} }%>
-                            <% }%>                    
+                        <select name="time" id="time" value="time" onchange ="validaHora()">
+                            <% let minuto = 0; for(var hora = 8; hora <= 18; hora++){ minuto = 0;  %><% for(var quartoHora = 1; quartoHora <= 4; quartoHora++){%><option value="<%= hora+":"+minuto.toString().padEnd(2,'0') %>"> <%= hora+":"+minuto.toString().padEnd(2,'0') %></option><% minuto += 15; if (hora=== 18) {break;} }%><% }%>                    
                         </select>
                     </div>
                 </div>
@@ -42,13 +36,14 @@
                     </div>
                 </div>
                 <div class="consulta-campo">
-                    <label class="subline outline">Funcionario</label>
-                    <select name="funcionario" id="funcionario" onclick="size=(size!=1)?1:n;">
+                    <label class="subline outline">Realizado por</label>
+                    <p> Equipe Gautoclinic </p>
+                    <!--//<select name="funcionario" id="funcionario" onclick="size=(size!=1)?1:n;">
                         <p> Equipe Gautoclinic </p>
                         // <% funcionarios.forEach((e)=>{ %>
                         //     <option value="<%= e.idFuncionario %>"><%= e.Nome %></option>
                         // <% }) %>
-                    </select>
+                    </select>-->
                 </div>
                 <div class="consulta-campo">
                     <p class="aviso">Atente-se com sua data e horário. Em caso de cancelamento com menos de 24 horas ou não comparecimento, o valor de agendamento não será reembolsado. Você tem direito a somente um reagendamento no período de 30 dias. Uma vez que que o valor do agendamento foi pago, considera-se que o protocolo do procedimento já está em andamento, sendo assim, não há direito a reembolso de qualquer natureza. O procedimento será realizado por um profissional da equipe GAUTOCLINIC.</p>
@@ -70,12 +65,12 @@
     function validaData(){
         let agendamentos = <%- agendamentos %>;
         var date = document.getElementById("data").value;
-        var idFuncionario = document.getElementById("funcionario").value;
+        // var idFuncionario = document.getElementById("funcionario").value;
         alerts.innerHTML = "";
         agendamentos.forEach(agend => {
             let testeDate = new Date(agend.dataAgendamento)
             let dateDate = testeDate.getFullYear() +"-"+(testeDate.getMonth()+1).toString().padStart(2, '0')+"-"+testeDate.getDate();
-            if (date === dateDate && agend.idFuncionario === parseInt(idFuncionario)){
+            if (date === dateDate){
                 validaHora();
             }
             
@@ -85,9 +80,8 @@
     function validaHora(){
         var alerts = document.getElementById('alerts');
         var time = new Date(document.getElementById("data").value + " ");
-        time.setHours(document.getElementById("time").value.substring(0,2));
-        time.setMinutes(document.getElementById("time").value.substring(3,5));
-        var idFuncionario = document.getElementById("funcionario").value;
+        time.setHours(document.getElementById("time").value.substring(0,1));
+        time.setMinutes(document.getElementById("time").value.substring(2,5));
         var timeMin = new Date();
         timeMin.setHours(8);
         var timeMax = new Date();
@@ -98,7 +92,7 @@
                 let dateAgend = new Date(agendamentos[agend].dataHoraAgendamento);
                 const diffTime = Math.abs(time - dateAgend);
                 const diffMinutes= Math.ceil(diffTime / (1000 * 60));
-                if (diffMinutes <= 45 && agendamentos[agend].idFuncionario === parseInt(idFuncionario)){
+                if (diffMinutes <= 45){
                     alerts.innerHTML = "Este horário já está reservado. Por favor, selecione outro horário disponível.";
                     document.getElementById('Agendar').disabled = true;
                     break;
