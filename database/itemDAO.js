@@ -34,7 +34,7 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try{
             NN(id);
-            const sql = `SELECT P.id, P.name, P.qtd, P.price, P.descount, P.description, P.uses, P.active, P.benefits, P.mRate, P.height, P.width, P.depth, P.weight, I.id as idImage,  I.id as idImage, I.idItem as img2product, I.image, C.idUser as comment2user,C.idItem as comment2product, C.check_ref, C.rate, C.name as Conwer, C.comment, case when p.descount = 0 then p.price when p.descount is null then p.price else (p.price-(p.price*(p.descount/100))) end  as precoDesconto from gauto.itens P left join gauto.images I on I.idItem = P.id left join gauto.comments C on C.idItem = P.id where P.id = ?`;
+            const sql = `SELECT P.id, P.name, P.qtd, P.price, P.descount, P.description, P.uses, P.active, P.benefits, P.mRate, P.height, P.width, P.depth, P.weight, I.id as idImage,  I.id as idImage, I.idItem as img2product, I.image, C.idUser as comment2user,C.idItem as comment2product, C.check_ref, C.rate, C.name as Conwer, C.comment, case when P.descount = 0 then P.price when P.descount is null then P.price else (P.price-(P.price*(P.descount/100))) end  as precoDesconto from gauto.itens P left join gauto.images I on I.idItem = P.id left join gauto.comments C on C.idItem = P.id where P.id = ?`;
             const [rows] = await conn.query(sql, [id]);
             return compac(rows)[0];
         }catch(err){
@@ -81,7 +81,7 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try{
             NN(type);
-            const sql = `SELECT P.id, P.name, P.qtd, P.price, P.descount, P.description, P.mRate, P.height, P.width, P.depth, P.weight, I.id as idImage, I.idItem as img2product, I.image, C.idUser as comment2user,C.idItem as comment2product, C.check_ref, C.rate, C.name as Cowner, C.comment, (p.price-(p.price/p.descount)) as precoDesconto from itens P left join images I on I.idItem = P.id left join comments C on C.idItem = P.id where P.type = ?`;
+            const sql = `SELECT P.id, P.name, P.qtd, P.price, P.descount, P.description, P.mRate, P.height, P.width, P.depth, P.weight, I.id as idImage, I.idItem as img2product, I.image, C.idUser as comment2user,C.idItem as comment2product, C.check_ref, C.rate, C.name as Cowner, C.comment, (P.price-(P.price/P.descount)) as precoDesconto from itens P left join images I on I.idItem = P.id left join comments C on C.idItem = P.id where P.type = ?`;
             const [rows] = await conn.query(sql, [type]);
             return compac(rows);
         }catch(err){

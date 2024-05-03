@@ -96,7 +96,7 @@ routes.get('/etiqueta', helper.ensureAdmin, async (req, res) => {
         headers: {
             "Accept": "application/json",
             "Authorization": bearerMelhorEnvio,
-            "User-Agent": "Aplicação (email para contato técnico)"
+            "User-Agent": "Contatar servidorclientesaws@gmail.com"
         }
     });
 
@@ -140,7 +140,7 @@ routes.get('/paying', helper.ensureAdmin, async (req, res) => {
         headers: {
             "Accept": "application/json",
             "Authorization": bearerMelhorEnvio,
-            "User-Agent": "Aplicação (email para contato técnico)"
+            "User-Agent": "Contatar servidorclientesaws@gmail.com"
         }
     });
 
@@ -185,7 +185,7 @@ routes.get('/paying/:id', helper.ensureAdmin, async (req, res)=>{
         headers: {
             "Accept": "application/json",
             "Authorization": bearerMelhorEnvio,
-            "User-Agent": "Aplicação (email para contato técnico)"
+            "User-Agent": "Contatar servidorclientesaws@gmail.com"
         }
     })
     if(fetchres.ok){
@@ -211,7 +211,7 @@ routes.get('/etiqueta/:id', helper.ensureAdmin, async (req, res)=>{
         headers: {
             "Accept": "application/json",
             "Authorization": bearerMelhorEnvio,
-            "User-Agent": "Aplicação (email para contato técnico)"
+            "User-Agent": "Contatar servidorclientesaws@gmail.com"
         }
     })
     if(fetchres.ok){
@@ -288,7 +288,7 @@ routes.post('/confirm/etiqueta', async(req, res) => {
                 "Accept": " application/json",
                 "Authorization": bearerMelhorEnvio,
                 "Content-Type": "application/json",
-                "User-Agent": "Aplicação (email para contato técnico)",
+                "User-Agent": "Contatar servidorclientesaws@gmail.com",
             },
             body: JSON.stringify({
                 "orders": [
@@ -304,26 +304,21 @@ routes.post('/confirm/etiqueta', async(req, res) => {
     }
 });
 
-routes.post('/confirm/paying', async(req, res) => {
+routes.post('/delete/paying', async(req, res) => {
     const { id } = req.body;
     const melhorEnvio = new envioDAO();
 
     let bearerMelhorEnvio = 'Bearer ';
     await melhorEnvio.buscaToken().then(bearer => {  bearerMelhorEnvio += bearer.access_token});
 
-    let fetchres = await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/shipment/checkout',{
-            method: 'POST',
+    let fetchres = await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/cart/' + id,{
+            method: 'DELETE',
             headers: {
                 "Accept": " application/json",
                 "Authorization": bearerMelhorEnvio,
                 "Content-Type": "application/json",
-                "User-Agent": "Aplicação (email para contato técnico)",
-            },
-            body: JSON.stringify({
-                "orders": [
-                    id
-                ]
-            })
+                "User-Agent": "Contatar servidorclientesaws@gmail.com",
+            }
         });
     if(fetchres.ok){
         res.redirect('/admin/paying');
@@ -346,7 +341,7 @@ routes.post('/generate/paying', async(req, res) => {
                 "Accept": " application/json",
                 "Authorization": bearerMelhorEnvio,
                 "Content-Type": "application/json",
-                "User-Agent": "Aplicação (email para contato técnico)",
+                "User-Agent": "Contatar servidorclientesaws@gmail.com",
             },
             body: JSON.stringify({
                 "orders": [
@@ -375,7 +370,7 @@ routes.post('/print/paying', async(req, res) => {
                 "Accept": " application/json",
                 "Authorization": bearerMelhorEnvio,
                 "Content-Type": "application/json",
-                "User-Agent": "Aplicação (email para contato técnico)",
+                "User-Agent": "Contatar servidorclientesaws@gmail.com",
             },
             body: JSON.stringify({
                 "mode": "public",

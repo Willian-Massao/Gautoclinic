@@ -118,7 +118,7 @@ routes.post('/delete/etiqueta', async (req, res)=>{
             "Accept":"application/json",
             "Content-Type": "application/json",
             "Authorization": bearerMelhorEnvio,
-            "User-Agent": "Aplicação (email para contato técnico)",
+            "User-Agent": "Contatar servidorclientesaws@gmail.com",
         }
     })
     if(fetchres.ok){
