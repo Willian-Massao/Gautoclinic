@@ -52,7 +52,7 @@ routes.get('/images', helper.ensureAdmin, (req, res) => {
     }).catch(err => res.status(500).send('Something broke!'));
 }); 
 
-routes.get('/edit/images/:id', (req, res) => {
+routes.get('/edit/images/:id', helper.ensureAdmin, (req, res) => {
     const { id } = req.params;
     const errorMessage = req.flash('error');
     const images = new imageDAO();
@@ -75,7 +75,7 @@ routes.get('/products', helper.ensureAdmin, (req, res) => {
     }).catch(err => res.status(500).send('Something broke!'));
 });
 
-routes.get('/edit/products/:id', (req, res) => {
+routes.get('/edit/products/:id', helper.ensureAdmin, (req, res) => {
     const { id } = req.params;
     const errorMessage = req.flash('error');
     const itens = new itemDAO();
