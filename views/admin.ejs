@@ -6,6 +6,7 @@
 <body>
     <%- include ("partials/alert.ejs") %>
     <%- include ("partials/navbaradmin.ejs") %>
+    
     <main class="table">
         <table class="green-table">
                 <tr>
@@ -15,6 +16,9 @@
                     <th>Apagar</th>
                     <% if(table == "etiqueta" || table == "paying"){ %>
                         <th>Ver</th>    
+                    <% } %>
+                    <% if(table == "products" || table == "images"){ %>
+                        <th>Atualizar</th>    
                     <% } %>
                 </tr>
                 <% data.forEach((e)=>{ %>
@@ -65,7 +69,7 @@
                                 </td>
                             <% }else{ %>
                                 <td>
-                                    <form action="/database/delete/<%= table %>" method="POST">
+                                    <form action="/admin/delete/<%= table %>" method="POST">
                                         <input type="text" name="id" value="<%= e.id %>" class="disable" readonly>
                                         <button><i class="fi fi-rr-trash-xmark"></i></button>
                                     </form>
@@ -74,6 +78,16 @@
                             <td>
                                     <input type="text" name="id" value="<%= e.id %>" class="disable" readonly>
                                     <a style="background-color: #24a0ed;" href="/admin/<%= table %>/<%= e.id %>" target="_blank"><i class="fi fi-rr-search"></i></i></i></a>
+                            </td>
+                        <% }else if(table == "products" || table == "images"){ %>
+                            <td>
+                                <form action="/database/delete/<%= table %>" method="POST">
+                                    <input type="text" name="id" value="<%= e.id %>" class="disable" readonly>
+                                    <button><i class="fi fi-rr-trash-xmark"></i></button>
+                                </form>
+                            </td>
+                            <td>
+                                <a href="/admin/edit/<%= table %>/<%= e.id %>" style="background-color: #24a0ed;" ><i class="fi fi-rr-edit"></i></a>
                             </td>
                         <% }else{ %>
                             <td>
@@ -115,6 +129,9 @@
                 <p>Acões</p>
                 <% if(table == "etiqueta" || table == "paying"){ %>
                     <p>Ver</p>    
+                <% } %>
+                <% if(table == "products" || table == "images"){ %>
+                    <p>Update</p>
                 <% } %>
             </div>
             <div class="content">
@@ -171,7 +188,17 @@
                                 <input type="text" name="id" value="<%= itens.id %>" class="disable" readonly>
                                 <a style="background-color: #24a0ed;" href="/admin/<%= table %>/<%= itens.id %>" target="_blank"><i class="fi fi-rr-search"></i></i></i></a>
                             </td>
-                        <% }else{ %>
+                        <% }else if(table == "products" || table == "images"){ %>
+                            <td>
+                                <form action="/database/delete/<%= table %>" method="POST">
+                                    <input type="text" name="id" value="<%= itens.id %>" class="disable" readonly>
+                                    <button><i class="fi fi-rr-trash-xmark"></i></button>
+                                </form>
+                            </td>
+                            <td>
+                                <a href="/admin/edit/<%= table %>/<%= itens.id %>" style="background-color: #24a0ed;" ><i class="fi fi-rr-edit"></i></a>
+                            </td>
+                            <% }else{ %>
                             <td>
                                 <form action="/database/delete/<%= table %>" method="POST">
                                     <input type="text" name="id" value="<%= itens.id %>" class="disable" readonly>

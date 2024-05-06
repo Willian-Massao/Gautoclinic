@@ -51,6 +51,19 @@ routes.get('/images', helper.ensureAdmin, (req, res) => {
         }).catch(err => res.status(500).send('Something broke!'));
     }).catch(err => res.status(500).send('Something broke!'));
 }); 
+
+routes.get('/edit/images/:id', (req, res) => {
+    const { id } = req.params;
+    const errorMessage = req.flash('error');
+    const images = new imageDAO();
+    
+    images.findId(id).then( item =>{
+        images.describe().then( index =>{
+            res.render('editadmin', {data: item, indexes: index, table: 'images', error: errorMessage});
+        }).catch(err => res.status(500).send('Something broke!'));
+    }).catch(err => res.status(500).send('Something broke!'));
+});
+
 routes.get('/products', helper.ensureAdmin, (req, res) => {
     const errorMessage = req.flash('error');
     const itens = new itemDAO();
@@ -58,6 +71,18 @@ routes.get('/products', helper.ensureAdmin, (req, res) => {
     itens.select().then( item =>{
         itens.describe().then( index =>{
             res.render('admin', {data: item, indexes: index, table: 'products', error: errorMessage});
+        }).catch(err => res.status(500).send('Something broke!'));
+    }).catch(err => res.status(500).send('Something broke!'));
+});
+
+routes.get('/edit/products/:id', (req, res) => {
+    const { id } = req.params;
+    const errorMessage = req.flash('error');
+    const itens = new itemDAO();
+    
+    itens.getItem(id).then( item =>{
+        itens.describe().then( index =>{
+            res.render('editadmin', {data: item, indexes: index, table: 'products', error: errorMessage});
         }).catch(err => res.status(500).send('Something broke!'));
     }).catch(err => res.status(500).send('Something broke!'));
 });
@@ -96,7 +121,7 @@ routes.get('/etiqueta', helper.ensureAdmin, async (req, res) => {
         headers: {
             "Accept": "application/json",
             "Authorization": bearerMelhorEnvio,
-            "User-Agent": "Aplicação (email para contato técnico)"
+            "User-Agent": "Contatar servidorclientesaws@gmail.com"
         }
     });
 
@@ -140,7 +165,7 @@ routes.get('/paying', helper.ensureAdmin, async (req, res) => {
         headers: {
             "Accept": "application/json",
             "Authorization": bearerMelhorEnvio,
-            "User-Agent": "Aplicação (email para contato técnico)"
+            "User-Agent": "Contatar servidorclientesaws@gmail.com"
         }
     });
 
@@ -185,7 +210,7 @@ routes.get('/paying/:id', helper.ensureAdmin, async (req, res)=>{
         headers: {
             "Accept": "application/json",
             "Authorization": bearerMelhorEnvio,
-            "User-Agent": "Aplicação (email para contato técnico)"
+            "User-Agent": "Contatar servidorclientesaws@gmail.com"
         }
     })
     if(fetchres.ok){
@@ -211,7 +236,7 @@ routes.get('/etiqueta/:id', helper.ensureAdmin, async (req, res)=>{
         headers: {
             "Accept": "application/json",
             "Authorization": bearerMelhorEnvio,
-            "User-Agent": "Aplicação (email para contato técnico)"
+            "User-Agent": "Contatar servidorclientesaws@gmail.com"
         }
     })
     if(fetchres.ok){
@@ -288,7 +313,7 @@ routes.post('/confirm/etiqueta', async(req, res) => {
                 "Accept": " application/json",
                 "Authorization": bearerMelhorEnvio,
                 "Content-Type": "application/json",
-                "User-Agent": "Aplicação (email para contato técnico)",
+                "User-Agent": "Contatar servidorclientesaws@gmail.com",
             },
             body: JSON.stringify({
                 "orders": [
@@ -304,29 +329,86 @@ routes.post('/confirm/etiqueta', async(req, res) => {
     }
 });
 
-routes.post('/confirm/paying', async(req, res) => {
+routes.post('/delete/etiqueta', async(req, res) => {
     const { id } = req.body;
     const melhorEnvio = new envioDAO();
 
     let bearerMelhorEnvio = 'Bearer ';
     await melhorEnvio.buscaToken().then(bearer => {  bearerMelhorEnvio += bearer.access_token});
 
-    let fetchres = await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/shipment/checkout',{
-            method: 'POST',
+    let fetchres = await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/cart/' + id,{
+            method: 'DELETE',
             headers: {
                 "Accept": " application/json",
                 "Authorization": bearerMelhorEnvio,
                 "Content-Type": "application/json",
-                "User-Agent": "Aplicação (email para contato técnico)",
-            },
-            body: JSON.stringify({
-                "orders": [
-                    id
-                ]
-            })
+                "User-Agent": "Contatar servidorclientesaws@gmail.com",
+            }
         });
     if(fetchres.ok){
-        res.redirect('/admin/paying');
+        res.redirect('/admin/etiqueta');
+    }else{
+        req.flash('error', 'ID da etiqueta incorreto!');
+        res.redirect('/admin/etiqueta');
+    }
+});
+
+routes.post('/delete/paying', async(req, res) => {
+    const { id } = req.body;
+    const melhorEnvio = new envioDAO();
+
+    console.log(id);
+
+    let bearerMelhorEnvio = 'Bearer ';
+    await melhorEnvio.buscaToken().then(bearer => {  bearerMelhorEnvio += bearer.access_token});
+
+    let fetchres = await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/shipment/cancellable',{
+        method: 'POST',
+        headers: {
+            "Accept": " application/json",
+            "Authorization": bearerMelhorEnvio,
+            "Content-Type": "application/json",
+            "User-Agent": "Contatar servidorclientesaws@gmail.com",
+        },
+        body: JSON.stringify({
+            "orders": [
+                id
+            ]
+        })
+    });
+    let temp = await fetchres.json();
+    if(fetchres.ok){
+        console.log(temp[`${id}`]);
+        if(temp[`${id}`].cancellable == true){
+            console.log('entrou');
+            let fetchres = await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/shipment/cancel',{
+                method: 'POST',
+                headers: {
+                    "Accept": " application/json",
+                    "Authorization": bearerMelhorEnvio,
+                    "Content-Type": "application/json",
+                    "User-Agent": "Contatar servidorclientesaws@gmail.com",
+                },
+                body: JSON.stringify({
+                    "order": {
+                        "id": id,
+                        "reason_id": "2",
+                        "description": "Cancelamento de etiqueta"
+                    }
+                })
+            });
+            if(fetchres.ok){
+                temp = await fetchres.json();
+                console.log(temp);
+                res.redirect('/admin/paying');
+            }else{
+                req.flash('error', 'A etiqueta não pode ser cancelada!');
+                res.redirect('/admin/paying');
+            }
+        }else{
+            req.flash('error', 'A etiqueta não pode ser cancelada!');
+            res.redirect('/admin/paying');
+        }
     }else{
         req.flash('error', 'ID da etiqueta incorreto!');
         res.redirect('/admin/paying');
@@ -346,7 +428,7 @@ routes.post('/generate/paying', async(req, res) => {
                 "Accept": " application/json",
                 "Authorization": bearerMelhorEnvio,
                 "Content-Type": "application/json",
-                "User-Agent": "Aplicação (email para contato técnico)",
+                "User-Agent": "Contatar servidorclientesaws@gmail.com",
             },
             body: JSON.stringify({
                 "orders": [
@@ -375,7 +457,7 @@ routes.post('/print/paying', async(req, res) => {
                 "Accept": " application/json",
                 "Authorization": bearerMelhorEnvio,
                 "Content-Type": "application/json",
-                "User-Agent": "Aplicação (email para contato técnico)",
+                "User-Agent": "Contatar servidorclientesaws@gmail.com",
             },
             body: JSON.stringify({
                 "mode": "public",

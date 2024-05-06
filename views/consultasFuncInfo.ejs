@@ -5,6 +5,8 @@
 </head>
 <body>
     <%- include ("partials/alert.ejs") %>
+    <%- include ("partials/navbar.ejs") %>
+    <%- include ("partials/header.ejs") %>
 <main>
     <div class="job-container info">
         <div class="job-options">
@@ -35,8 +37,9 @@
             <div>
                 <div class="job-card total">
                     <h3>Valor Total</h3>
-                    <h6>-R$ 200 de taxa</h6>
-                    <h4>R$ <%= data.reduce((acc, item) => acc + item.price, 0)-200 %></h4>
+                    <!-- <h6>-R$ 200 de taxa</h6> -->
+                    <!-- <h4>R$ <%= data.reduce((acc, item) => acc + item.price, 0)-200 %></h4> -->
+                    <h4>R$ <%= data.reduce((acc, item) => acc + item.price, 0) %></h4>
                     <div class="form-buttons">
                         <input class="cancel" type="submit" value="Recusar" form="cancel">
                         <input class="accept" type="submit" value="Aceitar" form="accept">
@@ -52,5 +55,6 @@
         </div>
     </div>
 </main>
+<%- include ("partials/footer.ejs") %>
 </body>
 </html>

@@ -141,11 +141,11 @@ app.post('/payment', async(req, res) => {
         cache.itens.forEach(item => {
             databaseRes.forEach(res => {
                 if(res.id == item.id){
-                    transaction.price += res.price * item.qtd;
+                    transaction.price += (res.price - (res.price * (res.descount/100))) * item.qtd;
                     transaction.shipping.push({
                         id: res.id,
                         name: res.name,
-                        price: res.price,
+                        price: (res.price - (res.price * (res.descount/100))),
                         qtd: item.qtd,
                         dimensions:{
                             width: res.width,
@@ -174,7 +174,7 @@ async function sumupReq(trans, cache, req, res){
             "Content-Type": "application/json",
         }, body:JSON.stringify({
             "checkout_reference": trans.check_ref,
-            "amount": 1,
+            "amount": trans.price,
             "currency": trans.currency,
             "pay_to_email": trans.pay2mail,
             "payment_type": "pix",
@@ -195,7 +195,7 @@ async function sumupReq(trans, cache, req, res){
         transaction.insert(trans).then(()=>{
             res.json({ url: trans.check_ref})
         }).catch(err => {
-                res.status(500).send('Something broke!')
+            res.status(500).send('Something broke!')
         });
 
         if(cache.frete != undefined && cache.frete.length > 0){
@@ -256,7 +256,7 @@ app.post('/calcularFrete', async (req, res) => {
                     "Accept":"application/json",
                     "Content-Type": "application/json",
                     "Authorization": bearerMelhorEnvio,
-                    "User-Agent": "Aplicação (email para contato técnico)",
+                    "User-Agent": "Contatar servidorclientesaws@gmail.com",
                 },
                 body:
                 JSON.stringify(
@@ -335,7 +335,7 @@ app.get('/produtos/:sec', (req, res) =>{
     const itens = new itemDAO();
 
     itens.findType(req.params.sec).then( itens =>{
-        res.render('produtos', {itens: itens, user: req.user, error: errorMessage});
+            res.render('produtos', {itens: itens, user: req.user, error: errorMessage});
     }).catch(err => res.status(500).send('Something broke!'));
 });
 
@@ -352,7 +352,7 @@ app.get('/item/:id', (req, res) =>{
             })
             itens.newRate({mRate: (rates/(data.comments.length)), id: req.params.id});
         }
-        res.render('item', {item: data, user: req.user, image: data.images, error: errorMessage});
+            res.render('item', {item: data, user: req.user, image: data.images, error: errorMessage});
     })
 });
 
@@ -394,7 +394,7 @@ app.post('/status', async (req, res)=>{
                 method: 'GET',
                 headers: 
                 {
-                    'Authorization': 'Bearer ' + process.env.sumup_key,
+                    'Authorization': 'Bearer ' + process.env.SUMUP_KEY,
                     'Content-Type': 'application/json'
                 }
             });
@@ -404,7 +404,7 @@ app.post('/status', async (req, res)=>{
 
                 //se a resposta da api for diferente de pendente
                 if(temp.status != 'PENDING'){
-                    console.log(temp);
+                    
                     try{
                         let products = [];
                         let volumes = [];
@@ -451,12 +451,12 @@ app.post('/status', async (req, res)=>{
                                         volumes: [volumes[i]]
                                     }
                                     helper.add2cart(tableUsuario, tableOwner, temp).then((res)=>{
-                                        console.log(res);
+
                                     })
                                 }
                             }else{
                                 helper.add2cart(tableUsuario, tableOwner, itens).then((res)=>{
-                                    console.log(res);
+
                                 })
                             }
                         }
@@ -469,7 +469,7 @@ app.post('/status', async (req, res)=>{
             console.log(err);
         }
     }
-    console.log(req.body);
+
     res.send('ok');
 });
 

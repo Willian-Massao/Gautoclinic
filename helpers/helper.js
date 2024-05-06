@@ -141,7 +141,7 @@ async function add2cart(usuario, owner, itens){
             "Accept":"application/json",
             "Content-Type": "application/json",
             "Authorization": bearerMelhorEnvio,
-            "User-Agent": "Aplicação (email para contato técnico)",
+            "User-Agent": "Contatar servidorclientesaws@gmail.com",
         },
         body:JSON.stringify
         ({

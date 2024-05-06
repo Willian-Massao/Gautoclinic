@@ -120,14 +120,14 @@ routes.get('/orders/:check_ref', helper.ensureAuthenticated, (req, res) => {
     });
 });
 
-routes.get('/consultas', helper.ensureAuthenticated, (req, res) => {
+routes.get('/consultasAgendamento', helper.ensureAuthenticated, (req, res) => {
     const errorMessage = req.flash('error');
     const agendamento = new agendamentoDAO();
     const ptTable = {
-        'PENDING': 'Pendente',
-        'PAID': 'Marcado',
-        'FAILED': 'Desmarcado',
-        'FINISH': 'Finalizado'
+        'Pendente': 'PENDING',
+        'Marcado': 'PAID',
+        'Desmarcado': 'FAILED',
+        'Finalizado': 'FINISH'
     }
 
     agendamento.findUser({idUser: req.user.id}).then( orders => {
@@ -155,6 +155,25 @@ routes.get('/consultas', helper.ensureAuthenticated, (req, res) => {
     });
 });
 
+routes.get('/consultasAgendamento/:check_ref', helper.ensureAuthenticated, (req, res) => {
+    const errorMessage = req.flash('error');
+    const agend = new agendamentoDAO();
+    const check_ref = req.params.check_ref;
+    const idItem = req.params.idItem;
+    const ptTable = {
+        'PENDING': 'Pendente',
+        'PAID': 'Pago',
+        'FAILED': 'Recusado',
+        'FINISH': 'Entregue'
+    }
+
+    agend.findCheck_ref({ idFuncionario: 1, check_ref: check_ref }).then( orders => {
+        orders.forEach(element => {
+            element.status = ptTable[element.status];
+        });
+            res.render('consultaAgendamentoInfo', { user: req.user, orders: orders, error: errorMessage});
+    });
+});
 
 routes.get('/edit', helper.ensureAuthenticated, (req, res) => {
     const errorMessage = req.flash('error');

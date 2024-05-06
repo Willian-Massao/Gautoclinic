@@ -59,8 +59,8 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try {
             NN(images);
-            const sql = `UPDATE images SET image = ? WHERE id = ? and idItem = ?`;
-            await conn.query(sql, [images.image, images.id, images.idproduct]);
+            const sql = `UPDATE images SET image = ?, idItem = ? WHERE id = ?`;
+            await conn.query(sql, [images.image, images.idItem, images.id]);
         }catch(err){
             console.log(err);
             throw err;

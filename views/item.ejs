@@ -52,8 +52,8 @@
                 <div id="depth-info" data-value= "<%= item.depth %>"></div>
                 <div id="weight-info" data-value= "<%= item.weight %>"></div>
                 <div class="item-price">
-                    <h1 id="price-info">R$ <%= item.price.toFixed(2) %></h1>
-                    <p>6x R$ <%= ((item.price)/6).toFixed(2) %> sem juros</p>
+                    <h1 id="price-info">R$ <%= item.precoDesconto.toFixed(2) %></h1>
+                    <!-- <p>6x R$ <%= ((item.price)/6).toFixed(2) %> sem juros</p> -->
                 </div>
                 <% if(item.qtd != 0){ %>
                     <button class="item-buy" onclick="addLittleCar()">Adicionar ao carrinho</button>

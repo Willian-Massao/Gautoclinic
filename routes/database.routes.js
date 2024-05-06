@@ -65,7 +65,7 @@ routes.post('/delete/images', (req, res) => {
     const { id } = req.body;
     const img = new imageDAO();
 
-    img.delete(id).then(()=>{
+    img.deleteIdItem(id).then(()=>{
         res.redirect('/admin/images')}
     ).catch(err => {
         req.flash('error', 'ID da imagem incorreto!');
@@ -118,12 +118,37 @@ routes.post('/delete/etiqueta', async (req, res)=>{
             "Accept":"application/json",
             "Content-Type": "application/json",
             "Authorization": bearerMelhorEnvio,
-            "User-Agent": "Aplicação (email para contato técnico)",
+            "User-Agent": "Contatar servidorclientesaws@gmail.com",
         }
     })
     if(fetchres.ok){
         res.redirect('/admin/etiqueta');
     }
 })
+//update
+routes.post('/update/images', helper.upload.single('image') , async(req, res) => {
+    const img = new imageDAO();
+    let { id, idItem } = req.body;
+    const image = await helper.removeFile('./public/products/' + req.file.filename);
+
+    img.update({ id, idItem, image }).then(()=>{
+        res.redirect('/admin/images')}
+    ).catch(err => {
+        req.flash('error', 'ID da imagem incorreto!');
+        res.redirect('/admin/admins');
+    });
+});
+
+routes.post('/update/products' , async(req, res) => {
+    const { id, name, qtd, price, descount, type, description, mRate, height, width, depth, weight, uses, active,benefits } = req.body;
+    const itens = new itemDAO();
+
+    itens.update({ id ,name, qtd, price, descount, type, description, mRate, height, width, depth, weight, uses, active,benefits }).then(()=>{
+        res.redirect('/admin/products')}
+    ).catch(err => {
+        req.flash('error', 'ID da imagem incorreto!');
+        res.redirect('/admin/products');
+    });
+});
 
 module.exports = routes;

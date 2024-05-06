@@ -1,0 +1,25 @@
+<i class="banner">
+    <input checked type="radio" name="s" style="background-image: url('/src/consulta.jpg');" title="Gauto 1">
+    <input type="radio" name="s" style="background-image: url('/src/faciais.png');" title="Gauto 2">
+    <input type="radio" name="s" style="background-image: url('/src/cursos.png');" title="Gauto 3">
+</i>
+<script>
+    let banner = document.querySelector('.banner');
+    let radios = document.querySelectorAll('input[name="s"]');
+    let current = 0;
+    let max = radios.length;
+    let time = 5000;
+
+    function start(){
+        setInterval(() => {
+            radios[current].checked = false;
+            current++;
+            if(current >= max){
+                current = 0;
+            }
+            radios[current].checked = true;
+        }, time);
+    }
+
+    start();
+</script>
