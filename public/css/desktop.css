@@ -1061,7 +1061,13 @@ header.admin li:hover{
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border: 1px solid rgba(0, 0, 0, 0.15);
 }
+#frete-form.edit{
+    width: 400px;
+}
 
+#frete-form.edit input[type="text"] {
+    width: calc(100% - 30px);
+}
 .input-container,
 .check-container {
     margin-bottom: 15px;

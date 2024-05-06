@@ -51,6 +51,19 @@ routes.get('/images', helper.ensureAdmin, (req, res) => {
         }).catch(err => res.status(500).send('Something broke!'));
     }).catch(err => res.status(500).send('Something broke!'));
 }); 
+
+routes.get('/edit/images/:id', (req, res) => {
+    const { id } = req.params;
+    const errorMessage = req.flash('error');
+    const images = new imageDAO();
+    
+    images.findId(id).then( item =>{
+        images.describe().then( index =>{
+            res.render('editadmin', {data: item, indexes: index, table: 'images', error: errorMessage});
+        }).catch(err => res.status(500).send('Something broke!'));
+    }).catch(err => res.status(500).send('Something broke!'));
+});
+
 routes.get('/products', helper.ensureAdmin, (req, res) => {
     const errorMessage = req.flash('error');
     const itens = new itemDAO();
@@ -58,6 +71,18 @@ routes.get('/products', helper.ensureAdmin, (req, res) => {
     itens.select().then( item =>{
         itens.describe().then( index =>{
             res.render('admin', {data: item, indexes: index, table: 'products', error: errorMessage});
+        }).catch(err => res.status(500).send('Something broke!'));
+    }).catch(err => res.status(500).send('Something broke!'));
+});
+
+routes.get('/edit/products/:id', (req, res) => {
+    const { id } = req.params;
+    const errorMessage = req.flash('error');
+    const itens = new itemDAO();
+    
+    itens.getItem(id).then( item =>{
+        itens.describe().then( index =>{
+            res.render('editadmin', {data: item, indexes: index, table: 'products', error: errorMessage});
         }).catch(err => res.status(500).send('Something broke!'));
     }).catch(err => res.status(500).send('Something broke!'));
 });

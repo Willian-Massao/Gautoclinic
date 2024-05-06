@@ -34,7 +34,7 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try{
             NN(id);
-            const sql = `SELECT P.id, P.name, P.qtd, P.price, P.descount, P.description, P.uses, P.active, P.benefits, P.mRate, P.height, P.width, P.depth, P.weight, I.id as idImage,  I.id as idImage, I.idItem as img2product, I.image, C.idUser as comment2user,C.idItem as comment2product, C.check_ref, C.rate, C.name as Conwer, C.comment, case when P.descount = 0 then P.price when P.descount is null then P.price else (P.price-(P.price*(P.descount/100))) end  as precoDesconto from gauto.itens P left join gauto.images I on I.idItem = P.id left join gauto.comments C on C.idItem = P.id where P.id = ?`;
+            const sql = `SELECT P.id, P.name, P.qtd, P.type, P.price, P.descount, P.description, P.uses, P.active, P.benefits, P.mRate, P.height, P.width, P.depth, P.weight, I.id as idImage,  I.id as idImage, I.idItem as img2product, I.image, C.idUser as comment2user,C.idItem as comment2product, C.check_ref, C.rate, C.name as Conwer, C.comment, case when P.descount = 0 then P.price when P.descount is null then P.price else (P.price-(P.price*(P.descount/100))) end  as precoDesconto from gauto.itens P left join gauto.images I on I.idItem = P.id left join gauto.comments C on C.idItem = P.id where P.id = ?`;
             const [rows] = await conn.query(sql, [id]);
             return compac(rows)[0];
         }catch(err){
@@ -97,8 +97,8 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try {
             NN(itens);
-            const sql = `UPDATE itens SET name = ? ,qtd = ? ,price = ? ,descount = ? ,type = ? ,description = ? ,mRate = ? ,height = ? ,width = ? depth = ? ,weight = ? WHERE id = ?`;
-            await conn.query(sql, [itens.name,itens.qtd,itens.price,itens.descount,itens.type,itens.description,itens.mRate,itens.height,itens.width,itens.depth,itens.weight]);
+            const sql = `UPDATE itens SET name = ? ,qtd = ? ,price = ? ,descount = ? ,type = ? ,description = ? ,mRate = ? ,height = ? ,width = ?, depth = ? ,weight = ? WHERE id = ?;`;
+            await conn.query(sql, [itens.name,itens.qtd,itens.price,itens.descount,itens.type,itens.description,itens.mRate,itens.height,itens.width,itens.depth,itens.weight,itens.id]);
         }catch(err){
             console.log(err);
             throw err;
@@ -195,6 +195,7 @@ function compac(result){
                 name: element.name,
                 qtd: element.qtd,
                 price: element.price,
+                type: element.type,
                 descount: element.descount,
                 description: element.description,
                 benefits: element.benefits,
