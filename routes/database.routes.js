@@ -132,6 +132,7 @@ routes.post('/update/images', helper.upload.single('image') , async(req, res) =>
     const image = await helper.removeFile('./public/products/' + req.file.filename);
 
     img.update({ id, idItem, image }).then(()=>{
+        console.log('Imagem atualizada com sucesso!')
         res.redirect('/admin/images')}
     ).catch(err => {
         req.flash('error', 'ID da imagem incorreto!');
@@ -140,10 +141,11 @@ routes.post('/update/images', helper.upload.single('image') , async(req, res) =>
 });
 
 routes.post('/update/products' , async(req, res) => {
-    const { id, name, qtd, price, descount, type, description, mRate, height, width, depth, weight, uses, active,benefits } = req.body;
+    const { id, name, qtd, price, descount, type, description, mRate, height, width, depth, weight, uses, active, benefits } = req.body;
     const itens = new itemDAO();
 
     itens.update({ id ,name, qtd, price, descount, type, description, mRate, height, width, depth, weight, uses, active,benefits }).then(()=>{
+        console.log('Produtos atualizados com sucesso!');
         res.redirect('/admin/products')}
     ).catch(err => {
         req.flash('error', 'ID da imagem incorreto!');
