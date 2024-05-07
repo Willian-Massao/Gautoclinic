@@ -113,7 +113,7 @@ routes.post('/delete/etiqueta', async (req, res)=>{
     await melhorEnvio.buscaToken()
     .then(bearer => {  bearerMelhorEnvio += bearer.access_token});
 
-    let fetchres = await fetch('https://melhorenvio.com.br/api/v2/me/cart/' + id, {
+    let fetchres = await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/cart/' + id, {
         method: 'DELETE',
         headers: {
             "Accept":"application/json",
