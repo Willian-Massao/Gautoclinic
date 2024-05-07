@@ -107,7 +107,7 @@
                                 </td>
                             <% }else if(e.Field == "type"){ %>
                                 <td>
-                                    <select name="type" id="">
+                                    <select name="type" id="type" form="myform">
                                         <option value="facial">Facial</option>
                                     </select>
                                 </td>
@@ -225,16 +225,19 @@
                 <div class="window">
                     <div>
                         <% indexes.forEach((headers)=>{ %>
-                            <% if(headers.Field != "id"){ %>
-                                <input type="text" name="<%= headers %>" form="myform">
+                            <% if(headers.Field == "type"){ %>
+                                <input type="text" name="<%= headers.Field %>" form="myformmob" value="1">
+                            <% }else if(headers.Field != "id"){ %>
+                                <input type="text" name="<%= headers.Field %>" form="myformmob" value="1">
                             <% } %>
                         <% }) %>
-                        <input type="submit" form="myform" value="Adicionar">
+                        <input type="submit" form="myformmob" value="Adicionar">
                     </div>
                 </div>
             </div>
         </div>
         <% } %>
+        <form action="/database/add/<%= table %>" method="post" id="myformmob"></form>
         <form action="/database/add/<%= table %>" method="post" id="myform"></form>
         <script>
             if(document.URL.split('/')[document.URL.split('/').length -1] == 'images'){

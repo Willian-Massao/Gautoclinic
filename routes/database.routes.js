@@ -7,6 +7,7 @@ const itemDAO = require('../database/itemDAO.js');
 const adminDAO = require('../database/adminDAO.js');
 const commentDAO = require('../database/commentDAO.js');
 const envioDAO = require('../database/melhorenvioDAO.js');
+const { json } = require('body-parser');
 
 routes.post('/add/images', helper.upload.single('image') ,async (req, res) => {
     const img = new imageDAO();
@@ -39,7 +40,7 @@ routes.post('/add/products', (req, res) => {
         res.redirect('/admin/products')}
     ).catch(err => {
         req.flash('error', 'Preenchido incorretamente!');
-        res.redirect('/admin/admins');
+        res.redirect('/admin/products');
     });
 });
 //delete products
