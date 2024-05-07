@@ -116,7 +116,7 @@ routes.get('/etiqueta', helper.ensureAdmin, async (req, res) => {
     let bearerMelhorEnvio = 'Bearer ';
     await melhorEnvio.buscaToken().then(bearer => {  bearerMelhorEnvio += bearer.access_token});
     
-    let fetchres = await fetch('https://melhorenvio.com.br/api/v2/me/cart',{
+    let fetchres = await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/cart',{
         method: 'GET',
         headers: {
             "Accept": "application/json",
@@ -160,7 +160,7 @@ routes.get('/paying', helper.ensureAdmin, async (req, res) => {
     let bearerMelhorEnvio = 'Bearer ';
     await melhorEnvio.buscaToken().then(bearer => {  bearerMelhorEnvio += bearer.access_token});
     
-    let fetchres = await fetch('https://melhorenvio.com.br/api/v2/me/orders',{
+    let fetchres = await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/orders',{
         method: 'GET',
         headers: {
             "Accept": "application/json",
@@ -205,7 +205,7 @@ routes.get('/paying/:id', helper.ensureAdmin, async (req, res)=>{
     let bearerMelhorEnvio = 'Bearer ';
     await melhorEnvio.buscaToken().then(bearer => {  bearerMelhorEnvio += bearer.access_token});
 
-    let fetchres = await fetch('https://melhorenvio.com.br/api/v2/me/orders/' + id, {
+    let fetchres = await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/orders/' + id, {
         method: 'GET',
         headers: {
             "Accept": "application/json",
@@ -231,7 +231,7 @@ routes.get('/etiqueta/:id', helper.ensureAdmin, async (req, res)=>{
     let bearerMelhorEnvio = 'Bearer ';
     await melhorEnvio.buscaToken().then(bearer => {  bearerMelhorEnvio += bearer.access_token});
 
-    let fetchres = await fetch('https://melhorenvio.com.br/api/v2/me/cart/' + id, {
+    let fetchres = await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/cart/' + id, {
         method: 'GET',
         headers: {
             "Accept": "application/json",
@@ -254,7 +254,7 @@ routes.get('/envio', helper.ensureAdmin, async(req, res) => {
         let envio = new envioDAO();
         let code = req.query.code;
         
-        let fetchres = await fetch('https://melhorenvio.com.br/oauth/token',{
+        let fetchres = await fetch('https://sandbox.melhorenvio.com.br/oauth/token',{
             method: 'POST',
             headers: {
                 "Content-Type": "routeslication/json",
@@ -284,7 +284,7 @@ routes.get('/envio', helper.ensureAdmin, async(req, res) => {
 
 routes.post('/envio', async(req, res) => {
     const { client_id, client_secret, redirect_uri } = req.body;
-    let url = 'https://melhorenvio.com.br/oauth/authorize';
+    let url = 'https://sandbox.melhorenvio.com.br/oauth/authorize';
     let concatenatedString = '';
     controllerEnvio = new Envio({ client_id, client_secret, redirect_uri });
 
@@ -307,7 +307,7 @@ routes.post('/confirm/etiqueta', async(req, res) => {
     let bearerMelhorEnvio = 'Bearer ';
     await melhorEnvio.buscaToken().then(bearer => {  bearerMelhorEnvio += bearer.access_token});
 
-    let fetchres = await fetch('https://melhorenvio.com.br/api/v2/me/shipment/checkout',{
+    let fetchres = await fetch('https://sandbox./api/v2/me/shipment/checkout',{
             method: 'POST',
             headers: {
                 "Accept": " application/json",
@@ -336,7 +336,7 @@ routes.post('/delete/etiqueta', async(req, res) => {
     let bearerMelhorEnvio = 'Bearer ';
     await melhorEnvio.buscaToken().then(bearer => {  bearerMelhorEnvio += bearer.access_token});
 
-    let fetchres = await fetch('https://melhorenvio.com.br/api/v2/me/cart/' + id,{
+    let fetchres = await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/cart/' + id,{
             method: 'DELETE',
             headers: {
                 "Accept": " application/json",
@@ -362,7 +362,7 @@ routes.post('/delete/paying', async(req, res) => {
     let bearerMelhorEnvio = 'Bearer ';
     await melhorEnvio.buscaToken().then(bearer => {  bearerMelhorEnvio += bearer.access_token});
 
-    let fetchres = await fetch('https://melhorenvio.com.br/api/v2/me/shipment/cancellable',{
+    let fetchres = await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/shipment/cancellable',{
         method: 'POST',
         headers: {
             "Accept": " application/json",
@@ -381,7 +381,7 @@ routes.post('/delete/paying', async(req, res) => {
         console.log(temp[`${id}`]);
         if(temp[`${id}`].cancellable == true){
             console.log('entrou');
-            let fetchres = await fetch('https://melhorenvio.com.br/api/v2/me/shipment/cancel',{
+            let fetchres = await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/shipment/cancel',{
                 method: 'POST',
                 headers: {
                     "Accept": " application/json",
@@ -422,7 +422,7 @@ routes.post('/generate/paying', async(req, res) => {
     let bearerMelhorEnvio = 'Bearer ';
     await melhorEnvio.buscaToken().then(bearer => {  bearerMelhorEnvio += bearer.access_token});
 
-    let fetchres = await fetch('https://melhorenvio.com.br/api/v2/me/shipment/generate',{
+    let fetchres = await fetch('https://sandbox./api/v2/me/shipment/generate',{
             method: 'POST',
             headers: {
                 "Accept": " application/json",
@@ -451,7 +451,7 @@ routes.post('/print/paying', async(req, res) => {
     let bearerMelhorEnvio = 'Bearer ';
     await melhorEnvio.buscaToken().then(bearer => {  bearerMelhorEnvio += bearer.access_token});
 
-    let fetchres = await fetch('https://melhorenvio.com.br/api/v2/me/shipment/print',{
+    let fetchres = await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/shipment/print',{
             method: 'POST',
             headers: {
                 "Accept": " application/json",

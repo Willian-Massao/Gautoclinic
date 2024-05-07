@@ -249,7 +249,7 @@ app.post('/calcularFrete', async (req, res) => {
             itens.forEach(i => {
                 produtos += "id:" + i.id + ", width: "+ i.width + ", height: " + i.height + ", length: " + i.depth +", weight: " + i.weight + ", insurance_value: "+ i.price+", quantity: " + i.qtd
             });  
-            const calculoFretes = await fetch('https://melhorenvio.com.br/api/v2/me/shipment/calculate',{
+            const calculoFretes = await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/shipment/calculate',{
                 method: 'POST',
                 headers: 
                 {
