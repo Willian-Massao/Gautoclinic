@@ -116,7 +116,7 @@ routes.get('/orders/:check_ref', helper.ensureAuthenticated, (req, res) => {
         orders.forEach(element => {
             element.status = ptTable[element.status];
         });
-        res.render('orderinfo', { user: req.user, orders: orders, error: errorMessage});
+        res.render('orderInfo', { user: req.user, orders: orders, error: errorMessage});
     });
 });
 
