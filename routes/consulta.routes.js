@@ -200,6 +200,7 @@ routes.get('/orders', helper.ensureAdmin, (req, res) => {
                 return item;
             });
             data = mergeItems(data);
+            console.log(data);
             res.render('consultasFunc', {data: data, user: req.user, error: errorMessage});
         });
     }catch(err){
