@@ -153,7 +153,7 @@ routes.post('/alterarSenha',function(req,res){
 })
 
 routes.post('/register', async (req, res) => {
-    const { name, email, lastname, tel, cpf, cep, city, district, adress, number, password} = req.body;
+    const { name, email, niverDay, niverMouth, niverYear, lastname, tel, cpf, cep, city, district, adress, number, password} = req.body;
     // Verifica se o email já está cadastrado
     const users = new userDAO();
 
@@ -167,7 +167,8 @@ routes.post('/register', async (req, res) => {
         bcrypt.genSalt(10, (err, salt) => {
             bcrypt.hash(password, salt, async (err, hash) => {
                 // Salva o usuário no banco de dados
-                users.insert({name, email, lastname, tel, cpf, cep, city, district, adress, number, password: hash, salt}).then(()=> {
+                let niver = new Date(niverMouth+'-'+niverDay+'-'+niverYear);
+                users.insert({name, email, lastname, niver, tel, cpf, cep, city, district, adress, number, password: hash, salt}).then(()=> {
                     res.redirect('/user/login');
                 }).catch(err => {
                     req.flash('error', 'Campo preenchido incorretamente!');

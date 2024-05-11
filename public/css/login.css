@@ -194,6 +194,12 @@ a:hover{
 	grid-template-columns: 1fr 1fr;
 	grid-gap: 5px;
 }
+.tri-input{
+	width: 100%;
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	grid-gap: 5px;
+}
 #formConfirmaCodigo{
 	display:none;
 }

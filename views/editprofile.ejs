@@ -28,6 +28,10 @@
                                 <input type="text" name="lastname" id="lastname" value="<%= user.lastname %>">
                             </div>
                             <div class="input-container">
+                                <label for="lastname">Aniversario</label>
+                                <input type="date" name="niver" id="niver" value="<%= user.niver.toISOString().split('T')[0] %>">
+                            </div>
+                            <div class="input-container">
                                 <label for="email">Email</label>
                                 <input type="text" name="email" id="email" value="<%= user.email %>">
                             </div>

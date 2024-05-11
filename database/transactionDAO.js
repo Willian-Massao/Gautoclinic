@@ -104,6 +104,36 @@ module.exports  = class itens{
         }
     }
 
+    async updateShipping(transaction){
+        const conn = await pool.getConnection();
+        try {
+            NN(transaction);
+            const sql = `UPDATE transaction SET shipping = ? WHERE check_ref = ?`;
+            await conn.query(sql, [JSON.stringify(transaction.shipping), transaction.check_ref]);
+            console.log("transaction atualizado com sucesso!");
+        }catch(err){
+            console.log(err);
+            throw err;
+        }finally{
+            conn.release();
+        }
+    }
+
+    async getCheckrefByTrackId(transaction){
+        const conn = await pool.getConnection();
+        try {
+            NN(transaction);
+            const sql = `SELECT TR.id, US.email FROM transaction TR left join users US on TR.idUser = US.id WHERE JSON_CONTAINS(TR.shipping, JSON_EXTRACT('{"track_id": "${transaction.track_id}"}', '$'), '$');`;
+            let [row] = await conn.query(sql);
+            return row[0];
+        }catch(err){
+            console.log(err);
+            throw err;
+        }finally{
+            conn.release();
+        }
+    }
+
     async select(){
         const conn = await pool.getConnection();
         try {
