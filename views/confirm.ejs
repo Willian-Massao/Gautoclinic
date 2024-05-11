@@ -146,7 +146,7 @@
                 itens.forEach(i => {
                     produtos += "\"id\":" + i.id + ", width: "+ i.width + ", height: " + i.height + ", length: " + i.length +", weight: " + i.weight + ", insurance_value: "+ i.value+", quantity: " + i.qtd
                 });    
-                const fetch = await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/shipment/calculate',
+                const fetch = await fetch('https://melhorenvio.com.br/api/v2/me/shipment/calculate',
                 {
                     method: 'POST',
                     headers: 
