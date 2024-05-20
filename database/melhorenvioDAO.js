@@ -76,6 +76,34 @@ module.exports  = class melhorEnvioTokens{
             conn.release();
         }
     }
+    async buscaRefreshToken(){
+        const conn = await pool.getConnection();
+        try{
+            const sql = "select refresh_token from melhorEnvioTokens where indicador_ativo = 1;";
+            const [row] = await conn.query(sql);
+            return row[0];
+        }catch(err){
+            console.log(err);
+        }finally{
+            conn.release();
+        }
+    }
+    async alteraRefreshToken(melhorEnvioTokens){
+        const conn = await pool.getConnection();
+        try{
+            let sql = "select id, client_id, client_secret, refresh_token, access_token, expired_at from melhorEnvioTokens where indicador_ativo = 1;";
+            let [row] = await conn.query(sql);
+            sql = "update melhorEnvioTokens set indicador_ativo = 0 where id = ?"
+            await conn.query(sql, [row[0][0]])
+            sql = "insert into melhorEnvioTokens (id, redirect_uri, client_id, client_secret, refresh_token, access_token, expired_at, indicador_ativo) values (?,?,?,?,?,?,?,1)"
+            let novoId = (row[0][0])+1;
+            await conn.query(sql, [novoId,row[0][1],row[0][2],row[0][3],melhorEnvioTokens.refresh_token,melhorEnvioTokens.access_token,melhorEnvioTokens.expired_at])
+        }catch(err){
+            console.log(err);
+        }finally{
+            conn.release();
+        }
+    }
     async desativarToken(melhorEnvioTokens){
         const conn = await pool.getConnection();
         try{

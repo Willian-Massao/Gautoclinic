@@ -300,6 +300,24 @@ app.post('/calcularFrete', async (req, res) => {
                         freteCon = new FreteController({agencias: jsonfretes, to: jsoninfo.to, from: jsoninfo.from});
                         res.status(200).send('Sucesso');  
                         }else{
+                            let refreshMelhorEnvio;
+                            await melhorEnvio.buscaRefreshToken().then(tokenAtivo => {  refreshMelhorEnvio = tokenAtivo.refresh_token})
+                            let fetchres = await fetch('https://melhorenvio.com.br/oauth/token',{
+                                method: 'POST',
+                                headers: {
+                                    "Content-Type": "routeslication/json",
+                                }, body:JSON.stringify({
+                                    "client_id": process.env.MELHORENVIO_CLIENT_ID,
+                                    "refresh_token": refreshMelhorEnvio,
+                                    "client_secret": process.env.MELHORENVIO_SECRET,
+                                    "grant_type": "refresh_token"
+                                })
+                            });
+                            if (fetchres.ok){
+                                let responseRefresh = await fetchres.json();
+                                await melhorEnvio.alteraRefreshToken(responseRefresh);
+                            }
+
                         req.flash('error', 'Não existem opções de frete para este CEP');
                         res.json({err: 'Por favor digite um CEP válido'});;
                     }
