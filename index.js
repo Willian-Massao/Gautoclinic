@@ -275,7 +275,7 @@ app.post('/calcularFrete', async (req, res) => {
                             }],
                         })
                 });
-                if(calculoFretes.ok){
+                if(!calculoFretes.ok){
                     let jsonfretes = await calculoFretes.json();
                     jsonfretes = removerPela("error", undefined, jsonfretes);
                     if (jsonfretes.length >0){
@@ -300,7 +300,11 @@ app.post('/calcularFrete', async (req, res) => {
                         freteCon = new FreteController({agencias: jsonfretes, to: jsoninfo.to, from: jsoninfo.from});
                         res.status(200).send('Sucesso');  
                         }else{
-                            let refreshMelhorEnvio;
+                        req.flash('error', 'Não existem opções de frete para este CEP');
+                        res.json({err: 'Por favor digite um CEP válido'});;
+                    }
+                }else{
+                    let refreshMelhorEnvio;
                             await melhorEnvio.buscaRefreshToken().then(tokenAtivo => {  refreshMelhorEnvio = tokenAtivo.refresh_token})
                             let fetchres = await fetch('https://melhorenvio.com.br/oauth/token',{
                                 method: 'POST',
@@ -317,11 +321,7 @@ app.post('/calcularFrete', async (req, res) => {
                                 let responseRefresh = await fetchres.json();
                                 await melhorEnvio.alteraRefreshToken(responseRefresh);
                             }
-
-                        req.flash('error', 'Não existem opções de frete para este CEP');
-                        res.json({err: 'Por favor digite um CEP válido'});;
-                    }
-                }else{
+                            
                     req.flash('error', 'MelhorEnvio falhou na busca dos fretes');
                     res.json({err: 'Por favor digite um CEP válido'});
                 }
