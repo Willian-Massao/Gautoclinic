@@ -301,7 +301,7 @@ app.post('/calcularFrete', async (req, res) => {
                         res.status(200).send('Sucesso');  
                         }else{
                         req.flash('error', 'Não existem opções de frete para este CEP');
-                        res.json({err: 'Por favor digite um CEP válido'});;
+                        res.json({err: 'Por favor digite um CEP válido'});
                     }
                 }else{
                     let refreshMelhorEnvio;
@@ -321,7 +321,7 @@ app.post('/calcularFrete', async (req, res) => {
                                 let responseRefresh = await fetchres.json();
                                 await melhorEnvio.alteraRefreshToken(responseRefresh);
                             }
-                            
+
                     req.flash('error', 'MelhorEnvio falhou na busca dos fretes');
                     res.json({err: 'Por favor digite um CEP válido'});
                 }
