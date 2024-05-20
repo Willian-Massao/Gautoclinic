@@ -64,7 +64,7 @@ module.exports  = class agendamentos{
     async select(agendamentos){
         const conn = await pool.getConnection();
         try{
-            const sql = "SELECT AG.id, AG.dataHoraAgendamento, AG.dataHoraAgendamento, AG.confirmado, AG.price, AG.pagamentoOnline, AG.check_ref, AG.status, US.name as idUser, PC.nome as idProcedimento FROM agendamentos AG left join users US on US.id = AG.idUser left join procedimentos PC on AG.idProcedimento = PC.idProcedimentos WHERE AG.dataHoraAgendamento > ?;"
+            const sql = "SELECT AG.id, AG.dataHoraAgendamento, AG.dataHoraAgendamento, AG.confirmado, AG.price, AG.pagamentoOnline, AG.check_ref, AG.status, US.name as idUser, PC.nome as idProcedimento FROM agendamentos AG left join users US on US.id = AG.idUser left join procedimentos PC on AG.idProcedimento = PC.idProcedimentos;"
             const [rows] = await conn.query(sql, [agendamentos.data])
             console.log("agendamentos selecionados");
             return rows;

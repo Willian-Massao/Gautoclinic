@@ -9,9 +9,23 @@
     <%- include ("partials/alert.ejs") %>
 <main>
     <div class="job-container">
+        <div class="job-options">
+            <div class="job-card" onclick="filter(1)">
+                <h2>Job completed</h2>
+                <h2><%= data.map(e => {if(e.status == "COMPLETO"){return e}}).filter((i)=>{return typeof i == "object"}).length %></h2>
+            </div>
+            <div class="job-card" onclick="filter(2)">
+                <h2>Job Applied</h2>
+                <h2><%= data.map(e => {if(e.status == "ACEITO"){return e}}).filter((i)=>{return typeof i == "object"}).length %></h2>
+            </div>
+            <div class="job-card" onclick="filter(3)">
+                <h2>Job Offers</h2> 
+                <h2><%= data.map(e => {if(e.status == "PAGO"){return e}}).filter((i)=>{return typeof i == "object"}).length %></h2>
+            </div>
+        </div>
         <div class="job-list">
             <% data.forEach(item => { %>
-                <a href="/consulta/orders/<%= item.check_ref %>" class="job-card">
+                <a href="/consulta/orders/<%= item.check_ref %>" class="job-card item-<%= item.status %>">
                     <h3><%= item.idProcedimento[0] %></h3>
                     <p class="subline">Cliente: <%= item.idUser %></p>
                     <p><%= item.dataHoraAgendamento.toLocaleDateString("pt-BR",{timeZone: 'America/Sao_Paulo',year: 'numeric',month: 'numeric',day: 'numeric',hour: 'numeric',minute: 'numeric',second: 'numeric',}).replace(', ',' - ') %></p>
@@ -22,6 +36,25 @@
                 </a>
             <% }) %>
         </div>
+        <script>
+            function filter(type){
+                let types = {
+                    all: document.querySelectorAll('a.job-card'),
+                    1: document.querySelectorAll('.item-COMPLETADO'),
+                    2: document.querySelectorAll('.item-ACEITO'),
+                    3: document.querySelectorAll('.item-PAGO')
+                }
+                console.log(types[type])
+                for (let key in types){
+                    types[key].forEach(item => {
+                        item.style.display = 'none'
+                    })
+                }
+                types[type].forEach(item => {
+                    item.style.display = 'block'
+                })
+            }
+        </script>
     </div>
 </main>
 <%- include ("partials/footer.ejs") %>
