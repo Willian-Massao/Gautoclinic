@@ -88,6 +88,7 @@ routes.get('/orders', helper.ensureAuthenticated, (req, res) => {
     const ptTable = {
         'PENDING': 'Pendente',
         'PAID': 'Aprovado',
+        'SEND': 'Enviado',
         'FAILED': 'Recusado',
         'FINISH': 'Entregue'
     }
@@ -108,6 +109,7 @@ routes.get('/orders/:check_ref', helper.ensureAuthenticated, (req, res) => {
     const ptTable = {
         'PENDING': 'Pendente',
         'PAID': 'Aprovado',
+        'SEND': 'Enviado',
         'FAILED': 'Recusado',
         'FINISH': 'Entregue'
     }

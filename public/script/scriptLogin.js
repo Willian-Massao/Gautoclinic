@@ -1,5 +1,11 @@
 const inputs = document.querySelectorAll(".input");
 
+inputs.forEach(input => {
+	if(input.value != ""){
+		let parent = input.parentNode.parentNode;
+		parent.classList.add("focus");
+	}
+});
 
 function addcl(){
 	let parent = this.parentNode.parentNode;

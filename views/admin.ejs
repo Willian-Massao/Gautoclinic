@@ -57,6 +57,7 @@
                                 <td>
                                     <form action="/admin/print/<%= table %>" method="POST">
                                         <input type="text" name="id" value="<%= e.id %>" class="disable" readonly>
+                                        <input type="text" name="rasCode" value="<%= e.tracking %>" class="disable" readonly>
                                         <button style="background-color: #32ac47;"><i class="fi fi-rr-print"></i></i></button>
                                     </form>
                                 </td>

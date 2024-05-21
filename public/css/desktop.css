@@ -405,6 +405,15 @@ footer .menssages p{
 footer>div{
     width: 33%;
 }
+footer>div.menssages{
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+}
+footer>div.menssages a{
+    margin-top: 15px;
+}
 footer .social{
     display: flex;
     justify-content: center;
@@ -1219,7 +1228,7 @@ header.admin li:hover{
     text-align: start;
     border-bottom: 1px solid rgba(0, 0, 0, 0.15);
 }
-.account-info .input-container input[type="text"]{
+.account-info .input-container input[type="text"], .account-info .input-container input[type="date"]{
     width: calc(100% - 20px);
     padding: 10px;
     border: 1px solid rgba(0, 0, 0, 0.15);
@@ -1237,7 +1246,7 @@ header.admin li:hover{
 .account-container {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: start;
     flex-direction: row;
 }
 .frete-img{

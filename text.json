@@ -1,0 +1,58 @@
+[
+    {
+        "id": 1,
+        "qtd": 2,
+        "name": "Primer e Sérum facial",
+        "price": 0.25,
+        "track_code": "",
+        "track_id": "",
+        "dimensions": {
+            "depth": 1,
+            "width": 1,
+            "height": 1,
+            "weight": 1
+        }
+    },
+    {
+        "id": 2,
+        "qtd": 1,
+        "name": "Mousse e Tônico de limpeza",
+        "price": 0.25,
+        "track_code": "",
+        "track_id": "",
+        "dimensions": {
+            "depth": 1,
+            "width": 1,
+            "height": 1,
+            "weight": 1
+        }
+    },
+    {
+        "id": 3,
+        "qtd": 2,
+        "name": "Protetor Solar",
+        "price": 0.25,
+        "track_code": "",
+        "track_id": "",
+        "dimensions": {
+            "depth": 1,
+            "width": 1,
+            "height": 1,
+            "weight": 1
+        }
+    },
+    {
+        "id": 4,
+        "qtd": 1,
+        "name": "Kit Skin Care",
+        "price": 0.25,
+        "track_code": "",
+        "track_id": "",
+        "dimensions": {
+            "depth": 2,
+            "width": 2,
+            "height": 2,
+            "weight": 1
+        }
+    }
+]

@@ -29,8 +29,8 @@ module.exports  = class melhorEnvioTokens{
         const conn = await pool.getConnection();
         try{
             NN(melhorEnvioTokens);
-            const sql = "insert into melhorEnvioTokens (id, redirect_uri, client_id, client_secret, refresh_token, access_token, expired_at, indicador_ativo) values (?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE refresh_token = ?, access_token=?,expired_at = ?, indicador_ativo= ?"
-            await conn.query(sql, [melhorEnvioTokens.id, melhorEnvioTokens.redirect_uri, melhorEnvioTokens.client_id, melhorEnvioTokens.client_secret, melhorEnvioTokens.refresh_token, melhorEnvioTokens.access_token, melhorEnvioTokens.expired_at, melhorEnvioTokens.indicador_ativo, melhorEnvioTokens.refresh_token, melhorEnvioTokens.access_token, melhorEnvioTokens.expired_at, melhorEnvioTokens.indicador_ativo])
+            const sql = "insert into melhorEnvioTokens (id, redirect_uri, client_id, client_secret, refresh_token, access_token, expired_at, indicador_ativo) values (?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE indicador_ativo= ?"
+            await conn.query(sql, [melhorEnvioTokens.id, melhorEnvioTokens.redirect_uri, melhorEnvioTokens.client_id, melhorEnvioTokens.client_secret, melhorEnvioTokens.refresh_token, melhorEnvioTokens.access_token, melhorEnvioTokens.expired_at, melhorEnvioTokens.indicador_ativo, melhorEnvioTokens.indicador_ativo])
             console.log("melhorEnvioTokens inserido/updatado com sucesso!");
         }catch(err){
             console.log(err);
@@ -67,8 +67,47 @@ module.exports  = class melhorEnvioTokens{
     async buscaToken(){
         const conn = await pool.getConnection();
         try{
-            const sql = "select access_token from melhorEnvioTokens where indicador_ativo = 1;";
+            const sql = "select id, access_token from melhorEnvioTokens where indicador_ativo = 1;";
             const [row] = await conn.query(sql);
+            return row[0];
+        }catch(err){
+            console.log(err);
+        }finally{
+            conn.release();
+        }
+    }
+    async buscaRefreshToken(){
+        const conn = await pool.getConnection();
+        try{
+            const sql = "select refresh_token from melhorEnvioTokens where indicador_ativo = 1;";
+            const [row] = await conn.query(sql);
+            return row[0];
+        }catch(err){
+            console.log(err);
+        }finally{
+            conn.release();
+        }
+    }
+    async alteraRefreshToken(melhorEnvioTokens){
+        const conn = await pool.getConnection();
+        try{
+            let sql = "select id, client_id, client_secret, refresh_token, access_token, expired_at from melhorEnvioTokens where indicador_ativo = 1;";
+            let [row] = await conn.query(sql);
+            sql = "update melhorEnvioTokens set indicador_ativo = 0 where id = ?"
+            await conn.query(sql, [row[0].id])
+            sql = "insert into melhorEnvioTokens (redirect_uri, client_id, client_secret, refresh_token, access_token, expired_at, indicador_ativo) values (?,?,?,?,?,?,1)"
+            await conn.query(sql, [process.env.MELHORENVIO_REDIRECT_URI,row[0].client_id,row[0].client_secret,melhorEnvioTokens.refresh_token,melhorEnvioTokens.access_token,melhorEnvioTokens.expired_at])
+        }catch(err){
+            console.log(err);
+        }finally{
+            conn.release();
+        }
+    }
+    async desativarToken(melhorEnvioTokens){
+        const conn = await pool.getConnection();
+        try{
+            const sql = "UPDATE melhorEnvioTokens SET indicador_ativo = 0 WHERE id = ?;";
+            const [row] = await conn.query(sql, [melhorEnvioTokens.id]);
             return row[0];
         }catch(err){
             console.log(err);

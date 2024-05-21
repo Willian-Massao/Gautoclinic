@@ -11,6 +11,7 @@ module.exports  = class itens{
                 name varchar(45) NOT NULL,
                 email varchar(45) NOT NULL,
                 lastname varchar(45) NOT NULL,
+                niver date NOT NULL DEFAULT '2000-01-01',
                 tel varchar(45) NOT NULL,
                 cpf varchar(45) NOT NULL,
                 cep varchar(45) NOT NULL,
@@ -40,8 +41,8 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try{
             NN(users);
-            const sql = "insert into users (name, email, lastname, tel, cpf, cep, city, district, adress, number, password, salt) values (?,?,?,?,?,?,?,?,?,?,?,?)"
-            await conn.query(sql, [users.name, users.email, users.lastname, users.tel, users.cpf, users.cep, users.city, users.district, users.adress, users.number, users.password, users.salt])
+            const sql = "insert into users (name, email, lastname, niver, tel, cpf, cep, city, district, adress, number, password, salt) values (?,?,?,?,?,?,?,?,?,?,?,?)"
+            await conn.query(sql, [users.name, users.email, users.lastname, users.niver, users.tel, users.cpf, users.cep, users.city, users.district, users.adress, users.number, users.password, users.salt])
             console.log("users inserido com sucesso!");
         }catch(err){
             console.log(err);
@@ -83,8 +84,8 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try {
             NN(users);
-            const sql = `UPDATE users SET name = ?, email = ?, lastname = ?, tel = ?, cpf = ?, cep = ?, city = ?, district = ?, adress = ?, number = ? WHERE id = ?;`;
-            await conn.query(sql, [users.name, users.email, users.lastname, users.tel, users.cpf, users.cep, users.city, users.district, users.adress, users.number, users.id]);
+            const sql = `UPDATE users SET name = ?, email = ?, lastname = ?, niver = ?, tel = ?, cpf = ?, cep = ?, city = ?, district = ?, adress = ?, number = ? WHERE id = ?;`;
+            await conn.query(sql, [users.name, users.email, users.lastname, users.niver, users.tel, users.cpf, users.cep, users.city, users.district, users.adress, users.number, users.id]);
         }catch(err){
             console.log(err);
             throw err;

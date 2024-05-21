@@ -384,6 +384,15 @@ footer .menssages{
 footer>div{
     width: 80%;
 }
+footer>div.menssages{
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+}
+footer>div.menssages a{
+    margin-top: 15px;
+}
 footer .social{
     display: flex;
     justify-content: center;
@@ -1144,7 +1153,7 @@ margin-top: 5px;
     margin-bottom: 15px;
     padding: 10px;
 }
-.account-info .input-container input[type="text"]{
+.account-info .input-container input[type="text"], .account-info .input-container input[type="date"]{
     width: calc(100% - 20px);
     padding: 10px;
     border: 1px solid rgba(0, 0, 0, 0.15);
@@ -1366,7 +1375,7 @@ input[type=number] {
     flex-direction: column;
     justify-content: start;
     align-items: start;
-    margin-top: 35px;
+    margin-top: 300px;
     min-width: 360px;
     width: calc(100% - 40px);
 }
@@ -1374,7 +1383,6 @@ input[type=number] {
     display: table-cell;
     text-align: center;
 }
-
 .account-container.frete table{
     font-size: small;
 }

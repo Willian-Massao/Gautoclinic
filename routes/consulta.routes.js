@@ -85,7 +85,7 @@ async function sumupReq(trans, ListOf, req, res){
             "Content-Type": "application/json",
         }, body:JSON.stringify({
             "checkout_reference": trans.check_ref,
-            "amount": trans.price,
+            "amount": 200,
             "currency": trans.currency,
             "pay_to_email": trans.pay2mail,
         })
@@ -112,7 +112,7 @@ async function sumupReq(trans, ListOf, req, res){
     }
 }
 
-routes. get('/payment/:id', helper.ensureAuthenticated, (req, res)=>{
+routes.get('/payment/:id', helper.ensureAuthenticated, (req, res)=>{
     const errorMessage = req.flash('error');
     const agendamentos = new agendamentosDAO();
     
