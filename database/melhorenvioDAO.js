@@ -94,10 +94,9 @@ module.exports  = class melhorEnvioTokens{
             let sql = "select id, client_id, client_secret, refresh_token, access_token, expired_at from melhorEnvioTokens where indicador_ativo = 1;";
             let [row] = await conn.query(sql);
             sql = "update melhorEnvioTokens set indicador_ativo = 0 where id = ?"
-            await conn.query(sql, [row[0][0]])
-            sql = "insert into melhorEnvioTokens (id, redirect_uri, client_id, client_secret, refresh_token, access_token, expired_at, indicador_ativo) values (?,?,?,?,?,?,?,1)"
-            let novoId = (row[0][0])+1;
-            await conn.query(sql, [novoId,row[0][1],row[0][2],row[0][3],melhorEnvioTokens.refresh_token,melhorEnvioTokens.access_token,melhorEnvioTokens.expired_at])
+            await conn.query(sql, [row[0].id])
+            sql = "insert into melhorEnvioTokens (redirect_uri, client_id, client_secret, refresh_token, access_token, expired_at, indicador_ativo) values (?,?,?,?,?,?,1)"
+            await conn.query(sql, [process.env.MELHORENVIO_REDIRECT_URI,row[0].client_id,row[0].client_secret,melhorEnvioTokens.refresh_token,melhorEnvioTokens.access_token,melhorEnvioTokens.expired_at])
         }catch(err){
             console.log(err);
         }finally{

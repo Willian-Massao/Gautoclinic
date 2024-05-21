@@ -275,7 +275,7 @@ app.post('/calcularFrete', async (req, res) => {
                             }],
                         })
                 });
-                if(!calculoFretes.ok){
+                if(calculoFretes.ok){
                     let jsonfretes = await calculoFretes.json();
                     jsonfretes = removerPela("error", undefined, jsonfretes);
                     if (jsonfretes.length >0){
@@ -319,6 +319,9 @@ app.post('/calcularFrete', async (req, res) => {
                             });
                             if (fetchres.ok){
                                 let responseRefresh = await fetchres.json();
+                                let d = new Date();
+                                d.setDate(d.getDate() + ((responseRefresh.expires_in)/86400));
+                                responseRefresh.expired_at = d;
                                 await melhorEnvio.alteraRefreshToken(responseRefresh);
                             }
 
