@@ -12,5 +12,36 @@
         function errorbtn(){
             document.getElementById('error').style.display = 'none';
         }
+        function steathbtn(){
+            document.getElementById('steath').style.display = 'none';
+        }
     </script>
+</div>
+<div class="steath-container" id="steath">
+    <div class="steath">
+        <p id="message">É necessario uma conta para ver o carrinho</p>
+    </div>
+    <style>
+        .steath-container{
+            display: flex;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            z-index: 100;
+            margin-bottom: -65px;
+            justify-content: center;
+            transition: 150ms ease-in-out;
+        }
+        .steath-container .steath{
+            background-color: #d6d6d6;
+            border-radius: 31px;
+            width: fit-content;
+            border: 1px solid #a3a3a3;
+            padding: 5px;
+            padding-left: 30px;
+            padding-right: 30px;
+            display: flex;
+            justify-content: center;
+        }
+    </style>
 </div>

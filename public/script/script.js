@@ -78,10 +78,18 @@ function refreshCar(){
     document.getElementById("littlecar").innerHTML = "Seu carrinho<br>R$ " + price.toFixed(2);
 }
 
-function addLittleCar(){
+function addLittleCar(user){
     let isInside = false;
     let index = 0;
     let item = getItem();
+
+    if(user == 0){
+        document.getElementById('steath').style.marginBottom = '15px';
+        setTimeout(() => {
+            document.getElementById('steath').style.marginBottom = '-65px';
+        }, 5000);
+    }
+
 
     item.findIndex(function(x, i){
         if(x.id == window.location.href.split("/")[4]){
