@@ -246,7 +246,7 @@ app.post('/calcularFrete', async (req, res) => {
                 }
             });
     
-            if(apiRes.ok){
+            if(apiRes.ok && itens.length > 0){
                 itens.forEach(i => {
                     produtos += "id:" + i.id + ", width: "+ i.width + ", height: " + i.height + ", length: " + i.depth +", weight: " + i.weight + ", insurance_value: "+ i.price+", quantity: " + i.qtd
                 });  

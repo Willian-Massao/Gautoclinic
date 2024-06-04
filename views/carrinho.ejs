@@ -129,27 +129,31 @@
                 total()
             }
             function sendItens(){
-                if(document.getElementsByName("CEP")[0].value != "" && document.getElementsByName("CEP")[0].value != undefined && document.getElementsByName("numero")[0].value != "" && document.getElementsByName("numero")[0].value != undefined)
-                {
+                if(document.getElementsByName("CEP")[0].value != "" && document.getElementsByName("CEP")[0].value != undefined && document.getElementsByName("numero")[0].value != "" && document.getElementsByName("numero")[0].value != undefined){
                     if((document.getElementsByName("inputComplemento")[0].checked && document.getElementsByName("complemento")[0].value != "" && document.getElementsByName("complemento")[0].value != undefined) || 
                     (document.getElementsByName("inputComplemento")[0].checked === false && (document.getElementsByName("complemento")[0].value === undefined || document.getElementsByName("complemento")[0].value === "")))
                     {
-                axios({
-                    method: "post",
-                    url: "/calcularFrete",
-                    data: {
-                        itens: itens,
-                        CEP: document.getElementsByName("CEP")[0].value,
-                        numero: document.getElementsByName("numero")[0].value,
-                        complemento: document.getElementsByName("complemento")[0].value
-                    },
-                }).then((res) => {
-                    if(res.data.err == undefined){
-                        window.location.href = '/fretes';
-                    }else{
-                        location.reload()
-                    }
-                })
+                        if(itens.length > 0){
+                            console.log(itens);
+                            axios({
+                                method: "post",
+                                url: "/calcularFrete",
+                                data: {
+                                    itens: itens,
+                                    CEP: document.getElementsByName("CEP")[0].value,
+                                    numero: document.getElementsByName("numero")[0].value,
+                                    complemento: document.getElementsByName("complemento")[0].value
+                                },
+                            }).then((res) => {
+                                if(res.data.err == undefined){
+                                    window.location.href = '/fretes';
+                                }else{
+                                    location.reload()
+                                }
+                            })
+                        }else{
+                            alert("Adicione itens ao carrinho para prosseguir");
+                        }
                     }else{
                         alert("Preencha o complemento ou retire a seleção do possui complemento");
                     }
