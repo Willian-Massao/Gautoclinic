@@ -765,12 +765,15 @@ button.item-buy:active{
     margin-top: 15px;
     margin-bottom: 15px;
 }
-.summary-box-cep input{
+.summary-box-cep input[type="number"], .summary-box-cep input[type="text"]{
     width: calc(100% - 20px);
     padding: 10px;
     border: 1px solid rgba(0, 0, 0, 0.15);
     margin-bottom: 5px;
 
+}
+.summary-box-cep input[type="checkbox"]{
+    width: fit-content;
 }
 .summary-box-cep{
     display: flex;
@@ -778,6 +781,11 @@ button.item-buy:active{
     align-items: start;
     flex-direction: column;
     margin-top: 10px;
+}
+div#checkboxComplemento{
+    display: flex;
+    flex-direction: column-reverse;
+    width: fit-content;
 }
 .box-itens-name{
     max-width: 130px;
