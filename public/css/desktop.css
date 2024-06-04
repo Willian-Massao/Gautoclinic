@@ -403,7 +403,7 @@ footer .menssages p{
     margin: 2px;
 }
 footer>div{
-    width: 33%;
+    width: fit-content;
 }
 footer>div.menssages{
     display: flex;
