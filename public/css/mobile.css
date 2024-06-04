@@ -746,12 +746,15 @@ button.item-buy:active{
     margin-top: 15px;
     margin-bottom: 15px;
 }
-.summary-box-cep input{
+.summary-box-cep input[type="number"], .summary-box-cep input[type="text"]{
     width: calc(100% - 20px);
     padding: 10px;
     border: 1px solid rgba(0, 0, 0, 0.15);
     margin-bottom: 5px;
 
+}
+.summary-box-cep input[type="checkbox"]{
+    width: fit-content;
 }
 .summary-box-cep{
     display: flex;
@@ -1890,4 +1893,9 @@ main.etiqueta .outline{
 }
 form #alerts{
     color:red;
+}
+div#checkboxComplemento{
+    display: flex;
+    flex-direction: column-reverse;
+
 }
