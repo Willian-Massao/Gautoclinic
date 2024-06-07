@@ -489,14 +489,20 @@ routes.post('/print/paying', async(req, res) => {
         let temp = await fetchres.json();
 
         //console.log(temp);
-
+        console.log(id);
         transaction.getCheckrefByTrackId({track_id: id}).then( async itens =>{
-            //transaction.update({id: itens.id, status: 'SEND'});
+            transaction.update({id: itens.id, status: 'SEND'});
             const html = `
             <h1>Código de Rastreio</h1>
             <p>Seu código de rastreio é: ${rasCode}</p>
             `;
-            helper.sendEmail(itens.email, 'Código de Rastreio', html, `Seu código de rastreio é: ${id}`)
+            if(typeof itens != 'undefined'){
+                itens.forEach(async element => {
+                    helper.sendEmail(element.email, 'Código de Rastreio', html, '');
+                });
+            }else{
+                console.log('a transação' + id + 'não foi encontrada');
+            }
         })
 
 

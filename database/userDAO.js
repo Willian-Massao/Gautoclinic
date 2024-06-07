@@ -41,7 +41,7 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try{
             NN(users);
-            const sql = "insert into users (name, email, lastname, niver, tel, cpf, cep, city, district, adress, number, password, salt) values (?,?,?,?,?,?,?,?,?,?,?,?)"
+            const sql = "insert into users (name, email, lastname, niver, tel, cpf, cep, city, district, adress, number, password, salt) values (?,?,?,?,?,?,?,?,?,?,?,?,?)"
             await conn.query(sql, [users.name, users.email, users.lastname, users.niver, users.tel, users.cpf, users.cep, users.city, users.district, users.adress, users.number, users.password, users.salt])
             console.log("users inserido com sucesso!");
         }catch(err){
