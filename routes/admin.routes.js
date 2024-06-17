@@ -26,6 +26,11 @@ routes.get('/users', helper.ensureAdmin, (req, res) => {
                     index.splice(i, 2);
                 }
             });
+            item.forEach((e)=>{
+                temp = e.niver.toISOString().split('T')[0];
+                temp = temp.split('-');
+                e.niver = temp[2] + '/' + temp[1] + '/' + temp[0];
+            })
             res.render('admin', {data: item, indexes: index, table: 'users', error: errorMessage});
         }).catch(err => res.status(500).send('Something broke!'));
     }).catch(err => res.status(500).send('Something broke!'));

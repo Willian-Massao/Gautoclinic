@@ -94,6 +94,15 @@ function numeroAleatorioRange(min, max) {
     }
 }
 
+function FormataStringData(data) {
+    var dia  = data.split("/")[0];
+    var mes  = data.split("/")[1];
+    var ano  = data.split("/")[2];
+  
+    return ano + '-' + ("0"+mes).slice(-2) + '-' + ("0"+dia).slice(-2);
+    // Utilizo o .slice(-2) para garantir o formato com 2 digitos.
+}
+
 function sendEmail(destinatario, assunto,html,text){
     mailer.sendMail({
         from: 'GautoClinicEmailAutomatico@gmail.com',
@@ -223,5 +232,6 @@ module.exports = {
     calcularIdade,
     calcularData,
     ensureFunc,
-    add2cart
+    add2cart,
+    FormataStringData
 }
