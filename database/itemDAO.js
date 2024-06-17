@@ -184,6 +184,22 @@ module.exports  = class itens{
             conn.release();
         }
     }
+    async AtualizarQtd(item){
+        const conn = await pool.getConnection();
+        try {
+            // tirar a quantidade especificada do item especificada do valor contido no banco de dados
+            // qtd não é a total, é a quantidade que será retirada
+            const sql = "select qtd from itens where id = ?";
+            const [rows] = await conn.query(sql, [item.id]);
+            let qtd = rows[0].qtd - item.qtd;
+            const sql2 = "update itens set qtd = ? where id = ?";
+            await conn.query(sql2, [qtd, item.id]);
+        }catch(err){
+            console.log(err);
+        }finally{
+            conn.release();
+        }
+    }
 }
 
 function compac(result){

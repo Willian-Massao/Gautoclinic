@@ -231,6 +231,8 @@ app.post('/make/refund', async(req, res) => {
 
 app.post('/calcularFrete', async (req, res) => {
     let {itens, CEP, numero, complemento} = req.body;
+    let inStoque = true;
+    const item = new itemDAO();
     const melhorEnvio = new envioDAO();
     let bearerMelhorEnvio = 'Bearer ';
     await melhorEnvio.buscaToken().then(bearer => {  bearerMelhorEnvio += bearer.access_token}).then(async ()=>{
@@ -245,93 +247,108 @@ app.post('/calcularFrete', async (req, res) => {
                     "Content-Type": "application/json",
                 }
             });
-    
-            if(apiRes.ok && itens.length > 0){
-                itens.forEach(i => {
-                    produtos += "id:" + i.id + ", width: "+ i.width + ", height: " + i.height + ", length: " + i.depth +", weight: " + i.weight + ", insurance_value: "+ i.price+", quantity: " + i.qtd
-                });  
-                const calculoFretes = await fetch('https://melhorenvio.com.br/api/v2/me/shipment/calculate',{
-                    method: 'POST',
-                    headers: 
-                    {
-                        "Accept":"application/json",
-                        "Content-Type": "application/json",
-                        "Authorization": bearerMelhorEnvio,
-                        "User-Agent": "Contatar servidorclientesaws@gmail.com",
-                    },
-                    body:
-                    JSON.stringify(
-                        {
-                           "from": 
-                            {
-                                "postal_code": process.env.CEP_ENVIO
-                            },
-                            "to": 
-                            {
-                                "postal_code": CEP
-                            },
-                            "products": [{ 
-                                produtos
-                            }],
-                        })
-                });
-                if(calculoFretes.ok){
-                    let jsonfretes = await calculoFretes.json();
-                    jsonfretes = removerPela("error", undefined, jsonfretes);
-                    if (jsonfretes.length >0){
-                        if (complemento === undefined ||complemento === ''){
-                            complemento = null;
+
+            if(itens.length > 0){
+                for(let i = 0; i < itens.length; i++){
+                    await item.findId(itens[i].id).then( data =>{
+                        if(itens[i].qtd > data.qtd){
+                            inStoque = false;
                         }
-                    let cepJson = await apiRes.json();
-                        let jsoninfo = {
-                            "from": process.env.CEP_ENVIO, 
-                            "to": {
-                                    "CEP": CEP, 
-                                    "numero": numero, 
-                                    "complemento": complemento, 
-                                    "adress": cepJson.logradouro, 
-                                    "district": cepJson.bairro, 
-                                    "city": cepJson.localidade, 
-                                    "state_abbr": cepJson.uf, 
-                                    "country_id": "BR" 
+                    });
+                }
+                if(inStoque){
+                    if(apiRes.ok){
+                        itens.forEach(i => {
+                            produtos += "id:" + i.id + ", width: "+ i.width + ", height: " + i.height + ", length: " + i.depth +", weight: " + i.weight + ", insurance_value: "+ i.price+", quantity: " + i.qtd
+                        });  
+                        const calculoFretes = await fetch('https://melhorenvio.com.br/api/v2/me/shipment/calculate',{
+                            method: 'POST',
+                            headers: 
+                            {
+                                "Accept":"application/json",
+                                "Content-Type": "application/json",
+                                "Authorization": bearerMelhorEnvio,
+                                "User-Agent": "Contatar servidorclientesaws@gmail.com",
+                            },
+                            body:
+                            JSON.stringify(
+                                {
+                                   "from": 
+                                    {
+                                        "postal_code": process.env.CEP_ENVIO
                                     },
-                            "userShipping": ""
-                            };
-                        freteCon = new FreteController({agencias: jsonfretes, to: jsoninfo.to, from: jsoninfo.from});
-                        res.status(200).send('Sucesso');  
+                                    "to": 
+                                    {
+                                        "postal_code": CEP
+                                    },
+                                    "products": [{ 
+                                        produtos
+                                    }],
+                                })
+                        });
+                        if(calculoFretes.ok){
+                            let jsonfretes = await calculoFretes.json();
+                            jsonfretes = removerPela("error", undefined, jsonfretes);
+                            if (jsonfretes.length >0){
+                                if (complemento === undefined ||complemento === ''){
+                                    complemento = null;
+                                }
+                            let cepJson = await apiRes.json();
+                                let jsoninfo = {
+                                    "from": process.env.CEP_ENVIO, 
+                                    "to": {
+                                            "CEP": CEP, 
+                                            "numero": numero, 
+                                            "complemento": complemento, 
+                                            "adress": cepJson.logradouro, 
+                                            "district": cepJson.bairro, 
+                                            "city": cepJson.localidade, 
+                                            "state_abbr": cepJson.uf, 
+                                            "country_id": "BR" 
+                                            },
+                                    "userShipping": ""
+                                    };
+                                freteCon = new FreteController({agencias: jsonfretes, to: jsoninfo.to, from: jsoninfo.from});
+                                res.status(200).send('Sucesso');  
+                                }else{
+                                req.flash('error', 'Não existem opções de frete para este CEP');
+                                res.json({err: 'Por favor digite um CEP válido'});
+                            }
                         }else{
-                        req.flash('error', 'Não existem opções de frete para este CEP');
+                            let refreshMelhorEnvio;
+                                    await melhorEnvio.buscaRefreshToken().then(tokenAtivo => {  refreshMelhorEnvio = tokenAtivo.refresh_token})
+                                    let fetchres = await fetch('https://melhorenvio.com.br/oauth/token',{
+                                        method: 'POST',
+                                        headers: {
+                                            "Content-Type": "routeslication/json",
+                                        }, body:JSON.stringify({
+                                            "client_id": process.env.MELHORENVIO_CLIENT_ID,
+                                            "refresh_token": refreshMelhorEnvio,
+                                            "client_secret": process.env.MELHORENVIO_SECRET,
+                                            "grant_type": "refresh_token"
+                                        })
+                                    });
+                                    if (fetchres.ok){
+                                        let responseRefresh = await fetchres.json();
+                                        let d = new Date();
+                                        d.setDate(d.getDate() + ((responseRefresh.expires_in)/86400));
+                                        responseRefresh.expired_at = d;
+                                        await melhorEnvio.alteraRefreshToken(responseRefresh);
+                                    }
+        
+                            req.flash('error', 'MelhorEnvio falhou na busca dos fretes');
+                            res.json({err: 'Por favor digite um CEP válido'});
+                        }
+                    }else{
+                        req.flash('error', 'Por favor digite um CEP válido');
                         res.json({err: 'Por favor digite um CEP válido'});
                     }
                 }else{
-                    let refreshMelhorEnvio;
-                            await melhorEnvio.buscaRefreshToken().then(tokenAtivo => {  refreshMelhorEnvio = tokenAtivo.refresh_token})
-                            let fetchres = await fetch('https://melhorenvio.com.br/oauth/token',{
-                                method: 'POST',
-                                headers: {
-                                    "Content-Type": "routeslication/json",
-                                }, body:JSON.stringify({
-                                    "client_id": process.env.MELHORENVIO_CLIENT_ID,
-                                    "refresh_token": refreshMelhorEnvio,
-                                    "client_secret": process.env.MELHORENVIO_SECRET,
-                                    "grant_type": "refresh_token"
-                                })
-                            });
-                            if (fetchres.ok){
-                                let responseRefresh = await fetchres.json();
-                                let d = new Date();
-                                d.setDate(d.getDate() + ((responseRefresh.expires_in)/86400));
-                                responseRefresh.expired_at = d;
-                                await melhorEnvio.alteraRefreshToken(responseRefresh);
-                            }
-
-                    req.flash('error', 'MelhorEnvio falhou na busca dos fretes');
-                    res.json({err: 'Por favor digite um CEP válido'});
+                    req.flash('error', 'Quantidade de itens no estoque insuficiente');
+                    res.json({err: 'Quantidade de itens no estoque insuficiente'});
                 }
-            }else{
-                req.flash('error', 'Por favor digite um CEP válido');
-                res.json({err: 'Por favor digite um CEP válido'});
             }
+    
         }else{
             req.flash('error', 'Por favor digite um CEP válido');
             res.json({err: 'Por favor digite um CEP válido'});
@@ -408,6 +425,7 @@ app.get('/payment/:id', (req, res)=>{
 
 app.post('/status', async (req, res)=>{
     const transactions = new transactionDAO();
+    const itens = new itemDAO();
     const { id, status, event_type } = req.body;
 
     //não coloquei para atualizar direto pq a chance de alguem mal intencionado fazer um post para atualizar o status
@@ -458,6 +476,7 @@ app.post('/status', async (req, res)=>{
                                     "width": e.dimensions.width,//Largura
                                     "weight": e.dimensions.weight//Peso
                                 })//Volume
+                                itens.AtualizarQtd({id: e.id, qtd: e.qtd})
                             })
 
                             itens = {
@@ -487,7 +506,6 @@ app.post('/status', async (req, res)=>{
                                         })
                                     })
                                 }
-                                console.log({shipping: tableUsuario.shipping, check_ref: temp.checkout_reference, type: 'SEDEX'});
                                 transactions.updateShipping({shipping: tableUsuario.shipping, check_ref: temp.checkout_reference})
                             }else{
                                 helper.add2cart(tableUsuario, tableOwner, itens).then((res)=>{
