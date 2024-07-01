@@ -3,6 +3,7 @@ const helper = require('../helpers/helper');
 require('dotenv/config');
 
 const User = require('../controllers/UserController.js');
+let controllerUser;
 
 const LocalStrategy = require('passport-local').Strategy;
 const passport = require('passport');
@@ -48,9 +49,8 @@ passport.serializeUser(function(user, done) {
   
 passport.deserializeUser(function(user, done) {
     const users = new userDAO();
-    users.findId(user.id).then(user => {
-        user.hasAdmin = controllerUser.hasAdmin;
-        user.hasFunc = controllerUser.hasFunc;
+    users.findId(user.id).then(userData => {
+        user = userData;
         done(null, user);
     }).catch(err => done(err));
 });
