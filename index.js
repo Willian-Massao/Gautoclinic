@@ -68,7 +68,7 @@ images.create();
 admins.create();
 passwordForgot.create();
 envio.create();
-//frete.create();
+frete.create();
 ownershop.create();
 procedimentos.create();
 funcionarios.create();
