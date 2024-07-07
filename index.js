@@ -131,7 +131,7 @@ app.post('/payment', async(req, res) => {
     }
 
     if(cache.frete != undefined && cache.frete.length > 0){
-        data = req.session.freteCon.getAgencias()[0];
+        data = req.session.freteCon.agencias[0];
         data.forEach(element => {
             if(element.id == parseInt(cache.frete[0].id)){
                 transaction.price += parseFloat(element.price);
@@ -201,7 +201,7 @@ async function sumupReq(trans, cache, req, res){
 
         if(cache.frete != undefined && cache.frete.length > 0){
             let userShipping = cache.frete[0].id;
-            req.session.freteCon.setEscolha(userShipping)
+            req.session.freteCon.escolha = userShipping;
         }
     }else{
         res.status(500).send('sumup unauthorized')
@@ -490,16 +490,16 @@ app.post('/status', async (req, res)=>{
                             //        company = e.name;
                             //    }
                             //})
-                            let freteSession = req.session.freteCon
-                            let Agencias = freteSession.getAgencias()
-                            let escolha = freteSession.getEscolha()
-                            company = Agencias.map((x) => {
+                            let freteSession = req.session.freteCon;
+                            let agencias = freteSession.agencias[0];
+                            let escolha = freteSession.escolha;
+                            company = agencias.map((x) => {
                                 if(x.id == escolha){
                                     return x.name;
                                 }
-                            })
+                            }).filter((word) => word != undefined);
 
-                            if(company == 'SEDEX'){
+                            if(company[0] == 'SEDEX'){
                                 for(let i = 0; i < itens.products.length; i++){
                                     let Ptemp = {
                                         products: [products[i]],
