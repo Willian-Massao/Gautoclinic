@@ -184,10 +184,10 @@ routes.get('/edit', helper.ensureAuthenticated, (req, res) => {
 });
 
 routes.post('/edit', helper.ensureAuthenticated, (req, res) => {
-    const { name, lastname, email, cpf, tel, cep, adress, district, city, number } = req.body;
+    const { name, lastname, email, cpf, tel, cep, adress, district, city, number, niver } = req.body;
     const user = new userDAO();
 
-    user.update({ name, lastname, email, cpf, tel, cep, adress, district, city, number, id: req.user.id }).then( itens =>{
+    user.update({ name, lastname, email, cpf, tel, cep, adress, district, city, number, id: req.user.id, niver }).then( itens =>{
         res.redirect('/account');
     }).catch(err => {
         req.flash('error', 'campo preenchido incorretamente!');

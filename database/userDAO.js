@@ -88,8 +88,8 @@ module.exports  = class itens{
         const conn = await pool.getConnection();
         try {
             NN(users);
-            const sql = `UPDATE users SET name = ?, email = ?, lastname = ?, niver = ?, tel = ?, cpf = ?, cep = ?, city = ?, district = ?, adress = ?, number = ? WHERE id = ?;`;
-            await conn.query(sql, [users.name, users.email, users.lastname, users.niver, users.tel, users.cpf, users.cep, users.city, users.district, users.adress, users.number, users.id]);
+            const sql = `UPDATE users SET name = ?, email = ?, lastname = ?, niver = ?, tel = ?, cpf = ?, cep = ?, city = ?, district = ?, adress = ?, number = ?, niver = ? WHERE id = ?;`;
+            await conn.query(sql, [users.name, users.email, users.lastname, users.niver, users.tel, users.cpf, users.cep, users.city, users.district, users.adress, users.number, users.niver, users.id]);
         }catch(err){
             console.log(err);
             throw err;

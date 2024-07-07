@@ -1,5 +1,6 @@
 class Frete{
     constructor(envio){
+        this.ownerId = envio.userId
         this.agencias = [envio.agencias];
         this.escolha;
         this.to = envio.to;

@@ -40,7 +40,6 @@ const port = 3000;
 
 // Controllers
 let FreteController = require('./controllers/FreteController.js');
-let freteCon;
 
 // cria tabela
 const users = new userDAO();
@@ -68,7 +67,7 @@ images.create();
 admins.create();
 passwordForgot.create();
 envio.create();
-frete.create();
+//frete.create();
 ownershop.create();
 procedimentos.create();
 funcionarios.create();
@@ -132,7 +131,7 @@ app.post('/payment', async(req, res) => {
     }
 
     if(cache.frete != undefined && cache.frete.length > 0){
-        data = freteCon.getAgencias()[0];
+        data = req.session.freteCon.getAgencias()[0];
         data.forEach(element => {
             if(element.id == parseInt(cache.frete[0].id)){
                 transaction.price += parseFloat(element.price);
@@ -202,7 +201,7 @@ async function sumupReq(trans, cache, req, res){
 
         if(cache.frete != undefined && cache.frete.length > 0){
             let userShipping = cache.frete[0].id;
-            freteCon.setEscolha(userShipping)
+            req.session.freteCon.setEscolha(userShipping)
         }
     }else{
         res.status(500).send('sumup unauthorized')
@@ -308,7 +307,9 @@ app.post('/calcularFrete', async (req, res) => {
                                             },
                                     "userShipping": ""
                                     };
-                                freteCon = new FreteController({agencias: jsonfretes, to: jsoninfo.to, from: jsoninfo.from});
+                                req.session.freteCon = new FreteController({userId: req.user.id ,agencias: jsonfretes, to: jsoninfo.to, from: jsoninfo.from});
+                                //let freteTemp = new FreteController({userId: req.user.id ,agencias: jsonfretes, to: jsoninfo.to, from: jsoninfo.from})
+                                //freteCon.push(freteTemp);
                                 res.status(200).send('Sucesso');  
                                 }else{
                                 req.flash('error', 'Não existem opções de frete para este CEP');
@@ -484,9 +485,17 @@ app.post('/status', async (req, res)=>{
                                 volumes: volumes
                             }
 
-                            tableUsuario.fretes.forEach((e)=>{
-                                if(e.id == tableUsuario.info.userShipping){
-                                    company = e.name;
+                            //tableUsuario.fretes.forEach((e)=>{
+                            //    if(e.id == tableUsuario.info.userShipping){
+                            //        company = e.name;
+                            //    }
+                            //})
+                            let freteSession = req.session.freteCon
+                            let Agencias = freteSession.getAgencias()
+                            let escolha = freteSession.getEscolha()
+                            company = Agencias.map((x) => {
+                                if(x.id == escolha){
+                                    return x.name;
                                 }
                             })
 
@@ -550,9 +559,12 @@ app.get('/search', (req, res) =>{
 app.get('/fretes', helper.ensureAuthenticated, (req, res) => {
     const frete = new freteDAO();
     const errorMessage = req.flash('error');
-    let freteJson = freteCon.getAgencias()[0];
+    //console.log(freteCon);
+    //let freteJson = freteCon.getAgencias()[0];
+    console.log(req.session.freteCon)
+    let freteJson = req.session.freteCon;
 
-    res.render('fretes', { user: req.user, fretes: freteJson, error: errorMessage});
+    res.render('fretes', { user: req.user, fretes: freteJson.agencias[0], error: errorMessage});
 });
 
 app.get('/marcar', helper.ensureAuthenticated, async (req, res) => {
