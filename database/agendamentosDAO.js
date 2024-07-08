@@ -81,8 +81,8 @@ module.exports  = class agendamentos{
         const conn = await pool.getConnection();
         try{
             NN(agendamentos);
-            const sql = "UPDATE agendamentos SET confirmado = ? WHERE idUser = ? AND check_ref ?"
-            await conn.query(sql, [agendamentos.confirmado, agendamentos.idUser, agendamentos.check_ref])
+            const sql = "UPDATE agendamentos SET confirmado = ?, status = ? WHERE idUser = ? AND check_ref = ?;"
+            await conn.query(sql, [agendamentos.confirmado, agendamentos.status, agendamentos.idUser, agendamentos.check_ref])
             console.log("agendamentos atualizado com sucesso!");
         }catch(err){
             console.log(err);
@@ -135,7 +135,8 @@ module.exports  = class agendamentos{
         const conn = await pool.getConnection();
         try {
             const sql = `SELECT AG.id, AG.dataHoraAgendamento, AG.dataHoraAgendamento, AG.confirmado, PC.preco AS price, AG.pagamentoOnline, AG.check_ref, AG.status, US.name as idUser, PC.nome as idProcedimento FROM agendamentos AG left join users US on US.id = AG.idUser left join procedimentos PC on AG.idProcedimento = PC.idProcedimentos WHERE idFuncionario = ? and check_ref = ?;`;
-            const [rows] = await conn.query(sql, [agendamentos.idFuncionario, agendamentos.check_ref]);
+            const [rows] = await conn.query(sql, [ agendamentos.idFuncionario, agendamentos.check_ref ]);
+            console.log(rows);
             return rows;
         }catch(err){
             console.log(err);

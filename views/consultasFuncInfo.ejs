@@ -46,10 +46,10 @@
                     </div>
                 </div>
                 <form action="/consulta/cancel" method="post" id="cancel">
-                    <input type="text" value="<%= data[0].check_ref%>" style="display: none;">
+                    <input type="text" value="<%= data[0].check_ref%>" name="checkRef" style="display: none;">
                 </form>
                 <form action="/consulta/accept" method="post" id="accept">
-                    <input type="text" value="<%= data[0].check_ref%>" style="display: none;">
+                    <input type="text" value="<%= data[0].check_ref%>" name="checkRef" style="display: none;">
                 </form>
             </div>
         </div>

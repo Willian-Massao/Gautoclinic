@@ -85,7 +85,7 @@ async function sumupReq(trans, ListOf, req, res){
             "Content-Type": "application/json",
         }, body:JSON.stringify({
             "checkout_reference": trans.check_ref,
-            "amount": 200,
+            "amount": trans.price,
             "currency": trans.currency,
             "pay_to_email": trans.pay2mail,
         })
@@ -121,19 +121,20 @@ routes.get('/payment/:id', helper.ensureAuthenticated, (req, res)=>{
     }).catch(err => res.status(500).send('Something broke!'));
 });
 
-routes.post('/accept', helper.ensureAdmin), async (req, res) =>{
+routes.post('/accept', helper.ensureAdmin, async (req, res) =>{
     const {checkRef} = req.body;
     const agendamentos = new agendamentosDAO();
     const assunto = "Confirmação agendamento GautoClinic";
 
-    let tableAgendamento = await agendamentos.findCheck_ref({idFuncionario:1,check_ref:checkRef})
+    let tableAgendamento = await agendamentos.findCheck_ref({idFuncionario:1,check_ref:checkRef});
+    //console.log(tableAgendamento);
     let html = `<style>.container {display: flex;justify-content: center;align-items: center;font-family: sans-serif;background-color: #cccccc;padding: 30px;   }   .carta {width: 300px;border-radius: 10px;display: flex;flex-direction: column;justify-content: space-between;padding: 10px;background-color: #fff;box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);   }   .carta__header {text-align: center;   }   .carta__body {text-align: center;   }   .carta__footer {text-align: center;   }   .carta__logo{width: 100%;height: 50px;display: flex;justify-content: center;align-items: center;   }   .carta__logo img{max-width: 100%;max-height: 100%;flex-shrink: 0;   }</style><div class="container">   <div class="carta"><div class="carta__logo">    <img src="https://gautoclinic.com.br/src/logo.png" alt="Logo GautoClinic"></div><div class="carta__header">    <h1>Olá, ${req.user.name}</h1></div><div class="carta__body">    <p>O seu agendamento para o procedimento ${tableAgendamento[0].idProcedimento} foi confirmado para o dia ${tableAgendamento[0].dataHoraAgendamento} estaremos esperando por você.</p></div><div class="carta__footer">    <p>Atenciosamente Equipe GautoClinic.</p></div>   </div></div>`
     const text = "";
-    await agendamentos.confirmaAgendamento({confirmado:1, idUser:req.user.id, check_ref:checkRef});
+    await agendamentos.confirmaAgendamento({status: 'ACCEPT', confirmado:1, idUser:req.user.id, check_ref:checkRef});
     helper.sendEmail(req.user.email,assunto,html,text);
-
-}
-routes.get('/cancel', helper.ensureAdmin), async (req, res) =>{
+    res.redirect('/orders');
+})
+routes.post('/cancel', helper.ensureAdmin, async (req, res) =>{
     const {checkRef} = req.body;
     const agendamentos = new agendamentosDAO();
     const assunto = "Cancelamento agendamento GautoClinic";
@@ -152,6 +153,7 @@ routes.get('/cancel', helper.ensureAdmin), async (req, res) =>{
     });
     if(apiRes.ok){
         let temp = await apiRes.json();
+        console.log(temp);
 
         //se a resposta da api for diferente de pendente
         if(temp.status != 'PENDING'){
@@ -163,19 +165,26 @@ routes.get('/cancel', helper.ensureAdmin), async (req, res) =>{
             });
             
             if(fetchres.ok){
-                await agendamentos.confirmaAgendamento({confirmado:0, idUser:req.user.id, check_ref:checkRef});
+                let apiRes = await fetchres.json();
+                console.log(apiRes);
+                await agendamentos.confirmaAgendamento({status: 'REFUNDED', confirmado:0, idUser:req.user.id, check_ref:checkRef});
                 helper.sendEmail(req.user.email,assunto,html,text);
             }
             else{
+                let apiRes = await fetchres.json();
+                console.log(apiRes);
                 req.flash('error', 'Erro ao fazer o reembolso');
                 res.redirect('/orders');
             }
         }else{
-            req.flash('error', 'O pagamento não está em um status reembolsável');
+            req.flash('error', 'Erro na API, contate o administrador');
             res.redirect('/orders');
         }
+    }else{
+        req.flash('error', 'O pagamento não está em um status reembolsável');
+        res.redirect('/orders');
     }
-}
+})
 
 routes.get('/orders', helper.ensureAdmin, (req, res) => {
     const errorMessage = req.flash('error');
@@ -200,7 +209,7 @@ routes.get('/orders', helper.ensureAdmin, (req, res) => {
                 return item;
             });
             data = mergeItems(data);
-            console.log(data);
+            //console.log(data);
             res.render('consultasFunc', {data: data, user: req.user, error: errorMessage});
         });
     }catch(err){
