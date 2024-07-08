@@ -88,6 +88,8 @@ async function sumupReq(trans, ListOf, req, res){
             "amount": trans.price,
             "currency": trans.currency,
             "pay_to_email": trans.pay2mail,
+            "return_url": "https://gautoclinic.com.br/consulta/consulStatus",
+            "redirect_url": "https://gautoclinic.com.br/"
         })
     });
     if(apiRes.ok){
@@ -120,6 +122,42 @@ routes.get('/payment/:id', helper.ensureAuthenticated, (req, res)=>{
         res.render('payment', {data: data, user: req.user, error: errorMessage});
     }).catch(err => res.status(500).send('Something broke!'));
 });
+
+routes.post('/consulStatus', async (req, res)=>{
+    const agendamentos = new agendamentosDAO();
+    const { id, status, event_type } = req.body;
+
+    if(status == 'SUCCESSFUL' && event_type == 'CHECKOUT_STATUS_CHANGED'){
+        try{
+            //vai verificar com a pripria sumup se ela foi realmente paga
+            const apiRes = await fetch('https://api.sumup.com/v0.1/checkouts/' + id,{
+                method: 'GET',
+                headers: 
+                {
+                    'Authorization': 'Bearer ' + process.env.SUMUP_KEY,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if(apiRes.ok){
+                let temp = await apiRes.json();
+                console.log(temp);
+
+                //se a resposta da api for diferente de pendente
+                if(temp.status != 'PENDING'){
+                    await agendamentos.confirmaAgendamento({status: temp.status, confirmado:0, idUser:req.user.id, check_ref:checkRef});
+                }
+            }else{
+                let temp = await apiRes.json();
+                console.log(temp)
+            }
+        }catch(err){
+            console.log(err)
+        }
+    }else{
+        console.log('Algo esta muito errado, o que retornou da sumup e o que foi chamado aqui está diferente, espero nunca ver isso no console')
+    }
+})
 
 routes.post('/accept', helper.ensureAdmin, async (req, res) =>{
     const {checkRef} = req.body;
