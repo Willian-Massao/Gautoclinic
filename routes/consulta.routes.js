@@ -127,6 +127,8 @@ routes.post('/consulStatus', async (req, res)=>{
     const agendamentos = new agendamentosDAO();
     const { id, status, event_type } = req.body;
 
+    console.log(req.body);
+
     if(status == 'SUCCESSFUL' && event_type == 'CHECKOUT_STATUS_CHANGED'){
         try{
             //vai verificar com a pripria sumup se ela foi realmente paga
