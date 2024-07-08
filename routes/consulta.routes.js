@@ -147,7 +147,7 @@ routes.post('/consulStatus', async (req, res)=>{
 
                 //se a resposta da api for diferente de pendente
                 if(temp.status != 'PENDING'){
-                    await agendamentos.changeStatus({status: temp.status, confirmado:0, check_ref:checkRef});
+                    await agendamentos.changeStatus({status: temp.status, confirmado:0, check_ref: temp.checkout_reference});
                 }
             }else{
                 let temp = await apiRes.json();
