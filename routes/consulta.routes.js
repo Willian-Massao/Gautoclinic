@@ -153,7 +153,7 @@ routes.post('/consulStatus', async (req, res)=>{
                     console.log({status: temp.status, confirmado:0, check_ref: temp.checkout_reference})
                     await agendamentos.changeStatus({status: temp.status, confirmado:0, check_ref: temp.checkout_reference});
                 }
-                res.send(201)
+                res.sendStatus(201);
             }else{
                 let temp = await apiRes.json();
                 console.log(temp)
@@ -210,8 +210,9 @@ routes.post('/cancel', helper.ensureAdmin, async (req, res) =>{
             });
             
             if(fetchres.ok){
-                await agendamentos.confirmaAgendamento({status: 'REFUNDED', confirmado:0, idUser:req.user.id, check_ref:checkRef});
+                await agendamentos.changeStatus({status: 'REFUNDED', confirmado:0, check_ref:checkRef});
                 helper.sendEmail(req.user.email,assunto,html,text);
+                res.redirect('/consulta/orders');
             }else{
                 let apiRes = await fetchres.json();
                 console.log(apiRes);
