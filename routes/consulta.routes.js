@@ -177,8 +177,24 @@ routes.post('/accept', helper.ensureAdmin, async (req, res) =>{
     const text = "";
     await agendamentos.confirmaAgendamento({status: 'ACCEPT', confirmado:1, idUser:req.user.id, check_ref:checkRef});
     helper.sendEmail(req.user.email,assunto,html,text);
-    res.redirect('/orders');
+    res.redirect('/consulta/orders');
 })
+
+routes.post('/finish', helper.ensureAdmin, async (req, res)=>{
+    const { checkRef } = req.body;
+    const agendamentos = new agendamentosDAO();
+
+    let tableAgendamento = await agendamentos.findCheck_ref({idFuncionario:1,check_ref:checkRef});
+
+    if(tableAgendamento[0].status == 'ACCEPT'){
+        await agendamentos.changeStatus({status: 'FINISH', confirmado:1, check_ref:checkRef});
+        res.redirect('/consulta/orders');
+    }else{
+        req.flash('error', 'A consulta não foi aceita para ser cancelada');
+        res.redirect('/consulta/orders');
+    }
+});
+
 routes.post('/cancel', helper.ensureAdmin, async (req, res) =>{
     const {checkRef} = req.body;
     const agendamentos = new agendamentosDAO();
@@ -238,7 +254,7 @@ routes.get('/orders', helper.ensureAdmin, (req, res) => {
 
     const ptTable = {
         'PAID': 'PAGO',
-        'FINISH': 'COMPLETADO',
+        'FINISH': 'COMPLETO',
         'ACCEPT': 'ACEITO',
         'REFUNDED': 'CANCELADO',
     }

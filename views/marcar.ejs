@@ -21,7 +21,7 @@
                         <% let diaSeguinte = new Date(); diaSeguinte.setDate(diaSeguinte.getDate() + 1);%>
                         <input type="date" name="data" id="data" oninput="validaData()" placeholder="data" min = "<%= diaSeguinte.getFullYear() +"-"+(diaSeguinte.getMonth()+1).toString().padStart(2,'0')+"-"+diaSeguinte.getDate().toString().padStart(2,'0') %>" >
                         <select name="time" id="time" value="time" onchange ="validaHora()">
-                            <% let minuto = 0; for(var hora = 8; hora <= 18; hora++){ minuto = 0;  %><% for(var quartoHora = 1; quartoHora <= 4; quartoHora++){%><option value="<%= hora+":"+minuto.toString().padEnd(2,'0') %>"> <%= hora+":"+minuto.toString().padEnd(2,'0') %></option><% minuto += 15; if (hora=== 18) {break;} }%><% }%>                    
+                            <% let minuto = 0; for(var hora = 8; hora <= 18; hora++){ minuto = 0;  %><% for(var quartoHora = 1; quartoHora <= 4; quartoHora++){%><option value="<%= hora.toString().padStart(2,'0')+":"+minuto.toString().padEnd(2,'0') %>"> <%= hora+":"+minuto.toString().padEnd(2,'0') %></option><% minuto += 15; if (hora=== 18) {break;} }%><% }%>                    
                         </select>
                     </div>
                 </div>
@@ -80,8 +80,9 @@
     function validaHora(){
         var alerts = document.getElementById('alerts');
         var time = new Date(document.getElementById("data").value + " ");
-        time.setHours(document.getElementById("time").value.substring(0,1));
-        time.setMinutes(document.getElementById("time").value.substring(2,5));
+        time.setHours(document.getElementById("time").value.substring(0,2));
+        time.setMinutes(document.getElementById("time").value.substring(3,5));
+        console.log(time);
         var timeMin = new Date();
         timeMin.setHours(8);
         var timeMax = new Date();
@@ -89,7 +90,9 @@
         let agendamentos = <%- agendamentos %>;
         if(time.getHours() <= timeMax.getHours() && time.getHours() >= timeMin.getHours()){
             for(let agend in agendamentos){
-                let dateAgend = new Date(agendamentos[agend].dataHoraAgendamento);
+                console.log(agendamentos[agend]);
+                let dateAgend = new Date(`${agendamentos[agend].dataAgendamento.split('T')[0]}T${agendamentos[agend].horaAgendamento}`);
+                console.log(`${agendamentos[agend].dataAgendamento.split('T')[0]}T${agendamentos[agend].horaAgendamento}`);
                 const diffTime = Math.abs(time - dateAgend);
                 const diffMinutes= Math.ceil(diffTime / (1000 * 60));
                 if (diffMinutes <= 45){
