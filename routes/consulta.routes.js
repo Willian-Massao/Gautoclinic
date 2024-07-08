@@ -88,7 +88,7 @@ async function sumupReq(trans, ListOf, req, res){
             "amount": trans.price,
             "currency": trans.currency,
             "pay_to_email": trans.pay2mail,
-            "return_url": "https://gautoclinic.com.br/consulStatus",
+            "return_url": "https://gautoclinic.com.br/consulta/consulStatus",
             "redirect_url": "https://gautoclinic.com.br/"
         })
     });
