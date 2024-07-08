@@ -41,14 +41,23 @@
                     <!-- <h4>R$ <%= data.reduce((acc, item) => acc + item.price, 0)-200 %></h4> -->
                     <h4>R$ <%= data.reduce((acc, item) => acc + item.price, 0) %></h4>
                     <div class="form-buttons">
-                        <input class="cancel" type="submit" value="Recusar" form="cancel">
-                        <input class="accept" type="submit" value="Aceitar" form="accept">
+                        <% if(data[0].status == 'PAGO'){ %>
+                            <input class="cancel" type="submit" value="Recusar" form="cancel">
+                            <input class="accept" type="submit" value="Aceitar" form="accept">
+                        <% }else if(data[0].status == 'ACEITO'){ %>
+                            <input class="finish" type="submit" value="Terminar" form="finish">
+                        <% }else{ %>
+                            <input class="finish" type="submit" value="Sem ação" form="" disabled>
+                        <% } %>
                     </div>
                 </div>
                 <form action="/consulta/cancel" method="post" id="cancel">
                     <input type="text" value="<%= data[0].check_ref%>" name="checkRef" style="display: none;">
                 </form>
                 <form action="/consulta/accept" method="post" id="accept">
+                    <input type="text" value="<%= data[0].check_ref%>" name="checkRef" style="display: none;">
+                </form>
+                <form action="/consulta/finish" method="post" id="finish">
                     <input type="text" value="<%= data[0].check_ref%>" name="checkRef" style="display: none;">
                 </form>
             </div>

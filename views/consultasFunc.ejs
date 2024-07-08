@@ -22,6 +22,10 @@
                 <h2>Job Offers</h2> 
                 <h2><%= data.map(e => {if(e.status == "PAGO"){return e}}).filter((i)=>{return typeof i == "object"}).length %></h2>
             </div>
+            <div class="job-card" onclick="filter(4)">
+                <h2>All Jobs</h2> 
+                <h2><%= data.map(e => {if(e.status != ""){return e}}).filter((i)=>{return typeof i == "object"}).length %></h2>
+            </div>
         </div>
         <div class="job-list">
             <% data.forEach(item => { %>
@@ -39,10 +43,10 @@
         <script>
             function filter(type){
                 let types = {
-                    all: document.querySelectorAll('a.job-card'),
-                    1: document.querySelectorAll('.item-COMPLETADO'),
+                    1: document.querySelectorAll('.item-COMPLETO'),
                     2: document.querySelectorAll('.item-ACEITO'),
-                    3: document.querySelectorAll('.item-PAGO')
+                    3: document.querySelectorAll('.item-PAGO'),
+                    4: document.querySelectorAll('a.job-card')
                 }
                 console.log(types[type])
                 for (let key in types){
