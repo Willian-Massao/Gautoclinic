@@ -92,6 +92,22 @@ module.exports  = class agendamentos{
         }
     }
 
+    async changeStatus(agendamentos){
+        // esse só deve ser utilizado na atualização de status da compra
+        const conn = await pool.getConnection();
+        try{
+            NN(agendamentos);
+            const sql = "UPDATE agendamentos SET confirmado = ?, status = ? WHERE check_ref = ?;"
+            await conn.query(sql, [agendamentos.confirmado, agendamentos.status, agendamentos.check_ref])
+            console.log("agendamentos atualizado com sucesso!");
+        }catch(err){
+            console.log(err);
+            throw err;
+        }finally{
+            conn.release();
+        }
+    }
+
     async findId(agendamentos){
         const conn = await pool.getConnection();
         try {
