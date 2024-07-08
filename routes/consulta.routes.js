@@ -210,7 +210,8 @@ routes.post('/cancel', helper.ensureAdmin, async (req, res) =>{
             });
             
             if(fetchres.ok){
-                await agendamentos.changeStatus({status: 'REFUNDED', confirmado:0, check_ref:checkRef});
+                console.log({status: 'REFUNDED', confirmado:0, check_ref:temp.checkout_reference });
+                await agendamentos.changeStatus({status: 'REFUNDED', confirmado:0, check_ref:temp.checkout_reference });
                 helper.sendEmail(req.user.email,assunto,html,text);
                 res.redirect('/consulta/orders');
             }else{

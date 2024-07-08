@@ -191,8 +191,8 @@ module.exports  = class agendamentos{
 function NN(thing){
     let objKeys = Object.keys(thing);
     objKeys.forEach((key) => {
-        if(thing[key] == "" || thing[key] == null){
-            throw new Error("O Campo não pode ser nulo!");
+        if(thing[key] === "" || thing[key] === null){
+            throw new Error("O Campo " + thing[key] + "veio nulo!");
         };
     });
 }
