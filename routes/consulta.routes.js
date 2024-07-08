@@ -129,9 +129,9 @@ routes.post('/consulStatus', async (req, res)=>{
 
     console.log(req.body);
 
-    if(status == 'SUCCESSFUL' && event_type == 'CHECKOUT_STATUS_CHANGED'){
+    if(event_type == 'CHECKOUT_STATUS_CHANGED'){
         try{
-            //vai verificar com a pripria sumup se ela foi realmente paga
+            //vai verificar com a pripria sumupa
             const apiRes = await fetch('https://api.sumup.com/v0.1/checkouts/' + id,{
                 method: 'GET',
                 headers: 
@@ -149,7 +149,11 @@ routes.post('/consulStatus', async (req, res)=>{
                 if(temp.status != 'PENDING'){
                     console.log({status: temp.status, confirmado:1, check_ref: temp.checkout_reference})
                     await agendamentos.changeStatus({status: temp.status, confirmado:1, check_ref: temp.checkout_reference});
+                }else{
+                    console.log({status: temp.status, confirmado:0, check_ref: temp.checkout_reference})
+                    await agendamentos.changeStatus({status: temp.status, confirmado:0, check_ref: temp.checkout_reference});
                 }
+                res.send(201)
             }else{
                 let temp = await apiRes.json();
                 console.log(temp)
@@ -206,16 +210,13 @@ routes.post('/cancel', helper.ensureAdmin, async (req, res) =>{
             });
             
             if(fetchres.ok){
-                let apiRes = await fetchres.json();
-                console.log(apiRes);
                 await agendamentos.confirmaAgendamento({status: 'REFUNDED', confirmado:0, idUser:req.user.id, check_ref:checkRef});
                 helper.sendEmail(req.user.email,assunto,html,text);
-            }
-            else{
+            }else{
                 let apiRes = await fetchres.json();
                 console.log(apiRes);
                 req.flash('error', 'Erro ao fazer o reembolso');
-                res.redirect('/orders');
+                res.redirect('/consulta/orders');
             }
         }else{
             req.flash('error', 'Erro na API, contate o administrador');
