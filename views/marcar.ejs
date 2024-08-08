@@ -79,7 +79,7 @@
 
     function validaHora(){
         var alerts = document.getElementById('alerts');
-        var time = new Date(document.getElementById("data").value + " ");
+        var time = new Date(document.getElementById("data").value);
         time.setHours(document.getElementById("time").value.substring(0,2));
         time.setMinutes(document.getElementById("time").value.substring(3,5));
         console.log(time);
