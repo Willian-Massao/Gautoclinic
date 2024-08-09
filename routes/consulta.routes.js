@@ -65,7 +65,7 @@ routes.post('/add/', async (req, res) => {
                         date: '',
                         shipping: []
                     }
-                    //sumupReq(transaction, ListOf, req, res)
+                    sumupReq(transaction, ListOf, req, res)
                 });
                   
         }).catch(err => {
