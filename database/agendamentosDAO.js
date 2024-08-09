@@ -22,6 +22,7 @@ module.exports  = class agendamentos{
                 CONSTRAINT idProcedimentoAgendamentos FOREIGN KEY (idProcedimento) REFERENCES procedimentos (idProcedimentos),
                 CONSTRAINT idUserAgendamentos FOREIGN KEY (idUser) REFERENCES users (id));`;
             await conn.query(sql);
+            await conn.query(`SET @@global.time_zone = '+03:00';`);
             console.log("Tabela agendamentos criada com sucesso!");
         }catch(err){
             console.log(err);
@@ -49,7 +50,7 @@ module.exports  = class agendamentos{
     async selecionaAgendamentos(){
         const conn = await pool.getConnection();
         try{
-            const sql = "select dataHoraAgendamento, DATE(dataHoraAgendamento) as 'dataAgendamento', TIME(dataHoraAgendamento) as 'horaAgendamento'  from agendamentos where dataHoraAgendamento >= DATE_ADD(date(now()), INTERVAL 1 DAY)"
+            const sql = `SELECT CONVERT_TZ(dataHoraAgendamento, '+00:00', '-03:00') AS dataHoraAgendamento, status, idProcedimento FROM agendamentos WHERE CONVERT_TZ(dataHoraAgendamento, '+00:00', '-03:00') >= DATE_ADD(DATE(CONVERT_TZ(NOW(), '+00:00', '-03:00')), INTERVAL 1 DAY);`
             const [rows] = await conn.query(sql)
             console.log("agendamentos selecionados");
             return rows;
@@ -152,7 +153,6 @@ module.exports  = class agendamentos{
         try {
             const sql = `SELECT AG.id, AG.dataHoraAgendamento, AG.dataHoraAgendamento, AG.confirmado, PC.preco AS price, AG.pagamentoOnline, AG.check_ref, AG.status, US.name as idUser, PC.nome as idProcedimento FROM agendamentos AG left join users US on US.id = AG.idUser left join procedimentos PC on AG.idProcedimento = PC.idProcedimentos WHERE idFuncionario = ? and check_ref = ?;`;
             const [rows] = await conn.query(sql, [ agendamentos.idFuncionario, agendamentos.check_ref ]);
-            console.log(rows);
             return rows;
         }catch(err){
             console.log(err);
@@ -164,8 +164,19 @@ module.exports  = class agendamentos{
     async verificaHorarioFunc(agendamentos){
         const conn = await pool.getConnection();
         try {
-            const sql = `SELECT case when TIMESTAMPDIFF(minute, dataHoraAgendamento, ?) > 45 then 1 else 0 end as 'PodeAgendar' from agendamentos WHERE date(dataHoraAgendamento) = ?;`;
-            const [rows] = await conn.query(sql, [agendamentos.dataHoraAgendamento, agendamentos.dataConsulta]);
+            const sql = `SELECT CASE 
+    WHEN EXISTS (
+        SELECT 1
+        FROM agendamentos 
+        WHERE 
+			idProcedimento = ?
+			AND status = 'PAID' 
+            AND ABS(TIMESTAMPDIFF(MINUTE, dataHoraAgendamento, ?)) < 60 
+    ) 
+    THEN 0 
+    ELSE 1 
+END AS PodeAgendar;`;
+            const [rows] = await conn.query(sql, [agendamentos.id, agendamentos.dataHoraAgendamento]);
             return rows;
         }catch(err){
             console.log(err);
