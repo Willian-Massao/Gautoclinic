@@ -15,11 +15,11 @@
                     <label class="subline outline" for="nascimento">DATA DE NASCIMENTO</label>
                     <input type="date" name="nascimento" id="nascimento" placeholder="nascimento">
                 </div> -->
-                <div class="consulta-campo">
+                <div class="consulta-campo" id="standard_calendar">
                     <label class="subline outline" for="data">Data e Horario</label>
-                    <div class="subcampo-consulta">
+                    <div class="subcampo-consulta calendar">
                         <% let diaSeguinte = new Date(); diaSeguinte.setDate(diaSeguinte.getDate() + 1);%>
-                        <input type="date" name="data" id="data" onchange="validaData()" placeholder="data" min = "<%= diaSeguinte.getFullYear() +"-"+(diaSeguinte.getMonth()+1).toString().padStart(2,'0')+"-"+diaSeguinte.getDate().toString().padStart(2,'0') %>" >
+                        <input type="date" name="data" id="data" onchange="validaData()" placeholder="Date/Time" min = "<%= diaSeguinte.getFullYear() +"-"+(diaSeguinte.getMonth()+1).toString().padStart(2,'0')+"-"+diaSeguinte.getDate().toString().padStart(2,'0') %>" >
                         <select name="time" id="time" value="time" onchange="validaHora()">
                             <% let minuto = 0; for(var hora = 8; hora <= 18; hora++){ minuto = 0;  %><% for(var quartoHora = 1; quartoHora <= 4; quartoHora++){%><option value="<%= hora.toString().padStart(2,'0')+":"+minuto.toString().padEnd(2,'0') %>"> <%= hora+":"+minuto.toString().padEnd(2,'0') %></option><% minuto += 15; if (hora=== 18) {break;} }%><% }%>                    
                         </select>
@@ -70,6 +70,8 @@
         agendamentos.forEach(agend => {
             let testeDate = new Date(agend.dataAgendamento)
             let dateDate = testeDate.getFullYear() +"-"+(testeDate.getMonth()+1).toString().padStart(2, '0')+"-"+testeDate.getDate();
+            console.log(dateDate);
+            console.log(date);
             if (date === dateDate){
                 validaHora();
             }
@@ -88,6 +90,7 @@
         var timeMax = new Date();
         timeMax.setHours(18);
         let agendamentos = <%- agendamentos %>;
+        console.log(agendamentos);
         if(time.getHours() <= timeMax.getHours() && time.getHours() >= timeMin.getHours()){
             for(let agend in agendamentos){
                 console.log(agendamentos[agend]);
