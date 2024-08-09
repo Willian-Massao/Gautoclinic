@@ -33,7 +33,9 @@ routes.post('/add/', async (req, res) => {
         if(aviso != 'on'){
             throw new Error('É necessário aceitar os termos de uso');
         }
-        agend.verificaHorarioFunc({dataHoraAgendamento: consulDate, dataConsulta: dataConsulta}).then(agendamentos => {
+        console.log(dataConsulta);
+        console.log(consulDate);
+        agend.verificaHorarioFunc({dataHoraAgendamento: consulDate}).then(agendamentos => {
             if(agendamentos.length > 0){
                 agendamentos.forEach(agendamento => {
                     if(agendamento.PodeAgendar != 1){
