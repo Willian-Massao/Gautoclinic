@@ -33,10 +33,10 @@ routes.post('/add/', async (req, res) => {
         if(aviso != 'on'){
             throw new Error('É necessário aceitar os termos de uso');
         }
-        console.log(dataConsulta);
-        console.log(consulDate);
-        agend.verificaHorarioFunc({dataHoraAgendamento: consulDate}).then(agendamentos => {
+        console.log({dataHoraAgendamento: consulDate, id: procedimentos});
+        agend.verificaHorarioFunc({dataHoraAgendamento: consulDate, id: procedimentos}).then(agendamentos => {
             if(agendamentos.length > 0){
+                console.log(agendamentos);
                 agendamentos.forEach(agendamento => {
                     if(agendamento.PodeAgendar != 1){
                         throw new Error('Este horário já está reservado. Por favor, selecione outro horário disponível.');
@@ -65,7 +65,7 @@ routes.post('/add/', async (req, res) => {
                         date: '',
                         shipping: []
                     }
-                    sumupReq(transaction, ListOf, req, res)
+                    //sumupReq(transaction, ListOf, req, res)
                 });
                   
         }).catch(err => {
