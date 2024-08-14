@@ -23,8 +23,8 @@ module.exports  = class itens{
                 salt varchar(255) NOT NULL,
                 PRIMARY KEY (id,cpf,email,name),
                 KEY INDICEEMAIL (email),
-                KEY INDICENAME (name)
-              )`;
+                KEY INDICENAME (name),
+                forms json)`;
             await conn.query(sql);
             console.log("Tabela users criada com sucesso!");
         }catch(err){
@@ -52,15 +52,44 @@ module.exports  = class itens{
         }
     }
 
+    async insertFormData(data){
+        const conn = await pool.getConnection();
+        try{
+            NN(data)
+            const sql = "UPDATE users SET forms = ? WHERE id = ?;"
+            await conn.query(sql, [JSON.stringify(data.forms) , data.id]);
+            console.log("Forms adicionado ao usuario com ID: " + data.id);
+        }catch(err){
+            console.log(err);
+            throw err;
+        }finally{
+            conn.release();
+        }
+    }
+
     // read
     async findId(id){
         const conn = await pool.getConnection();
         try {
-            const sql = `SELECT US.* , case when AD.id is not null then true else false end AS hasAdmin,
+            const sql = `SELECT US.*, US.forms , case when AD.id is not null then true else false end AS hasAdmin,
             case when FU.idFuncionario is not null then true else false end AS hasFunc FROM users US 
-            left join admins AD on US.id = AD.id 
-            left join funcionarios FU on US.id = FU.idFuncionario 
+            inner join admins AD on US.id = AD.id 
+            inner join funcionarios FU on US.id = FU.idFuncionario 
             WHERE US.id = ?`;
+            const [rows] = await conn.query(sql, [id]);
+            return rows[0];
+        }catch(err){
+            console.log(err);
+        }finally{
+            conn.release();
+        }
+    }
+    
+    // read
+    async gettingById(id){
+        const conn = await pool.getConnection();
+        try {
+            const sql = `SELECT * FROM users WHERE id = ?`;
             const [rows] = await conn.query(sql, [id]);
             return rows[0];
         }catch(err){

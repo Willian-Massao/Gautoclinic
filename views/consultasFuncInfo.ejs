@@ -10,10 +10,10 @@
 <main>
     <div class="job-container info">
         <div class="job-options">
-            <div class="job-card">
+            <a href="/user/info/<%= data[0].idUser %>" class="job-card">
                 <h6>NOME</h6>
-                <h4><%= data[0].idUser %></h4>
-            </div>
+                <h4><%= data[0].nameUser %></h4>
+            </a>
             <div class="job-card">
                 <h6>DATA</h6>
                 <h4><%= data[0].dataHoraAgendamento.toLocaleDateString("pt-BR",{timeZone: 'America/Sao_Paulo',year: 'numeric',month: 'numeric',day: 'numeric',hour: 'numeric',minute: 'numeric',second: 'numeric',}).replace(', ', ' - ') %></h4>

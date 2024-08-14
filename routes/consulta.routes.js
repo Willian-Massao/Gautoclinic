@@ -15,10 +15,34 @@ routes.post('/add/', async (req, res) => {
     let consulDate = new Date(data + ' ' + time);
     const proces = new procedimentosDAO();
     const agend = new agendamentosDAO();
+    const user = new userDAO();
     const funcionario = 1;
     let dataConsulta = consulDate.getFullYear() +"-"+(consulDate.getMonth()+1).toString().padStart(2,'0')+"-"+consulDate.getDate().toString().padStart(2,'0');
     let ListOf = [];
     let transaction;
+
+    let form = {
+        "historico":{},
+        "firstTime": false
+    };
+
+    //getting forms
+    for(let keys in Object.keys(req.body)){
+        if(Object.keys(req.body)[keys].includes("historico-")){
+            if(req.body[Object.keys(req.body)[keys]].length == 2){
+                form.historico[`${Object.keys(req.body)[keys].slice(10)}`] = {
+                    "valor": req.body[Object.keys(req.body)[keys]][0],
+                    "data": req.body[Object.keys(req.body)[keys]][1]
+                }
+            }else{
+                form.historico[`${Object.keys(req.body)[keys].slice(10)}`] = {"valor": req.body[Object.keys(req.body)[keys]]}
+            }
+        }
+    }
+    //console.log(form)
+    if(JSON.stringify(form.historico) != '{}'){
+        user.insertFormData({forms: form, id: req.user.id});
+    }
  
     try{
         //verificar se é maior de 18
@@ -33,10 +57,8 @@ routes.post('/add/', async (req, res) => {
         if(aviso != 'on'){
             throw new Error('É necessário aceitar os termos de uso');
         }
-        console.log({dataHoraAgendamento: consulDate, id: procedimentos});
         agend.verificaHorarioFunc({dataHoraAgendamento: consulDate, id: procedimentos}).then(agendamentos => {
             if(agendamentos.length > 0){
-                console.log(agendamentos);
                 agendamentos.forEach(agendamento => {
                     if(agendamento.PodeAgendar != 1){
                         throw new Error('Este horário já está reservado. Por favor, selecione outro horário disponível.');
@@ -129,8 +151,6 @@ routes.post('/consulStatus', async (req, res)=>{
     const agendamentos = new agendamentosDAO();
     const { id, status, event_type } = req.body;
 
-    console.log(req.body);
-
     if(event_type == 'CHECKOUT_STATUS_CHANGED'){
         try{
             //vai verificar com a pripria sumupa
@@ -149,10 +169,8 @@ routes.post('/consulStatus', async (req, res)=>{
 
                 //se a resposta da api for diferente de pendente
                 if(temp.status != 'PENDING'){
-                    console.log({status: temp.status, confirmado:1, check_ref: temp.checkout_reference})
                     await agendamentos.changeStatus({status: temp.status, confirmado:1, check_ref: temp.checkout_reference});
                 }else{
-                    console.log({status: temp.status, confirmado:0, check_ref: temp.checkout_reference})
                     await agendamentos.changeStatus({status: temp.status, confirmado:0, check_ref: temp.checkout_reference});
                 }
                 res.sendStatus(201);
