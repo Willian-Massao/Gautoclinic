@@ -71,10 +71,10 @@ module.exports  = class itens{
     async findId(id){
         const conn = await pool.getConnection();
         try {
-            const sql = `SELECT US.*, US.forms , case when AD.id is not null then true else false end AS hasAdmin,
+            const sql = `SELECT US.* , case when AD.id is not null then true else false end AS hasAdmin,
             case when FU.idFuncionario is not null then true else false end AS hasFunc FROM users US 
-            inner join admins AD on US.id = AD.id 
-            inner join funcionarios FU on US.id = FU.idFuncionario 
+            left join admins AD on US.id = AD.id 
+            left join funcionarios FU on US.id = FU.idFuncionario 
             WHERE US.id = ?`;
             const [rows] = await conn.query(sql, [id]);
             return rows[0];
