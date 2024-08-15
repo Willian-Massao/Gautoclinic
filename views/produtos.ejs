@@ -29,9 +29,6 @@
                     </div>
                     <p class="price descount">R$ <%= item.price.toFixed(2) %> </p>
                     <p class="price">R$ <%= (item.price - (item.price * (item.descount/100))).toFixed(2) %> Em promoção</p>
-                    <div class="buy">
-                        <button class="buy-button">Comprar</button>
-                    </div>
                 </a>
             <% }) %>
         </div>

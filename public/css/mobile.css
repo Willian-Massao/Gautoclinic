@@ -1,6 +1,22 @@
 :root{
     --secodary-color: #d6d6d6;
 }
+@font-face {
+    font-family: "Medio";
+    src: url("../src/Medio.otf") format("opentype");
+}
+@font-face {
+    font-family: "CaviarDreams";
+    src: url("../src/CaviarDreams.ttf") format("truetype");
+}
+@font-face {
+    font-family: "QuickSandBook";
+    src: url("../src/Quicksand_Book.otf") format("opentype");
+}
+@font-face {
+    font-family: "QuickSandLighter";
+    src: url("../src/Quicksand_Light.otf") format("opentype");
+}
 h1,h2,p,i,a{
     color: black;
 }
@@ -10,7 +26,7 @@ footer h1,footer h2,footer p{
 body{
     margin: 0;
     padding: 0;
-    font-family: "Inter", sans-serif;
+    font-family: "QuickSandBook", sans-serif;
     height:100%;
     position: relative;
 }
@@ -257,6 +273,9 @@ main .itens .item img {
     width: 20px;
     height: 20px;
 }
+p.comment-user{
+    margin-top: 5px;
+}
 main .product{
     display: flex;
     justify-content: center;
@@ -271,6 +290,19 @@ main .product p{
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+main .product p, main .product div{
+    margin-bottom: 5px;
+}
+main .product div.rate img{
+    margin-right: 2px;
+}
+main .product p.price.descount{
+    font-weight: normal;
+    color: rgba(0, 0, 0, 0.60);
+}
+main .product p.price{
+    font-weight: bold;
 }
 main a.product{
     color: var(--secodary-color);
@@ -545,12 +577,19 @@ main .item-images div img{
     flex-direction: column;
     width: 100%;
 }
+.item-container .item-info .item-price{
+    width: 100%;
+    font-size: larger;
+    display: flex;
+    justify-content: center;
+}
 .item-container .item-name{
     max-width: 100%;
     font-size: 1.875rem;
     font-weight: bolder;
     overflow: hidden;
     white-space: wrap;
+    margin-bottom: 3px;
 }
 .item-container .item-rate{
     display: flex;
@@ -585,8 +624,10 @@ main .item-images div img{
 
 button.item-buy{
     margin-top: 10px;
-    width: 120px;
+    width: 100%;
+    height: 50px;
     padding: 10px;
+    font-size: 1.2rem;
     border: 0;
     border-radius: 5px;
     background-color: var(--secodary-color);
@@ -667,9 +708,16 @@ button.item-buy:active{
 .item-benefit{
     background: rgb(255,239,161);
     background: linear-gradient(45deg, rgba(255,239,161,1) 0%, rgba(206,155,54,1) 33%, rgba(206,155,54,1) 67%, rgba(255,239,161,1) 100%); 
-    padding: 15px;
+    padding-left: 45px;
+    padding-right: 45px;
+    padding-top: 15px;
+    padding-bottom: 25px;
     margin-top: 15px;
-    border-radius: 5px;
+    border-radius: 10px;
+}
+.item-benefit ul{
+    margin: 0;
+    padding: 0;
 }
 .item-benefit li{
     text-align: justify;
