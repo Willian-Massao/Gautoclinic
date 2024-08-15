@@ -27,7 +27,7 @@ const transactions = new transactionDAO();
                 temp = await apiRes.json();
                 //if(true)
                 if(temp.status != 'PENDING'){
-                    console.log(temp);
+                    //console.log(temp);
                     try{
                         let products = [];
                         let volumes = [];

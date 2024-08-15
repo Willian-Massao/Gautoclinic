@@ -1761,6 +1761,24 @@ main.etiqueta .outline{
 .job-container .job-options .job-card h2{
     margin: 0;
 }
+.job-container .job-list .job-card.userInfo{
+    flex-direction: column;
+    max-width: fit-content;
+}
+.job-container .job-list .job-card.userInfo > div{
+    flex-direction: column;
+    margin: 5px;
+    padding: 5px;
+    background-color: rgb(190, 146, 212);
+    border: 1px solid rgb(169, 97, 202);
+    border-radius: 5px;
+    width: calc(100% - 20px);
+}
+.job-container .job-list .job-card.userInfo > div > h5{
+    padding: 0;
+    margin: 0;
+}
+
 .job-container .job-list{
     display: flex;
     justify-content: center;

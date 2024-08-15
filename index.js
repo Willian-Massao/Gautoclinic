@@ -528,7 +528,7 @@ app.post('/status', async (req, res)=>{
                                             }
                                         })
                                     })
-                                    console.log({shipping: tableUsuario.shipping, check_ref: temp.checkout_reference, type: 'other'});
+                                    //console.log({shipping: tableUsuario.shipping, check_ref: temp.checkout_reference, type: 'other'});
                                     transactions.updateShipping({shipping: tableUsuario.shipping, check_ref: temp.checkout_reference});
 
                                 })
@@ -561,7 +561,7 @@ app.get('/fretes', helper.ensureAuthenticated, (req, res) => {
     const errorMessage = req.flash('error');
     //console.log(freteCon);
     //let freteJson = freteCon.getAgencias()[0];
-    console.log(req.session.freteCon)
+    //console.log(req.session.freteCon)
     let freteJson = req.session.freteCon;
 
     res.render('fretes', { user: req.user, fretes: freteJson.agencias[0], error: errorMessage});
@@ -581,6 +581,35 @@ app.get('/marcar', helper.ensureAuthenticated, async (req, res) => {
     }catch(err){
         console.log(err);
     }finally{
+        //console.log(req.user.forms)
+        if(req.user.forms === null){
+            req.user.forms = {
+                "historico": {
+                        "antecedentesCirurgicos": {"valor": false,"nome": "Antecedentes cirúrgicos ?"},
+                        "tratamentosEsteticosAnteriores": {"valor": false,"nome": "Tratamentos estéticos anteriores ?"},
+                        "antecedentesAlergicos": {"valor": false,"nome": "Antecedentes alérgicos ?"},
+                        "funcionamentoRegularIntestino": {"valor": false,"nome": "Funcionamento regular do intestino ?"},
+                        "praticaAtividadeFisica": {"valor": false,"nome": "Já pratica alguma atividade física ?"},
+                        "usoDrogasLicitas": {"valor": false,"nome": "Faz uso de drogas lícitas ?"},
+                        "alimentacaoBalanceada": {"valor": false,"nome": "Possui uma alimentação balanceada ?"},
+                        "ingereLiquidosFrequencia": {"valor": false,"nome": "Ingere líquidos com frequência ?"},
+                        "gestante": {"valor": false,"nome": "É gestante ?"},
+                        "condicaoOrtopedica": {"valor": false,"nome": "Tem alguma condição ortopédica ?"},
+                        "tratamentoMedico": {"valor": false,"nome": "faz algum tratamento médico ?"},
+                        "portadorMarcapasso": {"valor": false,"nome": "Portador(a) de marcapasso ?"},
+                        "usoRoacutan": {"valor": false,"nome": "Ja fez o uso de ROACUTAN ?"},
+                        "sensibilidadeDor": {"valor": false,"nome": "Possui alguma sensibilidade a dor ?"},
+                        "pressaoAlta": {"valor": false,"nome": "Possui pressão alta ?"},
+                        "problemasCoracao": {"valor": false,"nome": "Possui problemas no coração ?"},
+                        "diabetesGrau": {"valor": false,"nome": "Diabetes? Qual grau ?", "grau": ""},
+                        "menstruada": {"valor": false,"nome": "Menstruada ?"},
+                        "usoMedicamentoDiario": {"valor": false,"nome": "Faz o uso de algum medicamento diário ?"},
+                        "herpesLabial": {"valor": false,"nome": "Possui HERPES LABIAL ?"},
+                        "outraPatologia": {"valor": false,"nome": "Possui alguma outra patalogia não citada aqui ?", "value": ''}
+                },
+                "firstTime": true
+            }
+        }
         res.render('marcar', { procedimentos: proc, funcionarios: func, agendamentos: JSON.stringify(agend), user: req.user, error: errorMessage});
     }
 });

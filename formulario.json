@@ -1,0 +1,26 @@
+{
+    "historico": {
+        "antecedentesCirurgicos": {"valor": false,"nome": "Antecedentes cirúrgicos ?"},
+        "tratamentosEsteticosAnteriores": {"valor": false,"nome": "Tratamentos estéticos anteriores ?"},
+        "antecedentesAlergicos": {"valor": false,"nome": "Antecedentes alérgicos ?"},
+        "funcionamentoRegularIntestino": {"valor": false,"nome": "Funcionamento regular do intestino ?"},
+        "praticaAtividadeFisica": {"valor": false,"nome": "Já pratica alguma atividade física ?"},
+        "usoDrogasLicitas": {"valor": false,"nome": "Faz uso de drogas lícitas ?"},
+        "alimentacaoBalanceada": {"valor": false,"nome": "Possui uma alimentação balanceada ?"},
+        "ingereLiquidosFrequencia": {"valor": false,"nome": "Ingere líquidos com frequência ?"},
+        "gestante": {"valor": false,"nome": "É gestante ?"},
+        "condicaoOrtopedica": {"valor": false,"nome": "Tem alguma condição ortopédica ?"},
+        "tratamentoMedico": {"valor": false,"nome": "faz algum tratamento médico ?"},
+        "portadorMarcapasso": {"valor": false,"nome": "Portador(a) de marcapasso ?"},
+        "usoRoacutan": {"valor": false,"nome": "Ja fez o uso de ROACUTAN ?"},
+        "sensibilidadeDor": {"valor": false,"nome": "Possui alguma sensibilidade a dor ?"},
+        "pressaoAlta": {"valor": false,"nome": "Possui pressão alta ?"},
+        "problemasCoracao": {"valor": false,"nome": "Possui problemas no coração ?"},
+        "diabetesGrau": {"valor": false,"nome": "Diabetes? Qual grau ?"},
+        "menstruada": {"valor": false,"nome": "Menstruada ?"},
+        "usoMedicamentoDiario": {"valor": false,"nome": "Faz o uso de algum medicamento diário ?"},
+        "herpesLabial": {"valor": false,"nome": "Possui HERPES LABIAL ?"},
+        "outraPatologia": {"valor": false,"nome": "Possui alguma outra patalogia não citada aqui ?"}
+    },
+    "firstTime": false
+}

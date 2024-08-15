@@ -151,7 +151,7 @@ module.exports  = class agendamentos{
     async findCheck_ref(agendamentos){
         const conn = await pool.getConnection();
         try {
-            const sql = `SELECT AG.id, AG.dataHoraAgendamento, AG.dataHoraAgendamento, AG.confirmado, PC.preco AS price, AG.pagamentoOnline, AG.check_ref, AG.status, US.name as idUser, PC.nome as idProcedimento FROM agendamentos AG left join users US on US.id = AG.idUser left join procedimentos PC on AG.idProcedimento = PC.idProcedimentos WHERE idFuncionario = ? and check_ref = ?;`;
+            const sql = `SELECT AG.id, AG.dataHoraAgendamento, AG.dataHoraAgendamento, AG.confirmado, PC.preco AS price, AG.pagamentoOnline, AG.check_ref, AG.status, US.name as nameUser, US.id as idUser, PC.nome as idProcedimento FROM agendamentos AG left join users US on US.id = AG.idUser left join procedimentos PC on AG.idProcedimento = PC.idProcedimentos WHERE idFuncionario = ? and check_ref = ?;`;
             const [rows] = await conn.query(sql, [ agendamentos.idFuncionario, agendamentos.check_ref ]);
             return rows;
         }catch(err){

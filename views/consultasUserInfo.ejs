@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include ("partials/head.ejs") %>
+</head>
+<body>
+    <%- include ("partials/alert.ejs") %>
+    <%- include ("partials/navbar.ejs") %>
+    <%- include ("partials/header.ejs") %>
+<main>
+    <div class="job-container info">
+        <div class="job-options">
+            <div class="job-card">
+                <h6>NOME</h6>
+                <h4><%= data.name %></h4>
+            </div>
+            <div class="job-card">
+                <h6>E-MAIL</h6>
+                <h4><%= data.email %></h4>
+            </div>
+            <div class="job-card">
+                <h6>TELEFONE</h6>
+                <h4><%= data.tel %></h4>
+            </div>
+        </div>
+        <div class="job-list">
+            <div class="job-card userInfo">
+                <h3>Lista de informações</h3>
+                <% if(data.forms != undefined){ %>
+                    <% let keys = Object.keys(data.forms.historico); %>
+                    <% for(let index in keys){ %>
+                        <% if(data.forms.historico[keys[index]].valor == 'true'){ %>
+                            <div>
+                                <h5><%= data.forms.historico[keys[index]].nome %></h5>
+                                <% if(data.forms.historico[keys[index]].data != undefined){ %>
+                                    <h5><%= data.forms.historico[keys[index]].data %></h5>
+                                <% }else{ %>
+                                    <h5>Sim</h5>
+                                <% } %>
+                            </div>
+                        <% } %>
+                    <% } %>
+                <% }else{ %>
+                    <div>
+                        <h5>O usuario não preencheu o formulario</h5>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</main>
+<%- include ("partials/footer.ejs") %>
+</body>
+</html>

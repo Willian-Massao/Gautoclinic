@@ -401,7 +401,7 @@ routes.post('/delete/paying', async(req, res) => {
     });
     let temp = await fetchres.json();
     if(fetchres.ok){
-        console.log(temp[`${id}`]);
+        //console.log(temp[`${id}`]);
         if(temp[`${id}`].cancellable == true){
             console.log('entrou');
             let fetchres = await fetch('https://melhorenvio.com.br/api/v2/me/shipment/cancel',{
@@ -422,7 +422,7 @@ routes.post('/delete/paying', async(req, res) => {
             });
             if(fetchres.ok){
                 temp = await fetchres.json();
-                console.log(temp);
+                //console.log(temp);
                 res.redirect('/admin/paying');
             }else{
                 req.flash('error', 'A etiqueta não pode ser cancelada!');
@@ -494,7 +494,7 @@ routes.post('/print/paying', async(req, res) => {
         let temp = await fetchres.json();
 
         //console.log(temp);
-        console.log(id);
+        //console.log(id);
         transaction.getCheckrefByTrackId({track_id: id}).then( async itens =>{
             transaction.update({id: itens.id, status: 'SEND'});
             const html = `

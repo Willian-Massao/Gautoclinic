@@ -15,6 +15,8 @@ const freteDAO = require('../database/freteDAO.js');
 const passwordForgotDAO = require('../database/passwordFogotDAO.js');
 const { json } = require('body-parser');
 
+const formJSON = require('../formulario.json');
+
 passport.use(new LocalStrategy({
     usernameField: 'email', // nome do campo de email no formulário de login
     passwordField: 'password' // nome do campo de senha no formulário de login
@@ -205,6 +207,26 @@ routes.get('/agendamentos', helper.ensureAuthenticated, (req, res) => {
     const errorMessage = req.flash('error');
     
     res.render('agendamentos', { user: req.user, error: errorMessage});
+});
+
+routes.get('/info/:id', helper.ensureAuthenticated, async (req, res) => {
+    const errorMessage = req.flash('error');
+    const users = new userDAO();
+    let keys = Object.keys(formJSON.historico);
+    
+    
+    try{
+        let data = await users.gettingById(req.params.id);
+        //console.log(data);
+        if(data.forms){
+            for(let index in keys){
+                data.forms.historico[keys[index]].nome = formJSON.historico[keys[index]].nome;
+            }
+        }
+        res.render('consultasUserInfo', { user: req.user, error: errorMessage, data: data});
+    }catch(err){
+        console.log(err);
+    }
 });
 
 

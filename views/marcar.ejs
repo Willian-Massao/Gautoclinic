@@ -2,6 +2,16 @@
 <html lang="en">
 <head>
     <%- include ("partials/head.ejs") %>
+    <script>
+        function unlockOptions(alvo, ini){
+            ini[0].addEventListener('click',()=>{                            
+                alvo.disabled = true;
+            });
+            ini[1].addEventListener('click',()=>{                            
+                alvo.disabled = false;
+            });
+        }
+    </script>
 </head>
 <body>
     <%- include ("partials/alert.ejs") %>
@@ -45,6 +55,30 @@
                         // <% }) %>
                     </select>-->
                 </div>
+                <% if(user.forms.firstTime){ %>
+                    <div class="consulta-campo">
+                        <% for(let keys in Object.keys(user.forms.historico)){ %>
+                            <label class="subline outline"><%= user.forms.historico[Object.keys(user.forms.historico)[keys]].nome %></label>
+                            <div class="">
+                                <input type="radio" name="historico-<%= Object.keys(user.forms.historico)[keys] %>" value="false" checked="checked">Não
+                                <input type="radio" name="historico-<%= Object.keys(user.forms.historico)[keys] %>" value="true">Sim
+                            </div>
+                            <% if(Object.keys(user.forms.historico)[keys] == "diabetesGrau"){ %>
+                                <select class="historico-diabetesGrauValue" name="historico-diabetesGrau" id="" placeholder="Insira aqui a patalogia" disabled>
+                                    <option value="Tipo 1" selected>Tipo 1</option>
+                                    <option value="Tipo 1">Tipo 2</option>
+                                    <option value="Tipo 1">Tipo Gestacional</option>
+                                    <option value="Tipo 1">Tipo Infantil</option>
+                                </select>
+                            <% }else if(Object.keys(user.forms.historico)[keys] == "outraPatologia"){ %>
+                                <input type="text" class="historico-outraPatologiaValue" name="historico-outraPatologia" placeholder="Insira aqui a patalogia">
+                            <% } %>
+                            <script>
+                                unlockOptions(document.getElementsByClassName("historico-<%= Object.keys(user.forms.historico)[keys] %>Value")[0], document.getElementsByName('historico-<%= Object.keys(user.forms.historico)[keys] %>'));
+                            </script>
+                        <% } %>
+                    </div>
+                <% } %>
                 <div class="consulta-campo">
                     <p class="aviso">Atente-se com sua data e horário. Em caso de cancelamento com menos de 24 horas ou não comparecimento, o valor de agendamento não será reembolsado. Você tem direito a somente um reagendamento no período de 30 dias. Uma vez que que o valor do agendamento foi pago, considera-se que o protocolo do procedimento já está em andamento, sendo assim, não há direito a reembolso de qualquer natureza. O procedimento será realizado por um profissional da equipe GAUTOCLINIC.</p>
                     <div>
@@ -56,8 +90,6 @@
             </form>
         </div>
     </main>
-    <script>
-    </script>
     <%- include ("partials/footer.ejs") %>
 </body>
 </html>
