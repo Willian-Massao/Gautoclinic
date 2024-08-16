@@ -60,14 +60,6 @@
                 <% }else{ %>
                     <button class="item-buy" disabled>Adicionar ao carrinho</button>
                 <% } %>
-                <div class="item-benefit">
-                    <h1>Beneficios</h1>
-                    <ul>
-                    <% item.benefits.split(';').forEach((e)=>{ %>
-                        <li><%= e %></li>       
-                    <%}) %>
-                    </ul>
-                </div>
                 <div class="sec-container">
                     <div class="desc-sec">
                         <button class="sec-button" onclick="select(0)" style="border-bottom: 1px solid black;">Descrição</button>
@@ -92,6 +84,14 @@
                             <!--<%= item.uses %>-->
                         </div>
                     </div>
+                </div>
+                <div class="item-benefit">
+                    <h1>Beneficios</h1>
+                    <ul>
+                    <% item.benefits.split(';').forEach((e)=>{ %>
+                        <li><%= e %></li>       
+                    <%}) %>
+                    </ul>
                 </div>
             </div>
         </div>

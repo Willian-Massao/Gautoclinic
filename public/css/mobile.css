@@ -1,5 +1,6 @@
 :root{
     --secodary-color: #d6d6d6;
+    --Pfont: "Garemond";
 }
 @font-face {
     font-family: "Medio";
@@ -14,8 +15,40 @@
     src: url("../src/Quicksand_Book.otf") format("opentype");
 }
 @font-face {
+    font-family: "QuickSandBook";
+    font-weight: bold;
+    src: url("../src/Quicksand_Bold.otf") format("opentype");
+}
+@font-face {
     font-family: "QuickSandLighter";
     src: url("../src/Quicksand_Light.otf") format("opentype");
+}
+@font-face {
+    font-family: "BodoniModa";
+    src: url("../src/BodoniModaSC-VariableFont_opsz,wght.ttf") format("truetype");
+}
+@font-face {
+    font-family: "BodoniModa";
+    font-style: italic;
+    src: url("../src/BodoniModaSC-Italic-VariableFont_opsz,wght.ttf") format("truetype");
+}
+@font-face {
+    font-family: "Bitter";
+    src: url("../src/Bitter-VariableFont_wght.ttf") format("truetype");
+}
+@font-face {
+    font-family: "Bitter";
+    font-style: italic;
+    src: url("../src/Bitter-Italic-VariableFont_wght.ttf") format("truetype");
+}
+@font-face {
+    font-family: "Garemond";
+    src: url("../src/EBGaramond-VariableFont_wght.ttf") format("truetype");
+}
+@font-face {
+    font-family: "Garemond";
+    font-style: italic;
+    src: url("../src/EBGaramond-Italic-VariableFont_wght.ttf") format("truetype");
 }
 h1,h2,p,i,a{
     color: black;
@@ -26,7 +59,7 @@ footer h1,footer h2,footer p{
 body{
     margin: 0;
     padding: 0;
-    font-family: "QuickSandBook", sans-serif;
+    font-family: var(--Pfont);
     height:100%;
     position: relative;
 }
@@ -95,6 +128,7 @@ header .search-bar{
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.30);
     height: 50px;
     width: 450px;
+    margin-top: 5px;
     border-radius: 50px;
     overflow: hidden;
     border: 1px solid rgba(0, 0, 0, 0.20);
@@ -496,7 +530,7 @@ nav ul input{
     margin: 0;
     background-color: rgba(0, 0, 0, 0.0);
     font-size: medium;
-    font-family: "Inter", sans-serif;
+    font-family: var(--Pfont);
     color: rgb(255, 62, 62);
     font-weight: bold;
 }
@@ -609,10 +643,10 @@ main .item-images div img{
     color: red;
 }
 .item-rate .item-stock p{
-    margin: 0;
     padding: 0;
-    margin-bottom: 6px;
-    margin-left: 3px;
+    margin: 0;
+    margin-top: 1px;
+    margin-left: 2px;
 }
 .rate{
     display: flex;
@@ -628,6 +662,7 @@ button.item-buy{
     height: 50px;
     padding: 10px;
     font-size: 1.2rem;
+    font-family: var(--Pfont);
     border: 0;
     border-radius: 5px;
     background-color: var(--secodary-color);
@@ -706,8 +741,8 @@ button.item-buy:active{
     display: unset;
 }
 .item-benefit{
-    background: rgb(255,239,161);
-    background: linear-gradient(45deg, rgba(255,239,161,1) 0%, rgba(206,155,54,1) 33%, rgba(206,155,54,1) 67%, rgba(255,239,161,1) 100%); 
+    background-color: black;
+    color: white;
     padding-left: 45px;
     padding-right: 45px;
     padding-top: 15px;
@@ -715,16 +750,17 @@ button.item-buy:active{
     margin-top: 15px;
     border-radius: 10px;
 }
+.item-benefit h1{
+    color: white;
+}
 .item-benefit ul{
     margin: 0;
     padding: 0;
 }
 .item-benefit li{
-    text-align: justify;
+    text-align: left;
     margin-top: 15px;
-}
-.item-benefit ul{
-    padding-left: 10px;
+    word-spacing: .1rem;
 }
 .appraisal-container{
     display: flex;
