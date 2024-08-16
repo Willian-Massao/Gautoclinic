@@ -94,6 +94,8 @@ async function add2cart(usuario, owner, itens){
     let bearerMelhorEnvio = 'Bearer ';
     await melhorEnvio.buscaToken().then(bearer => {  bearerMelhorEnvio += bearer.access_token});
 
+    console.log(owner);
+
     const apiRes = await fetch('https://melhorenvio.com.br/api/v2/me/cart',
     {
         method: 'POST',
