@@ -178,7 +178,7 @@ module.exports  = class itens{
         try {
             const sql = 
             `SELECT 
-            CONCAT_WS(' ', name, lastname) as 'nome_completo', us.tel, us.email, us.cpf, trans.shipping
+            CONCAT_WS(' ', name, lastname) as 'nome_completo', us.id, us.tel, us.email, us.cpf, trans.shipping
             FROM transaction trans
             inner join users us
             on us.id = trans.idUser

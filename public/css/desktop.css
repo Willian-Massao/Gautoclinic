@@ -575,6 +575,7 @@ main .item-container{
     flex-direction: row;
     position: sticky;
     top: 0;
+    box-shadow: 1px 0px 0px 0px rgba(0, 0, 0, 0.15);
 }
 .item-images .image-list{
     width: calc(500px/3);
@@ -634,6 +635,7 @@ main .item-images div img{
     align-items: start;
     flex-direction: column;
     width: 450px;
+    margin-left: 5px;
 }
 .item-container .item-info .item-price{
     width: 100%;
