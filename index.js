@@ -436,7 +436,8 @@ app.post('/status', async (req, res)=>{
     //ai preferi vereficar com eles denovo de foi paga ou não
 
     //se a requisição for de sucesso e for de mudança de status
-    if(status == 'SUCCESSFUL' && event_type == 'CHECKOUT_STATUS_CHANGED'){
+    //if(status == 'SUCCESSFUL' && event_type == 'CHECKOUT_STATUS_CHANGED'){
+    if(true){
         try{
             //vai verificar com a pripria sumup se ela foi realmente paga
             const apiRes = await fetch('https://api.sumup.com/v0.1/checkouts/' + id,{
@@ -448,7 +449,8 @@ app.post('/status', async (req, res)=>{
                 }
             });
 
-            if(apiRes.ok){
+            //if(apiRes.ok){
+            if(true){
                 let temp = await apiRes.json();
 
                 //se a resposta da api for diferente de pendente
@@ -467,7 +469,13 @@ app.post('/status', async (req, res)=>{
                             const ownershop = new ownershopDAO();
                             let tableOwner = await ownershop.buscaOwner();
                             let tableUsuario = await transactions.buscaUsuarioFreteTransaction(temp.checkout_reference);
-                            let userShipping = JSON.parse(tableUsuario.shipping);
+                            let userShipping
+                            if(typeof tableUsuario.shipping == "string"){
+                                userShipping = JSON.parse(tableUsuario.shipping);
+                            }else if(typeof tableUsuario.shipping == "object" ){
+                                userShipping = tableUsuario.shipping;
+                            }
+                            //let userShipping = JSON.parse([{"id": 7, "qtd": 1, "name": "Gloss labial", "price": 0.9999, "track_id": "", "dimensions": {"depth": 1, "width": 1, "height": 1, "weight": 1}, "track_code": ""}]);
 
                             userShipping.forEach((e)=>{
                                 products.push({
