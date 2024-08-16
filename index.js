@@ -554,6 +554,7 @@ app.post('/status', async (req, res)=>{
                                         //        e.track_id = res.id;
                                         //    }
                                         //})
+                                        console.log(res);
                                     })
                                 }
                                 transactions.updateShipping({shipping: tableUsuario.shipping, check_ref: temp.checkout_reference})
@@ -570,6 +571,7 @@ app.post('/status', async (req, res)=>{
                                     //    })
                                     //})
                                     //console.log({shipping: tableUsuario.shipping, check_ref: temp.checkout_reference, type: 'other'});
+                                    console.log(res);
                                     transactions.updateShipping({shipping: tableUsuario.shipping, check_ref: temp.checkout_reference});
 
                                 })
