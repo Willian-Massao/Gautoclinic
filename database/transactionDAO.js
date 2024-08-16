@@ -1,6 +1,6 @@
 const pool  = require("./database");
 
-module.exports  = class itens{
+module.exports  = class transaction{
     // criar tabela
     async create(){
         const conn = await pool.getConnection();
@@ -178,10 +178,12 @@ module.exports  = class itens{
         try {
             const sql = 
             `SELECT 
-            CONCAT_WS(' ', name, lastname) as 'nome_completo', us.id, us.tel, us.email, us.cpf, trans.shipping
+            CONCAT_WS(' ', name, lastname) as 'nome_completo', us.id, us.tel, us.email, us.cpf, trans.shipping, fr.\`to\`, fr.agencias
             FROM transaction trans
             inner join users us
             on us.id = trans.idUser
+            inner join fretes fr
+            on trans.check_ref = fr.check_ref
             where trans.check_ref = ?`;
             const [row] = await conn.query(sql, [check_ref]);
             return row[0];

@@ -156,9 +156,9 @@ async function add2cart(usuario, owner, itens){
         ({
             // tableUsuario.shipping.id é o id do item, não da transportadora
             // na criação do frete adicionei um campo vazio para o id da transportadora (userShipping)
-            // quando o usuário seleciona a transportadora, e gera as informações para mandar pra sumup
+            // quando o usuário seleciona a transportadora, e gera asrmações para mandar pra sumup
             // eu pego o id da transportadora e coloco no campo userShipping
-            "service": usuario.info.userShipping,//Id transportadora
+            "service": usuario.agencias.id,//Id transportadora
             "from": 
             {
                 "name": owner.nome_completo,
@@ -182,14 +182,14 @@ async function add2cart(usuario, owner, itens){
                 "phone": usuario.tel,
                 "email": usuario.email,
                 "document": usuario.cpf,//CPF
-                "address": usuario.info.to.adress,//Logradouro Destinatario
-                "complement":  "teste",//usuario.info.to.complemento,// Complemento
-                "number": usuario.info.to.numero,//Numero
-                "district": usuario.info.to.district,//Bairro
-                "city": usuario.info.to.city,//Cidade
-                "country_id": usuario.info.to.country_id,//Pais
-                "postal_code": usuario.info.to.CEP,//Cep
-                "state_abbr": usuario.info.to.state_abbr,//Estado
+                "address": usuario.to.adress,//Logradouro Destinatario
+                "complement": "teste",//usuario.to.complemento,// Complemento
+                "number": usuario.to.numero,//Numero
+                "district": usuario.to.district,//Bairro
+                "city": usuario.to.city,//Cidade
+                "country_id": usuario.to.country_id,//Pais
+                "postal_code": usuario.to.CEP,//Cep
+                "state_abbr": usuario.to.state_abbr,//Estado
                 "note": "observação"//Observacao
             },
             // os produtos precisa estar no array, por que estamos passando todos os produtos que o frete calculou

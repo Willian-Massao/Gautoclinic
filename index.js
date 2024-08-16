@@ -51,7 +51,7 @@ const admins = new adminDAO();
 const passwordForgot = new passwordForgotDAO();
 const envio = new envioDAO();
 const refound = new refoundDAO();
-//const frete = new freteDAO();
+const frete = new freteDAO();
 const ownershop = new ownershopDAO();
 const procedimentos = new procedimentosDAO();
 const funcionarios = new funcionariosDAO();
@@ -67,7 +67,7 @@ images.create();
 admins.create();
 passwordForgot.create();
 envio.create();
-//frete.create();
+frete.create();
 ownershop.create();
 procedimentos.create();
 funcionarios.create();
@@ -108,7 +108,7 @@ app.post('/carrinho' ,async  (req, res) => {
 });
 
 app.post('/payment', async(req, res) => {
-    //const frete = new freteDAO();
+    const frete = new freteDAO();
     const itens = new itemDAO();
     let databaseRes = await itens.select();
     const CacheFrete = req.body.frete;
@@ -135,6 +135,7 @@ app.post('/payment', async(req, res) => {
         data.forEach(element => {
             if(element.id == parseInt(cache.frete[0].id)){
                 transaction.price += parseFloat(element.price);
+                req.session.freteCon.escolha = element;
             }
         });
         cache.itens.forEach(item => {
@@ -193,16 +194,18 @@ async function sumupReq(trans, cache, req, res){
         trans.date = data.date;
         trans.price = data.amount;
 
-        transaction.insert(trans).then(()=>{
-            res.json({ url: trans.check_ref})
-        }).catch(err => {
-            res.status(500).send('Something broke!')
-        });
-
-        if(cache.frete != undefined && cache.frete.length > 0){
-            let userShipping = cache.frete[0].id;
-            req.session.freteCon.escolha = userShipping;
+        try{
+            await transaction.insert(trans);
+            await frete.insert({userId: req.user.id ,agencias: req.session.freteCon.escolha, to: req.session.freteCon.to, from: req.session.freteCon.from, check_ref: trans.check_ref});
+            res.json({ url: trans.check_ref});
+        }catch(err){
+            console.log(err);
         }
+
+        //if(cache.frete != undefined && cache.frete.length > 0){
+        //    let userShipping = cache.frete[0].id;
+        //    req.session.freteCon.escolha = userShipping;
+        //}
     }else{
         res.status(500).send('sumup unauthorized')
     }
@@ -426,7 +429,7 @@ app.get('/payment/:id', (req, res)=>{
 
 app.post('/status', async (req, res)=>{
     const transactions = new transactionDAO();
-    const itens = new itemDAO();
+    const itensDAO = new itemDAO();
     const { id, status, event_type } = req.body;
 
     //não coloquei para atualizar direto pq a chance de alguem mal intencionado fazer um post para atualizar o status
@@ -464,8 +467,9 @@ app.post('/status', async (req, res)=>{
                             const ownershop = new ownershopDAO();
                             let tableOwner = await ownershop.buscaOwner();
                             let tableUsuario = await transactions.buscaUsuarioFreteTransaction(temp.checkout_reference);
+                            let userShipping = JSON.parse(tableUsuario.shipping);
 
-                            tableUsuario.shipping.forEach((e)=>{
+                            userShipping.forEach((e)=>{
                                 products.push({
                                     "name": e.name,//Nome Produto
                                     "quantity": e.qtd,//Quantidade
@@ -477,7 +481,7 @@ app.post('/status', async (req, res)=>{
                                     "width": e.dimensions.width,//Largura
                                     "weight": e.dimensions.weight//Peso
                                 })//Volume
-                                //itens.AtualizarQtd({id: e.id, qtd: e.qtd})
+                                itensDAO.AtualizarQtd({id: e.id, qtd: e.qtd})
                             })
 
                             itens = {
@@ -490,16 +494,20 @@ app.post('/status', async (req, res)=>{
                             //        company = e.name;
                             //    }
                             //})
-                            let freteSession = req.session.freteCon;
-                            let agencias = freteSession.agencias[0];
-                            let escolha = freteSession.escolha;
-                            company = agencias.map((x) => {
-                                if(x.id == escolha){
-                                    return x.name;
-                                }
-                            }).filter((word) => word != undefined);
+                            let freteSession = await frete.findCheckRef(temp.checkout_reference);
+                            
+                            //console.log(freteSession);
+                            //let agencias = freteSession.agencias;
+                            //let escolha = freteSession.escolha;
+                            //company = agencias.map((x) => {
+                            //    if(x.id == escolha){
+                            //        return x.name;
+                            //    }
+                            //}).filter((word) => word != undefined);
 
-                            if(company[0] == 'SEDEX'){
+                            company = freteSession.agencias.name;
+
+                            if(company == 'SEDEX'){
                                 for(let i = 0; i < itens.products.length; i++){
                                     let Ptemp = {
                                         products: [products[i]],
@@ -508,11 +516,11 @@ app.post('/status', async (req, res)=>{
                                     helper.add2cart(tableUsuario, tableOwner, Ptemp).then((res)=>{
                                         //comparar se o nome do tableUsuario.shipping.name é igual ao res.products.name, se forem iguais
                                         //colocar o res.id no tableUsuario.shipping.track_id
-                                        tableUsuario.shipping.forEach((e)=>{
-                                            if(e.name == res.products[0].name){
-                                                e.track_id = res.id;
-                                            }
-                                        })
+                                        //userShipping.forEach((e)=>{
+                                        //    if(e.name == res.products[0].name){
+                                        //        e.track_id = res.id;
+                                        //    }
+                                        //})
                                     })
                                 }
                                 transactions.updateShipping({shipping: tableUsuario.shipping, check_ref: temp.checkout_reference})
@@ -521,13 +529,13 @@ app.post('/status', async (req, res)=>{
                                     //comparar se o nome do tableUsuario.shipping.name é igual ao res.products.name, se forem iguais
                                     //colocar o res.id no tableUsuario.shipping.track_id
                                     //sendo que aqui vem todos os itens de uma vez no res
-                                    tableUsuario.shipping.forEach((e)=>{
-                                        res.products.forEach((r)=>{
-                                            if(e.name == r.name){
-                                                e.track_id = r.id;
-                                            }
-                                        })
-                                    })
+                                    //userShipping.forEach((e)=>{
+                                    //    res.products.forEach((r)=>{
+                                    //        if(e.name == r.name){
+                                    //            e.track_id = r.id;
+                                    //        }
+                                    //    })
+                                    //})
                                     //console.log({shipping: tableUsuario.shipping, check_ref: temp.checkout_reference, type: 'other'});
                                     transactions.updateShipping({shipping: tableUsuario.shipping, check_ref: temp.checkout_reference});
 
