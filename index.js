@@ -477,7 +477,7 @@ app.post('/status', async (req, res)=>{
                                     "width": e.dimensions.width,//Largura
                                     "weight": e.dimensions.weight//Peso
                                 })//Volume
-                                itens.AtualizarQtd({id: e.id, qtd: e.qtd})
+                                //itens.AtualizarQtd({id: e.id, qtd: e.qtd})
                             })
 
                             itens = {
