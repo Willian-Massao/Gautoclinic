@@ -6,21 +6,19 @@ module.exports  = class itens{
     async create(){
         const conn = await pool.getConnection();
         try{
-            const sql = `CREATE TABLE if not exists fretes (
-                idUser INT NOT NULL AUTO_INCREMENT,
-                check_ref varchar(36),
-                fretes JSON NOT NULL,
-                info JSON NOT NULL,
-                PRIMARY KEY (idUser),
-                UNIQUE (check_ref),
-                CONSTRAINT CHECK_REF_IDX
-                  FOREIGN KEY (check_ref)
-                  REFERENCES transaction (check_ref)
-                  ON UPDATE NO ACTION,
-                CONSTRAINT IDUSERFRETES
-                  FOREIGN KEY (idUser)
-                  REFERENCES users (id)
-                  ON UPDATE NO ACTION);`;
+            const sql = `CREATE TABLE IF NOT exists fretes(
+                idFrete int NOT NULL AUTO_INCREMENT,
+                userId int NOT NULL,
+                agencias json NOT NULL,
+                \`to\` json NOT NULL,
+                \`from\` json NOT NULL,
+                check_ref varchar(32) NOT NULL,
+                PRIMARY KEY (idFrete),
+                KEY userIdFretes (userId),
+                KEY checkrefuiid (check_ref),
+                CONSTRAINT checkrefuiid FOREIGN KEY (check_ref) REFERENCES transaction (check_ref),
+                CONSTRAINT userIdFretes FOREIGN KEY (userId) REFERENCES users (id)
+            );`;
             await conn.query(sql);
             console.log("Tabela frete criada com sucesso!");
         }catch(err){
@@ -34,12 +32,12 @@ module.exports  = class itens{
     // crud
 
     // create
-    async InsertorUpdate(fretes){
+    async insert(fretes){
         const conn = await pool.getConnection();
         try{
             NN(fretes);
-            const sql = "insert into fretes (idUser, fretes, info) values (?,?,?) ON DUPLICATE KEY UPDATE fretes = ?, info = ?;"
-            await conn.query(sql, [fretes.idUser, JSON.stringify(fretes.fretes), JSON.stringify(fretes.info), JSON.stringify(fretes.fretes), JSON.stringify(fretes.info)]);
+            const sql = "insert into fretes (userId, agencias, \`to\`, \`from\`, check_ref) values (?,?,?,?,?);"
+            await conn.query(sql, [fretes.userId, JSON.stringify(fretes.agencias), JSON.stringify(fretes.to), JSON.stringify(fretes.from), fretes.check_ref]);
             console.log("fretes inserido com sucesso!");
         }catch(err){
             console.log(err);
@@ -63,11 +61,11 @@ module.exports  = class itens{
     }
 
     // read
-    async findId(id){
+    async findCheckRef(check_ref){
         const conn = await pool.getConnection();
         try {
-            const sql = `SELECT * FROM fretes WHERE idUser = ?`;
-            const [rows] = await conn.query(sql, [id]);
+            const sql = `SELECT * FROM fretes WHERE check_ref = ?`;
+            const [rows] = await conn.query(sql, [check_ref]);
             return rows[0];
         }catch(err){
             console.log(err);
@@ -77,21 +75,6 @@ module.exports  = class itens{
         }
     }
 
-
-    // update
-    async delete(id){
-        const conn = await pool.getConnection();
-        try {
-            NN(id);
-            const sql = `DELETE fretes WHERE idUser = ?`;
-            await conn.query(sql, [id]);
-        }catch(err){
-            console.log(err);
-            throw err;
-        }finally{
-            conn.release();
-        }
-    }
 
     async describe(){
         const conn = await pool.getConnection();
