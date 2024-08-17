@@ -478,29 +478,42 @@ app.post('/status', async (req, res)=>{
                             }
                             //let userShipping = JSON.parse([{"id": 7, "qtd": 1, "name": "Gloss labial", "price": 0.9999, "track_id": "", "dimensions": {"depth": 1, "width": 1, "height": 1, "weight": 1}, "track_code": ""}]);
 
-                            try{
-                                const apiRes = await fetch('https://viacep.com.br/ws/'+ process.env.CEP_ENVIO +'/json/',{
-                                    method: 'GET'
-                                });
-
-                                if(apiRes.ok){
-                                    let data = apiRes.json();
-                                    tableOwner ={
-                                        "nome_completo":"Matheus Gauto",
-                                        "phone":"+5511989065193",
-                                        "email":"Matheusgauto@gmail.com",
-                                        "stateRegister": "Sim",// Inscricao estadual Perguntar ao Gauto
-                                        "adress": data.logradouro,//Logradouro Remetente
-                                        "complement": data.complemento,// Complemento
-                                        "number": "2120",//Numero
-                                        "district": data.bairro,//Bairro
-                                        "city": data.localidade,//Cidade
-                                        "countryId": "Brasil"//Pais
-                                    }
-                                }
-                            }catch(err){
-
+                            tableOwner ={
+                                "nome_completo":"Matheus Gauto",
+                                "phone":"+5511989065193",
+                                "email":"Matheusgauto@gmail.com",
+                                "stateRegister": "Sim",// Inscricao estadual Perguntar ao Gauto
+                                "adress": "data.logradouro",//Logradouro Remetente
+                                "complement": "",// Complemento
+                                "number": "2120",//Numero
+                                "district": "Centro",//Bairro
+                                "city": "Guarulhos",//Cidade
+                                "countryId": "BR"//Pais
                             }
+
+                            //try{
+                            //    const apiRes = await fetch('https://viacep.com.br/ws/'+ process.env.CEP_ENVIO +'/json/',{
+                            //        method: 'GET'
+                            //    });
+//
+                            //    if(apiRes.ok){
+                            //        let data = apiRes.json();
+                            //        tableOwner ={
+                            //            "nome_completo":"Matheus Gauto",
+                            //            "phone":"+5511989065193",
+                            //            "email":"Matheusgauto@gmail.com",
+                            //            "stateRegister": "Sim",// Inscricao estadual Perguntar ao Gauto
+                            //            "adress": "data.logradouro",//Logradouro Remetente
+                            //            "complement": "",// Complemento
+                            //            "number": "2120",//Numero
+                            //            "district": "Centro",//Bairro
+                            //            "city": "Guarulhos",//Cidade
+                            //            "countryId": "BR"//Pais
+                            //        }
+                            //    }
+                            //}catch(err){
+//
+                            //}
 
                             userShipping.forEach((e)=>{
                                 products.push({
@@ -571,7 +584,7 @@ app.post('/status', async (req, res)=>{
                                     //    })
                                     //})
                                     //console.log({shipping: tableUsuario.shipping, check_ref: temp.checkout_reference, type: 'other'});
-                                    console.log(res);
+                                    
                                     transactions.updateShipping({shipping: tableUsuario.shipping, check_ref: temp.checkout_reference});
 
                                 })
