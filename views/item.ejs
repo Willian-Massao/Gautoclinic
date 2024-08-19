@@ -70,32 +70,33 @@
                 </div>
             </div>
         </div>
-        <div class="item-section">
+        <div class="item-section mobile">
             <div class="sec-container">
                 <div class="desc-sec">
-                    <button class="sec-button" onclick="select(0)" style="border-bottom: 1px solid black;">Descrição</button>
-                    <button class="sec-button" onclick="select(1)">Ativos</button>
-                    <button class="sec-button" onclick="select(2)">Como Usar</button>
-                    <button class="sec-button" onclick="select(3)">Avaliações</button>
-                </div>
-                <div class="desc-info">
-                    <div class="sec-desc sec active">
+                    <button class="sec-button" onclick="select(0)">Descrição</button>
+                    <div class="desc-info sec">
                         <p><%= item.description %></p>
                         <!--<%= item.description %>-->
                     </div>
-                    <div class="sec-ativos sec">
-                        <ul>
-                            <% item.active.split(',').forEach((e)=>{ %>
-                                <li><%= e %></li>
-                            <% }) %>
-                        </ul>
-                        <!--<%= item.ativos %>-->
+                </div>
+                <div class="desc-sec">
+                    <button class="sec-button" onclick="select(1)">Ativos</button>
+                    <div class="desc-info sec">
+                        <% item.active.split(',').forEach((e)=>{ %>
+                            <li><%= e %></li>
+                        <% }) %>
                     </div>
-                    <div class="sec-user sec">
+                </div>
+                <div class="desc-sec">
+                    <button class="sec-button" onclick="select(2)">Como Usar</button>
+                    <div class="desc-info sec">
                         <p><%= item.uses %></p>
                         <!--<%= item.uses %>-->
                     </div>
-                    <div class="sec-rating sec">
+                </div>
+                <div class="desc-sec">
+                    <button class="sec-button" onclick="select(3)">Avaliações</button>
+                    <div class="desc-info sec">
                         <div class="item-rating">
                             <div class="avg">
                                 <p><%= item.mRate.toFixed(1) %></p>
@@ -133,6 +134,14 @@
         </div>
     </main>
     <script>
+        let div = document.getElementsByClassName("sec");
+        let secbutton = document.getElementsByClassName("sec-button");
+        
+        //minimizar todos
+        for(let i in div){
+            console.log({div: div[i], value: div[i].style.marginTop})
+            div[i].style.marginTop = `-${div[i].clientHeight-2}px`;
+        }
         // quando o mouse passar em cima de uma classe image-sidebar pegar a imagem e colocar na image-principal
         function setPrincipal(e){
             let img = document.getElementById(`img-${e}`);
@@ -140,14 +149,13 @@
             imgPrincipal.src = img.src;
         }
         function select(sec){
-            let div = document.getElementsByClassName("sec");
-            let secbutton = document.getElementsByClassName("sec-button");
-            for(let i = 0; i < div.length; i++){
-                div[i].style.display = "none";
-                secbutton[i].style.border = "0";
+            // pegar o contexto se esta aberto ou não
+            console.log({div: div[sec].style.marginTop, equal: "0px", value: div[sec].style.marginTop == "0px"});
+            if(div[sec].style.marginTop != "0px"){
+                div[sec].style.marginTop = "0";
+            }else{
+                div[sec].style.marginTop = `-${div[sec].clientHeight-2}px`;
             }
-            div[sec].style.display = "unset";
-            secbutton[sec].style.borderBottom = "1px solid black";
         }
     </script>
     <%- include ("partials/footer.ejs") %>
