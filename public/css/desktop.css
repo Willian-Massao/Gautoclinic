@@ -1,6 +1,6 @@
 :root{
     --secodary-color: #d6d6d6;
-    --Pfont: "Garemond";
+    --Pfont: "Helvetica";
 }
 @font-face {
     font-family: "Medio";
@@ -49,6 +49,19 @@
     font-family: "Garemond";
     font-style: italic;
     src: url("../src/EBGaramond-Italic-VariableFont_wght.ttf") format("truetype");
+}
+@font-face {
+    font-family: "glacial";
+    src: url("../src/GlacialIndifference-Regular.otf") format("opentype");
+}
+@font-face {
+    font-family: "glacial";
+    font-style: bold;
+    src: url("../src/GlacialIndifference-Bold.otf") format("opentype");
+}
+@font-face {
+    font-family: "roboto";
+    src: url("../src/Roboto-Regular.ttf") format("truetype");
 }
 h1,h2,p,i,a{
     color: black;
@@ -536,12 +549,21 @@ nav ul li, nav ul form{
     border-bottom: 1px solid var(--secodary-color);
     list-style: none;
     display: flex;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
     color: var(--secodary-color);
 }
 nav ul li a{
     color: black;
+    margin: 0 ;
+    padding: 0;
+    padding-left: 15px;
+    width: calc(100% - 15px);
+    height: 100%;
+    text-align: start;
+    display: flex;
+    align-items: center;
+    text-wrap: nowrap;
 }
 nav ul input{
     width: 100%;
@@ -575,7 +597,6 @@ main .item-container{
     flex-direction: row;
     position: sticky;
     top: 0;
-    box-shadow: 1px 0px 0px 0px rgba(0, 0, 0, 0.15);
 }
 .item-images .image-list{
     width: calc(500px/3);
@@ -671,7 +692,7 @@ main .item-images div img{
 .item-rate .item-stock p{
     padding: 0;
     margin: 0;
-    margin-top: 1px;
+    margin-top: 2px;
     margin-left: 2px;
 }
 .rate{
@@ -716,6 +737,7 @@ button.item-buy:active{
     flex-direction: row;
     margin-top: 10px;
     width: 100%;
+    max-width: 1300px;
 }
 .item-rating .avg{
     width: 150px;
@@ -794,8 +816,16 @@ button.item-buy:active{
     align-items: start;
     flex-direction: column;
     width: calc(100% - 150px);
-    border-left: 1px solid var(--secodary-color);
     padding-left: 10px;
+}
+.appraisal-container .appraisal-comment{
+    width: 100%;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+.appraisal-comment p.comment-data{
+    margin: 0;
 }
 .comment-form, .comment-form form{
     display: flex;

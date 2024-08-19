@@ -1,6 +1,6 @@
 :root{
     --secodary-color: #d6d6d6;
-    --Pfont: "Garemond";
+    --Pfont: "Helvetica";
 }
 @font-face {
     font-family: "Medio";
@@ -521,6 +521,15 @@ nav ul li, nav ul form{
 }
 nav ul li a{
     color: black;
+    margin: 0 ;
+    padding: 0;
+    padding-left: 15px;
+    width: calc(100% - 15px);
+    height: 100%;
+    text-align: start;
+    display: flex;
+    align-items: center;
+    text-wrap: nowrap;
 }
 nav ul input{
     width: 100%;
@@ -645,7 +654,7 @@ main .item-images div img{
 .item-rate .item-stock p{
     padding: 0;
     margin: 0;
-    margin-top: 1px;
+    margin-top: 3px;
     margin-left: 2px;
 }
 .rate{
@@ -768,10 +777,18 @@ button.item-buy:active{
     align-items: start;
     flex-direction: column;
     width: calc(100% - 150px);
-    border-left: 1px solid var(--secodary-color);
     padding-left: 10px;
     margin-top: 15px;
     width: 100%;
+}
+.appraisal-container .appraisal-comment{
+    width: 100%;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+.appraisal-comment p.comment-data{
+    margin: 0;
 }
 .comment-form, .comment-form form{
     display: flex;
