@@ -61,7 +61,7 @@
                     <button class="item-buy" disabled>Adicionar ao carrinho</button>
                 <% } %>
                 <div class="item-benefit">
-                    <h1>Beneficios</h1>
+                    <h1>Benefícios dos ativos</h1>
                     <ul>
                     <% item.benefits.split(';').forEach((e)=>{ %>
                         <li><%= e %></li>       
@@ -73,14 +73,14 @@
         <div class="item-section mobile">
             <div class="sec-container">
                 <div class="desc-sec">
-                    <button class="sec-button" onclick="select(0)">Descrição</button>
+                    <button class="sec-button" onclick="select(0)">Descrição do Produto</button>
                     <div class="desc-info sec">
                         <p><%= item.description %></p>
                         <!--<%= item.description %>-->
                     </div>
                 </div>
                 <div class="desc-sec">
-                    <button class="sec-button" onclick="select(1)">Ativos</button>
+                    <button class="sec-button" onclick="select(1)">Ativos e Ingredientes</button>
                     <div class="desc-info sec">
                         <% item.active.split(',').forEach((e)=>{ %>
                             <li><%= e %></li>
@@ -88,14 +88,14 @@
                     </div>
                 </div>
                 <div class="desc-sec">
-                    <button class="sec-button" onclick="select(2)">Como Usar</button>
+                    <button class="sec-button" onclick="select(2)">Modo de Usar</button>
                     <div class="desc-info sec">
                         <p><%= item.uses %></p>
                         <!--<%= item.uses %>-->
                     </div>
                 </div>
                 <div class="desc-sec">
-                    <button class="sec-button" onclick="select(3)">Avaliações</button>
+                    <button class="sec-button" onclick="select(3)">Avaliações do Produto</button>
                     <div class="desc-info sec">
                         <div class="item-rating">
                             <div class="avg">
