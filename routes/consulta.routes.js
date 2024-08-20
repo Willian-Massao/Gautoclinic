@@ -224,9 +224,10 @@ routes.post('/cancel', helper.ensureAdmin, async (req, res) =>{
         let tableAgendamento = await agendamentos.findCheck_ref({idFuncionario:1,check_ref:checkRef})
         let html = "Olá, "+ req.user.name +" o seu agendamento para o procedimento " + tableAgendamento[0].idProcedimento + " do dia " + tableAgendamento[0].dataHoraAgendamento+ " foi cancelado pela nossa equipe, por favor entre em contato conosco para mais informações. Atenciosamente Equipe GautoClinic. <br>Importante: Ao realizar o pagamento do valor do agendamento, o processo do procedimento já é iniciado. Por isso, este valor não é reembolsável."
         const text = "";
-        
+
         await agendamentos.changeStatus({status: 'CANCELED', confirmado:0, check_ref:checkRef });
         helper.sendEmail(req.user.email,assunto,html,text);
+        res.redirect('/consulta/orders');
     }
 
     // A pedido do gauto não reembolsar a pessoa se ela ja fez o agendamento.
