@@ -79,7 +79,7 @@ header{
     flex-direction: row;
     flex-wrap: wrap;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.30);
-    height: 150px;
+    height: fit-content;
 }
 header.admin{
     height: fit-content;
@@ -119,7 +119,7 @@ header .icons a, header .icons button{
     transition: 220ms ease-in-out;
 }
 header .logo{
-    height: 30%;
+    height: 45px;
 }
 .logo img{
     height: 100%;
@@ -128,8 +128,9 @@ header .search-bar{
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.30);
     height: 50px;
     width: 450px;
-    margin-top: 5px;
-    border-radius: 50px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    border-radius: 3px;
     overflow: hidden;
     border: 1px solid rgba(0, 0, 0, 0.20);
 }
@@ -391,6 +392,11 @@ footer {
     color: black;
     width: 100%;
     height: 550px;
+    background-image: url('../src/footer.jpg');
+    background-size: cover;
+}
+footer a, footer p, footer h3, footer i{
+    color: white;
 }
 footer .newsletters{
     min-width: 265px;
@@ -429,7 +435,6 @@ footer .newsletters p{
     font-size: x-large;
 }
 footer .insta i{
-    color: black;
     font-size: xx-large;
     margin-top: 9px;
     margin-right: 8px;
