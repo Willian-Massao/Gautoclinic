@@ -2,6 +2,29 @@
 <html lang="en">
 <head>
     <%- include ("partials/head.ejs") %>
+    <% 
+        function textEnrich(text) {
+        // Substitui *texto* por <strong>texto</strong>
+        text = text.replaceAll(/\*(.*?)\*/g, '<strong>$1</strong>');
+        
+        // Substitui ~texto~ por <em>texto</em>
+        text = text.replaceAll(/~(.*?)~/g, '<u>$1</u>');
+        
+        // Substitui _texto_ por <u>texto</u>
+        text = text.replaceAll(/_(.*?)_/g, '<em>$1</em>');
+
+        // Substitui \n por <br>
+        text = text.replace(/\\n/g, '<br>');
+
+        // Substitui ; por <li> e envolve tudo em <ul>
+        if (text.includes(';')) {
+            let items = text.split(';').map(item => item.trim()); // Dividir e remover espaços
+            text = '<ul><li>' + items.join('</li><li>') + '</li></ul>';
+        }
+        
+        return text;
+    }
+    %>
 </head>
 <body>
     <%- include ("partials/navbar.ejs") %>
@@ -62,11 +85,7 @@
                 <% } %>
                 <div class="item-benefit">
                     <h1>Benefícios dos ativos</h1>
-                    <ul>
-                    <% item.benefits.split(';').forEach((e)=>{ %>
-                        <li><%= e %></li>       
-                    <%}) %>
-                    </ul>
+                    <%- textEnrich(item.benefits) %>
                 </div>
             </div>
         </div>
@@ -75,22 +94,20 @@
                 <div class="desc-sec">
                     <button class="sec-button" onclick="select(0)">Descrição do Produto</button>
                     <div class="desc-info sec">
-                        <p><%= item.description %></p>
+                        <p><%- textEnrich(item.description) %></p>
                         <!--<%= item.description %>-->
                     </div>
                 </div>
                 <div class="desc-sec">
                     <button class="sec-button" onclick="select(1)">Ativos e Ingredientes</button>
                     <div class="desc-info sec">
-                        <% item.active.split(',').forEach((e)=>{ %>
-                            <li><%= e %></li>
-                        <% }) %>
+                        <%- textEnrich(item.active) %>
                     </div>
                 </div>
                 <div class="desc-sec">
                     <button class="sec-button" onclick="select(2)">Modo de Usar</button>
                     <div class="desc-info sec">
-                        <p><%= item.uses %></p>
+                        <p><%- textEnrich(item.uses) %></p>
                         <!--<%= item.uses %>-->
                     </div>
                 </div>
@@ -156,6 +173,9 @@
             }else{
                 div[sec].style.marginTop = `-${div[sec].clientHeight-2}px`;
             }
+        }
+        function textEnrich(){
+
         }
     </script>
     <%- include ("partials/footer.ejs") %>
