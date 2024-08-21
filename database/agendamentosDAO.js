@@ -82,7 +82,7 @@ module.exports  = class agendamentos{
         const conn = await pool.getConnection();
         try{
             NN(agendamentos);
-            const sql = "UPDATE agendamentos SET confirmado = ?, status = ? WHERE idUser = ? AND check_ref = ?;"
+            const sql = "UPDATE agendamentos SET confirmado = ?, status = ? WHERE check_ref = ?;"
             await conn.query(sql, [agendamentos.confirmado, agendamentos.status, agendamentos.idUser, agendamentos.check_ref])
             console.log("agendamentos atualizado com sucesso!");
         }catch(err){

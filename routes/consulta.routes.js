@@ -195,7 +195,7 @@ routes.post('/accept', helper.ensureAdmin, async (req, res) =>{
     //console.log(tableAgendamento);
     let html = `<style>.container {display: flex;justify-content: center;align-items: center;font-family: sans-serif;background-color: #cccccc;padding: 30px;   }   .carta {width: 300px;border-radius: 10px;display: flex;flex-direction: column;justify-content: space-between;padding: 10px;background-color: #fff;box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);   }   .carta__header {text-align: center;   }   .carta__body {text-align: center;   }   .carta__footer {text-align: center;   }   .carta__logo{width: 100%;height: 50px;display: flex;justify-content: center;align-items: center;   }   .carta__logo img{max-width: 100%;max-height: 100%;flex-shrink: 0;   }</style><div class="container">   <div class="carta"><div class="carta__logo">    <img src="https://gautoclinic.com.br/src/logo.png" alt="Logo GautoClinic"></div><div class="carta__header">    <h1>Olá, ${req.user.name}</h1></div><div class="carta__body">    <p>O seu agendamento para o procedimento ${tableAgendamento[0].idProcedimento} foi confirmado para o dia ${tableAgendamento[0].dataHoraAgendamento} estaremos esperando por você.</p></div><div class="carta__footer">    <p>Atenciosamente Equipe GautoClinic.</p></div>   </div></div>`
     const text = "";
-    await agendamentos.confirmaAgendamento({status: 'ACCEPT', confirmado:1, idUser:req.user.id, check_ref:checkRef});
+    await agendamentos.confirmaAgendamento({status: 'ACCEPT', confirmado:1, check_ref:checkRef});
     helper.sendEmail(req.user.email,assunto,html,text);
     res.redirect('/consulta/orders');
 })
