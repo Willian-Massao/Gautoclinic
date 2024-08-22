@@ -220,6 +220,7 @@ i.banner input {
 	transition: transform ease-in-out 400ms;
 	z-index: 1;
     margin: 0;
+    border-radius: 0 !important;
 }
 
 i.banner input:focus {
