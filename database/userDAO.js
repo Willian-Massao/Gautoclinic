@@ -193,6 +193,39 @@ module.exports  = class itens{
             conn.release();
         }
     }
+
+    async BuscaPedidosClientes(){
+        const conn = await pool.getConnection();
+        try {
+            const sql = `SELECT DATE_FORMAT(ts.date, '%Y-%m-%d') as 'Data Compra', concat(us.name ,' ', lastname )as 'Nome Usuario', tel as 'Telefone',cpf as 'CPF',adress as 'Endereço',us.number as 'Num. Res.',district as 'Bairro', city as 'Cidade',cep as 'Cep', ts.price as 'Preço', ts.shipping as 'Produto Enviado', ts.check_ref as 'Codigo_Referencia', ts.obs as 'Observacao' FROM users us  
+                            inner join transaction ts
+                            on ts.idUser = us.id
+                            where ts.status = 'PAID' and ts.date >= DATE_FORMAT(DATE_ADD(now(), INTERVAL -11 DAY),'%Y-%m-%d') 
+                            order by ts.date desc`;
+            const [row] = await conn.query(sql);
+            return row;
+        }catch(err){
+            console.log(err);
+        }finally{
+            conn.release();
+        }
+    }
+
+    async BuscaPedidosClientesEspecifico(id){
+        const conn = await pool.getConnection();
+        try {
+            const sql = `SELECT DATE_FORMAT(ts.date, '%Y-%m-%d') as 'Data Compra', concat(us.name ,' ', lastname )as 'Nome Usuario', tel as 'Telefone',cpf as 'CPF',adress as 'Endereço',us.number as 'Num. Res.',district as 'Bairro', city as 'Cidade',cep as 'Cep', ts.price as 'Preço', ts.shipping as 'Produto Enviado', ts.check_ref as 'Codigo_Referencia',  ts.obs as 'Observacao' FROM users us  
+                            inner join transaction ts
+                            on ts.idUser = us.id
+                            where ts.check_ref = ?`;
+            const [row] = await conn.query(sql, [id]);
+            return row;
+        }catch(err){
+            console.log(err);
+        }finally{
+            conn.release();
+        }
+    }
 }
 
 function NN(thing){

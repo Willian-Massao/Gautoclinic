@@ -26,8 +26,15 @@
                     </div>
                 <% }else{ %>
                     <div class="input-container">
+                        <% if(table == 'PedidoRafa' && e.Field != 'Observacao' && e.Field != 'Codigo_Referencia'){ %>
+                        <Label for="<%= e.Field %>" ><%= e.Field %></Label>
+                        <input type="text" name="<%= e.Field %>" value="<%= data[e.Field] %>" disabled>
+                        <% }else if(table == 'PedidoRafa' && e.Field == 'Codigo_Referencia'){ %>
+                            <input type="text" name="<%= e.Field %>" value="<%= data[e.Field] %>" hidden>
+                        <% }else{ %>
                         <Label for="<%= e.Field %>" ><%= e.Field %></Label>
                         <input type="text" name="<%= e.Field %>" value="<%= data[e.Field] %>">
+                        <% } %>
                     </div>
                 <% } %>
             <% }) %>

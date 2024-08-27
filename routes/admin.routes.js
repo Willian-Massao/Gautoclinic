@@ -305,6 +305,35 @@ routes.get('/envio', helper.ensureAdmin, async(req, res) => {
     res.render('frete',{error: errorMessage});
 });
 
+routes.get('/PedidoRafa', helper.ensureAdmin, (req, res) => {
+    const errorMessage = req.flash('error');
+    const user = new userDAO();
+
+    user.BuscaPedidosClientes().then( pedidos =>{
+        let converteNomeColuna = Object.keys(pedidos[0])
+        let index=[];
+        converteNomeColuna.forEach((cadaColuna)=>{
+            index.push({Field: cadaColuna})
+        })
+            res.render('admin', {data: pedidos, indexes: index, table: 'PedidoRafa', error: errorMessage});
+        }).catch(err =>res.status(500).send('Something broke!,'+err));
+}); 
+
+routes.get('/edit/PedidoRafa/:id', helper.ensureAdmin, (req, res) => {
+    const errorMessage = req.flash('error');
+    const user = new userDAO();
+
+    user.BuscaPedidosClientesEspecifico(req.params.id).then( pedidos =>{
+        let converteNomeColuna = Object.keys(pedidos[0])
+        let index=[];
+        converteNomeColuna.forEach((cadaColuna)=>{
+            index.push({Field: cadaColuna})
+        })
+        res.render('editadmin', {data: pedidos[0], indexes: index, table: 'PedidoRafa', error: errorMessage});
+        }).catch(err =>res.status(500).send('Something broke!,'+err));
+}); 
+
+
 routes.post('/envio', async(req, res) => {
     const { client_id, client_secret, redirect_uri } = req.body;
     let url = 'https://melhorenvio.com.br/oauth/authorize';

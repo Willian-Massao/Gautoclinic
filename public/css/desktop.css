@@ -1072,7 +1072,6 @@ table.green-table{
 }
 .green-table td{
     width: min-content;
-    max-width: 100px;
     margin: 0;
     overflow: hidden;
     text-overflow: ellipsis;
