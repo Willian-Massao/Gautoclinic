@@ -483,7 +483,7 @@ app.post('/status', async (req, res)=>{
                                 "phone":"+5511989065193",
                                 "email":"Matheusgauto@gmail.com",
                                 "stateRegister": "Sim",// Inscricao estadual Perguntar ao Gauto
-                                "adress": "data.logradouro",//Logradouro Remetente
+                                "adress": "AV Salgado Filho",//Logradouro Remetente
                                 "complement": "",// Complemento
                                 "number": "2120",//Numero
                                 "district": "Centro",//Bairro
