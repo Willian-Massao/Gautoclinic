@@ -310,15 +310,20 @@ routes.get('/PedidoRafa', helper.ensureAdmin, (req, res) => {
     const user = new userDAO();
 
     user.BuscaPedidosClientes().then( pedidos =>{
-        let converteNomeColuna = Object.keys(pedidos[0]);
         let index=[];
-        converteNomeColuna.forEach((cadaColuna)=>{
-            index.push({Field: cadaColuna});
-        })
-        pedidos.forEach((pedido)=>{
-            pedido['Produto Enviado'] = JSON.stringify(pedido['Produto Enviado']);
-        })
-            res.render('admin', {data: pedidos, indexes: index, table: 'PedidoRafa', error: errorMessage});
+        if(pedidos.length != 0){ 
+            let converteNomeColuna = Object.keys(pedidos[0]);
+            converteNomeColuna.forEach((cadaColuna)=>{
+                index.push({Field: cadaColuna});
+            })
+            pedidos.forEach((pedido)=>{
+                pedido['Produto Enviado'] = JSON.stringify(pedido['Produto Enviado']);
+            })
+        }else{
+            index.push(["pedidos"]);
+            pedidos.push(["Sem pedidos feitos nos ultimos 12 dias"]);
+        }
+        res.render('admin', {data: pedidos, indexes: index, table: 'PedidoRafa', error: errorMessage});
         }).catch(err =>res.status(500).send('Something broke!,'+err));
 }); 
 
