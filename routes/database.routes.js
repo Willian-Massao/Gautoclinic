@@ -7,6 +7,7 @@ const itemDAO = require('../database/itemDAO.js');
 const adminDAO = require('../database/adminDAO.js');
 const commentDAO = require('../database/commentDAO.js');
 const envioDAO = require('../database/melhorenvioDAO.js');
+const transactionDAO = require('../database/transactionDAO.js');
 const { json } = require('body-parser');
 
 routes.post('/add/images', helper.upload.single('image') ,async (req, res) => {
@@ -151,6 +152,18 @@ routes.post('/update/products' , async(req, res) => {
     ).catch(err => {
         req.flash('error', 'ID da imagem incorreto!');
         res.redirect('/admin/products');
+    });
+});
+
+routes.post('/update/PedidoRafa' , async(req, res) => {
+    const { Codigo_Referencia, Observacao } = req.body;
+    const transaction = new transactionDAO();
+
+    transaction.ObservacaoUpdate(Observacao,Codigo_Referencia).then(()=>{
+        res.redirect('/admin/PedidoRafa')}
+    ).catch(err => {
+        req.flash('error', 'Codigo Referencia incorreto!');
+        res.redirect('/admin/PedidoRafa');
     });
 });
 

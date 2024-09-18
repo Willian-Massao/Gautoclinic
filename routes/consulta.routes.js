@@ -195,7 +195,7 @@ routes.post('/accept', helper.ensureAdmin, async (req, res) =>{
     //console.log(tableAgendamento);
     let html = `<style>.container {display: flex;justify-content: center;align-items: center;font-family: sans-serif;background-color: #cccccc;padding: 30px;   }   .carta {width: 300px;border-radius: 10px;display: flex;flex-direction: column;justify-content: space-between;padding: 10px;background-color: #fff;box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);   }   .carta__header {text-align: center;   }   .carta__body {text-align: center;   }   .carta__footer {text-align: center;   }   .carta__logo{width: 100%;height: 50px;display: flex;justify-content: center;align-items: center;   }   .carta__logo img{max-width: 100%;max-height: 100%;flex-shrink: 0;   }</style><div class="container">   <div class="carta"><div class="carta__logo">    <img src="https://gautoclinic.com.br/src/logo.png" alt="Logo GautoClinic"></div><div class="carta__header">    <h1>Olá, ${req.user.name}</h1></div><div class="carta__body">    <p>O seu agendamento para o procedimento ${tableAgendamento[0].idProcedimento} foi confirmado para o dia ${tableAgendamento[0].dataHoraAgendamento} estaremos esperando por você.</p></div><div class="carta__footer">    <p>Atenciosamente Equipe GautoClinic.</p></div>   </div></div>`
     const text = "";
-    await agendamentos.confirmaAgendamento({status: 'ACCEPT', confirmado:1, idUser:req.user.id, check_ref:checkRef});
+    await agendamentos.confirmaAgendamento({status: 'ACCEPT', confirmado:1, check_ref:checkRef});
     helper.sendEmail(req.user.email,assunto,html,text);
     res.redirect('/consulta/orders');
 })
@@ -220,50 +220,65 @@ routes.post('/cancel', helper.ensureAdmin, async (req, res) =>{
     const agendamentos = new agendamentosDAO();
     const assunto = "Cancelamento agendamento GautoClinic";
     
-    let tableAgendamento = await agendamentos.findCheck_ref({idFuncionario:1,check_ref:checkRef})
-    let html = "Olá, "+ req.user.name +" o seu agendamento para o procedimento " + tableAgendamento[0].idProcedimento + " do dia " + tableAgendamento[0].dataHoraAgendamento+ " foi estornado e cancelado pela nossa equipe, por favor entre em contato conosco para mais informações. Atenciosamente Equipe GautoClinic."
-    const text = "";
+    if(checkRef != null || checkRef != undefined){
+        let tableAgendamento = await agendamentos.findCheck_ref({idFuncionario:1,check_ref:checkRef})
+        let html = "Olá, "+ req.user.name +" o seu agendamento para o procedimento " + tableAgendamento[0].idProcedimento + " do dia " + tableAgendamento[0].dataHoraAgendamento+ " foi cancelado pela nossa equipe, por favor entre em contato conosco para mais informações. Atenciosamente Equipe GautoClinic. <br>Importante: Ao realizar o pagamento do valor do agendamento, o processo do procedimento já é iniciado. Por isso, este valor não é reembolsável."
+        const text = "";
 
-    const apiRes = await fetch('https://api.sumup.com/v0.1/checkouts/' + tableAgendamento[0].id,{
-                method: 'GET',
-                headers: 
-                {
-                    'Authorization': 'Bearer ' + process.env.SUMUP_KEY,
-                    'Content-Type': 'application/json'
-                }
-    });
-    if(apiRes.ok){
-        let temp = await apiRes.json();
-        console.log(temp);
-
-        //se a resposta da api for diferente de pendente
-        if(temp.status != 'PENDING'){
-            let fetchres = await fetch('https://api.sumup.com/v0.1/me/refund/' + temp.transaction_id,{
-                method: 'POST',
-                headers: {
-                    "Authorization": "Bearer " + process.env.SUMUP_KEY,
-                }
-            });
-            
-            if(fetchres.ok){
-                console.log({status: 'REFUNDED', confirmado:0, check_ref:temp.checkout_reference });
-                await agendamentos.changeStatus({status: 'REFUNDED', confirmado:0, check_ref:temp.checkout_reference });
-                helper.sendEmail(req.user.email,assunto,html,text);
-                res.redirect('/consulta/orders');
-            }else{
-                let apiRes = await fetchres.json();
-                console.log(apiRes);
-                req.flash('error', 'Erro ao fazer o reembolso');
-                res.redirect('/consulta/orders');
-            }
-        }else{
-            req.flash('error', 'Erro na API, contate o administrador');
-            res.redirect('/orders');
-        }
-    }else{
-        req.flash('error', 'O pagamento não está em um status reembolsável');
-        res.redirect('/orders');
+        await agendamentos.changeStatus({status: 'CANCELED', confirmado:0, check_ref:checkRef });
+        helper.sendEmail(req.user.email,assunto,html,text);
+        res.redirect('/consulta/orders');
     }
+
+    // A pedido do gauto não reembolsar a pessoa se ela ja fez o agendamento.
+
+    //const apiRes = await fetch('https://api.sumup.com/v0.1/checkouts/' + tableAgendamento[0].id,{
+    //            method: 'GET',
+    //            headers: 
+    //            {
+    //                'Authorization': 'Bearer ' + process.env.SUMUP_KEY,
+    //                'Content-Type': 'application/json'
+    //            }
+    //});
+    //if(apiRes.ok){
+    //    let temp = await apiRes.json();
+    //    console.log(temp);
+//
+    //    //se a resposta da api for diferente de pendente
+    //    if(temp.status != 'PENDING'){
+    //        let fetchres = await fetch('https://api.sumup.com/v0.1/me/refund/' + temp.transaction_id,{
+    //            method: 'POST',
+    //            headers: {
+    //                "Authorization": "Bearer " + process.env.SUMUP_KEY,
+    //            }
+    //        });
+    //        
+    //        if(fetchres.ok){
+    //            console.log({status: 'REFUNDED', confirmado:0, check_ref:temp.checkout_reference });
+    //            await agendamentos.changeStatus({status: 'REFUNDED', confirmado:0, check_ref:temp.checkout_reference });
+    //            helper.sendEmail(req.user.email,assunto,html,text);
+    //            res.redirect('/consulta/orders');
+    //        }else{
+    //            let apiRes = await fetchres.json();
+    //            console.log(apiRes);
+    //            if(apiRes.message == 'The transaction is not refundable in its current state' && apiRes.error_code == 'CONFLICT'){
+    //                await agendamentos.changeStatus({status: 'CANCELED', confirmado:0, check_ref:temp.checkout_reference });
+    //                helper.sendEmail(req.user.email,assunto,html,text);
+    //                req.flash('error', 'Pagamento via pix não reembolsavel');
+    //                res.redirect('/consulta/orders');
+    //            }else{
+    //                req.flash('error', 'Erro ao fazer reembolso');
+    //                res.redirect('/consulta/orders');
+    //            }
+    //        }
+    //    }else{
+    //        req.flash('error', 'Erro na API, contate o administrador');
+    //        res.redirect('/orders');
+    //    }
+    //}else{
+    //    req.flash('error', 'O pagamento não está em um status reembolsável');
+    //    res.redirect('/orders');
+    //}
 })
 
 routes.get('/orders', helper.ensureAdmin, (req, res) => {
@@ -277,6 +292,7 @@ routes.get('/orders', helper.ensureAdmin, (req, res) => {
         'FINISH': 'COMPLETO',
         'ACCEPT': 'ACEITO',
         'REFUNDED': 'CANCELADO',
+        'CANCELED': 'CANCELADO'
     }
 
     try{
@@ -324,6 +340,7 @@ routes.get('/orders/:id', helper.ensureAdmin, (req, res) => {
         'FINISH': 'COMPLETADO',
         'ACCEPT': 'ACEITO',
         'REFUNDED': 'CANCELADO',
+        'CANCELED': 'CANCELADO'
     }
 
     try{

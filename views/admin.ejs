@@ -13,7 +13,11 @@
                     <% indexes.forEach((e)=>{ %>
                         <th> <%= e.Field %> </th>
                     <% }) %>
+                    <% if(table != "PedidoRafa"){ %>
                     <th>Apagar</th>
+                    <% }else{ %>
+                        <th>Editar</th>
+                        <% } %>
                     <% if(table == "etiqueta" || table == "paying"){ %>
                         <th>Ver</th>    
                     <% } %>
@@ -89,6 +93,10 @@
                             </td>
                             <td>
                                 <a href="/admin/edit/<%= table %>/<%= e.id %>" style="background-color: #24a0ed;" ><i class="fi fi-rr-edit"></i></a>
+                            </td>
+                        <% }else if(table == "PedidoRafa"){ %>
+                            <td>
+                                <a href="/admin/edit/<%= table %>/<%= e.Codigo_Referencia %>" style="background-color: #24a0ed;" ><i class="fi fi-rr-edit"></i></a>
                             </td>
                         <% }else{ %>
                             <td>

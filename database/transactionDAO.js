@@ -15,6 +15,7 @@ module.exports  = class transaction{
                 status varchar(45) NOT NULL,
                 date datetime NOT NULL,
                 shipping json DEFAULT NULL,
+                obs varchar(255) DEFAULT NULL,
                 PRIMARY KEY (id, check_ref),
                 KEY \`is user transaction_idx\` (idUser),
                 KEY \`check_ref uuid\` (check_ref),
@@ -187,6 +188,22 @@ module.exports  = class transaction{
             where trans.check_ref = ?`;
             const [row] = await conn.query(sql, [check_ref]);
             return row[0];
+        }catch(err){
+            console.log(err);
+        }finally{
+            conn.release();
+        }
+
+    }
+
+    async ObservacaoUpdate(Observacao, Codigo_Referencia){
+        const conn = await pool.getConnection();
+        try {
+            const sql = 
+            `update transaction set obs = ?
+            where check_ref = ?`;
+            await conn.query(sql, [Observacao, Codigo_Referencia]);
+            console.log("transaction obs atualizado com sucesso!");
         }catch(err){
             console.log(err);
         }finally{
