@@ -342,9 +342,9 @@ app.post('/calcularFrete', async (req, res) => {
         
                             req.flash('error', 'MelhorEnvio falhou na busca dos fretes');
                             console.log(await fetchres.json(),{
-                                "client_id": process.env.MELHORENVIO_CLIENT_ID,
-                                "refresh_token": refreshMelhorEnvio,
-                                "client_secret": process.env.MELHORENVIO_SECRET,
+                                "client_id": refreshMelhorEnvio.client_id,
+                                "refresh_token": refreshMelhorEnvio.refresh_token,
+                                "client_secret": refreshMelhorEnvio.client_secret,
                                 "grant_type": "refresh_token"
                             } )
                             res.json({err: 'Por favor digite um CEP válido'});
