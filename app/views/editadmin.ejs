@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include ("partials/head.ejs") %>
+</head>
+<body>
+    <%- include ("partials/alert.ejs") %>
+    <%- include ("partials/navbaradmin.ejs") %>
+    
+    <main class="frete">
+        <% if(table == 'images'){ %>
+        <form action="/database/update/<%= table %>" method="post" id="frete-form" class="edit" enctype="multipart/form-data">
+        <% }else{ %>
+            <form action="/database/update/<%= table %>" method="post" id="frete-form" class="edit">
+        <% } %>
+            <h1>Atualizar dados</h1>
+            <% indexes.forEach((e)=>{ %>
+                <% if(e.Field == 'image'){ %>
+                    <div class="input-container">
+                        <Label for="<%= e.Field %>" ><%= e.Field %></Label>
+                        <input type="file" name="<%= e.Field %>">
+                        <div>
+                            <p>imagem atual: </p>
+                            <img src="data:image/jpg;base64,<%= data[e.Field] %>" alt="" style="max-width: 100% ;">
+                        </div>
+                    </div>
+                <% }else{ %>
+                    <div class="input-container">
+                        <% if(table == 'PedidoRafa' && e.Field != 'Observacao' && e.Field != 'Codigo_Referencia'){ %>
+                        <Label for="<%= e.Field %>" ><%= e.Field %></Label>
+                        <input type="text" name="<%= e.Field %>" value="<%= data[e.Field] %>" disabled>
+                        <% }else if(table == 'PedidoRafa' && e.Field == 'Codigo_Referencia'){ %>
+                            <input type="text" name="<%= e.Field %>" value="<%= data[e.Field] %>" hidden>
+                        <% }else{ %>
+                        <Label for="<%= e.Field %>" ><%= e.Field %></Label>
+                        <input type="text" name="<%= e.Field %>" value="<%= data[e.Field] %>">
+                        <% } %>
+                    </div>
+                <% } %>
+            <% }) %>
+            <input type="submit" value="Update">
+        </form>
+        <script>
+            if(document.URL.split('/')[document.URL.split('/').length -1] == 'images'){
+                document.getElementById('myform').setAttribute('enctype', 'multipart/form-data');
+            }
+        </script>
+    </main>
+</body>
+</html>

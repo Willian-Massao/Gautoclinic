@@ -8,38 +8,38 @@ const flash = require('connect-flash');
 const uuid = require("uuid-lib");
 require('dotenv/config');
 
-const routerDatabase = require('./routes/database.routes.js');
-const routerAdmin = require('./routes/admin.routes.js');
-const routerProfile = require('./routes/profile.routes.js');
-const routerUser = require('./routes/user.routes.js');
-const routerConsulta = require('./routes/consulta.routes.js');
+const routerDatabase = require('./app/routes/database.routes.js');
+const routerAdmin = require('./app/routes/admin.routes.js');
+const routerProfile = require('./app/routes/profile.routes.js');
+const routerUser = require('./app/routes/user.routes.js');
+const routerConsulta = require('./app/routes/consulta.routes.js');
 
-const helper = require('./helpers/helper.js');
+const helper = require('./app/helpers/helper.js');
 
 // database
-const userDAO = require("./database/userDAO.js");
-const itemDAO = require("./database/itemDAO.js");
-const transactionDAO = require("./database/transactionDAO.js");
-const commentDAO = require("./database/commentDAO.js");
-const imageDAO = require("./database/imageDAO.js");
-const adminDAO = require("./database/adminDAO.js");
-const passwordForgotDAO = require("./database/passwordFogotDAO.js");
-const envioDAO = require("./database/melhorenvioDAO.js");
-const refoundDAO = require("./database/refoundDAO.js");
-const freteDAO = require("./database/freteDAO.js");
-const ownershopDAO = require("./database/ownershopDAO.js")
-const procedimentosDAO = require("./database/procedimentosDAO.js")
-const funcionariosDAO = require("./database/funcionariosDAO.js")
-const funcionariosProcedimentosDAO = require("./database/funcionariosProcedimentosDAO.js")
-const agendamentosDAO = require("./database/agendamentosDAO.js")
-const routes = require('./routes/profile.routes.js');
+const userDAO = require("./app/database/userDAO.js");
+const itemDAO = require("./app/database/itemDAO.js");
+const transactionDAO = require("./app/database/transactionDAO.js");
+const commentDAO = require("./app/database/commentDAO.js");
+const imageDAO = require("./app/database/imageDAO.js");
+const adminDAO = require("./app/database/adminDAO.js");
+const passwordForgotDAO = require("./app/database/passwordFogotDAO.js");
+const envioDAO = require("./app/database/melhorenvioDAO.js");
+const refoundDAO = require("./app/database/refoundDAO.js");
+const freteDAO = require("./app/database/freteDAO.js");
+const ownershopDAO = require("./app/database/ownershopDAO.js")
+const procedimentosDAO = require("./app/database/procedimentosDAO.js")
+const funcionariosDAO = require("./app/database/funcionariosDAO.js")
+const funcionariosProcedimentosDAO = require("./app/database/funcionariosProcedimentosDAO.js")
+const agendamentosDAO = require("./app/database/agendamentosDAO.js")
+const routes = require('./app/routes/profile.routes.js');
 
 
 // porta do servidor
 const port = 3000;
 
 // Controllers
-let FreteController = require('./controllers/FreteController.js');
+let FreteController = require('./app/controllers/FreteController.js');
 
 // cria tabela
 const users = new userDAO();
@@ -320,15 +320,15 @@ app.post('/calcularFrete', async (req, res) => {
                             }
                         }else{
                             let refreshMelhorEnvio;
-                                    await melhorEnvio.buscaRefreshToken().then(tokenAtivo => {  refreshMelhorEnvio = tokenAtivo.refresh_token})
+                                    await melhorEnvio.buscaRefreshToken().then(tokenAtivo => {  refreshMelhorEnvio = tokenAtivo})
                                     let fetchres = await fetch('https://melhorenvio.com.br/oauth/token',{
                                         method: 'POST',
                                         headers: {
                                             "Content-Type": "routeslication/json",
                                         }, body:JSON.stringify({
-                                            "client_id": process.env.MELHORENVIO_CLIENT_ID,
-                                            "refresh_token": refreshMelhorEnvio,
-                                            "client_secret": process.env.MELHORENVIO_SECRET,
+                                            "client_id": refreshMelhorEnvio.client_id,
+                                            "refresh_token": refreshMelhorEnvio.refresh_token,
+                                            "client_secret": refreshMelhorEnvio.client_secret,
                                             "grant_type": "refresh_token"
                                         })
                                     });
@@ -341,6 +341,12 @@ app.post('/calcularFrete', async (req, res) => {
                                     }
         
                             req.flash('error', 'MelhorEnvio falhou na busca dos fretes');
+                            console.log(await fetchres.json(),{
+                                "client_id": refreshMelhorEnvio.client_id,
+                                "refresh_token": refreshMelhorEnvio.refresh_token,
+                                "client_secret": refreshMelhorEnvio.client_secret,
+                                "grant_type": "refresh_token"
+                            } )
                             res.json({err: 'Por favor digite um CEP válido'});
                         }
                     }else{
